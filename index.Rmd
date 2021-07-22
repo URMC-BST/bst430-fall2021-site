@@ -21,7 +21,7 @@ MW 11:00-12:40, SRB 1402
 <br>
 **Instructor**: Andrew McDavid
 <br>
-**Website**: somewhere on the githubs.io
+**Website**: https://urmc-bst.github.io/bst430-fall2021-site/
 <br>
 [**Syllabus**](static/Syllabus_DRAFT.pdf)
 

@@ -6,15 +6,15 @@
       "description": "Some additional details about the website",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-07-22T12:36:06-04:00"
+      "last_modified": "2021-07-22T12:48:49-04:00"
     },
     {
       "path": "index.html",
       "title": "BST430 - Introduction to Statistical Computing",
       "description": "University of Rochester, Fall 2021",
       "author": [],
-      "contents": "\nAdministrivia\nMW 11:00-12:40, SRB 1402 Instructor: Andrew McDavid Website: somewhere on the githubs.io Syllabus\nContent\nIntroduction / Workflow notes\nLab 0 (not for credit)\n\n\n\n\n",
-      "last_modified": "2021-07-22T12:36:07-04:00"
+      "contents": "\nAdministrivia\nMW 11:00-12:40, SRB 1402 Instructor: Andrew McDavid Website: https://urmc-bst.github.io/bst430-fall2021-site/ Syllabus\nContent\nIntroduction / Workflow notes\nLab 0 (not for credit)\n\n\n\n\n",
+      "last_modified": "2021-07-22T12:48:50-04:00"
     }
   ],
   "collections": []
