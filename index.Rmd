@@ -1,0 +1,35 @@
+---
+title: "BST430 - Introduction to Statistical Computing"
+description: "University of Rochester, Fall 2021"
+site: distill::distill_website
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Learn more about creating websites with Distill at:
+# https://rstudio.github.io/distill/website.html
+
+# Learn more about publishing to GitHub Pages at:
+# https://rstudio.github.io/distill/publish_website.html#github-pages
+
+```
+
+# Administrivia
+
+MW 11:00-12:40, SRB 1402
+<br>
+**Instructor**: Andrew McDavid
+<br>
+**Website**: somewhere on the githubs.io
+<br>
+[**Syllabus**](static/Syllabus_DRAFT.pdf)
+
+# Content
+
+0. Introduction / Workflow notes
+    * Lab 0 (not for credit)
+  
+
+
+
