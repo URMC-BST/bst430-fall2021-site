@@ -27,8 +27,9 @@ MW 11:00-12:40, SRB 1402
 
 # Content
 
-0. Introduction / Workflow notes
+0. [Introduction](lecture/l00-intro.html)
     * Lab 0 (not for credit)
+1. [Meet the toolkit](lecture/01-meet-toolkit.html)
   
 
 
