@@ -1,15 +1,20 @@
 ---
-title: "Meet the toolkit"
+title: "BST430  Lecture 1: Meet the toolkit"
 author: "Andrew McDavid"
-date: "`r Sys.Date()`"
+institute: "U of Rochester"
+date: "2021-08-17 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
-    css: "libs/slides.css"
+    css:
+      - css/lexis.css
+      - css/lexis-fonts.css
     lib_dir: libs
+    seal: true
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+      ratio: "4:3"
 ---
 
 ```{r setup, include=FALSE}
@@ -34,51 +39,40 @@ color_palette <- list(gray = "#999999",
 # For nonsese...
 #library(emo)
 htmltools::tagList(rmarkdown::html_dependency_font_awesome())
+
+
+
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
-library(rvest)
 ```
 
 ## Agenda
 
+- Candy
+- GitHub and git -- make a handle, fork a project, make a commit
 - Demo: A reproducible data analysis
 - R and RStudio
 - R Markdown
-- Git and GitHub
 - Recap
 
----
-
-class: center, middle
-
-# A reproducible data analysis
 
 ---
 
-## Let's talk about burritos!
+# Candy
 
-<iframe src="https://giphy.com/embed/6587R2Pda6iFW" width="853" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/burrito-6587R2Pda6iFW">via GIPHY</a></p>
-
----
-
-## Recap: What did we just do?
-
-- Locate a repository on **GitHub**
-
-- Clone and open the project in **RStudio**
-
-- Run the analysis using **R Markdown**
-
-- Edit the analysis to exclude reviews from "Other" reviewers using **R** syntax
-
-- Re-run the analysis using **R Markdown**
+1. Take 10 candies from the bag
+2. Weigh them (make sure scale is tared and in grams)
+3. Record your weight in grams
+4. Replace the 10 candies
+5. Pass the scale and bag to the next person
 
 ---
 
 ## Reproducibility checklist
 
+One of recurring themes in this class will be .alert[reproducibility].
 Near-term goals:
 
 - Are the tables and figures reproducible from the code and data?
@@ -95,13 +89,122 @@ Long-term goals:
 
 ## Toolkit
 
-![toolkit](img/01/toolkit.png)
+![toolkit](l01/img/toolkit.png)
 
 - Scriptability $\rightarrow$ R
 
 - Literate programming (code, narrative, output in one place) $\rightarrow$ R Markdown
 
 - Version control $\rightarrow$ Git / GitHub
+---
+
+class: center, middle
+
+# Github and git
+
+---
+
+class: font130
+
+## GitHub accounts
+
+- If you have a GitHub account and sit back and relax for a minute.
+- If you do not yet have a GitHub account, create one at https://github.com/. Tips for selecting a username:<sup>1</sup>
+    - Incorporate your actual name! People like to know who they’re dealing with. Also makes your username easier for people to guess or remember.
+    - Reuse your username from other contexts if you can, e.g., Twitter or Slack.
+    - Pick a username you will be comfortable revealing to your future boss.
+    - Shorter is better than longer.
+    - Be as unique as possible in as few characters as possible.
+    - Make it timeless. Don’t highlight your current university, employer, or place of residence.
+
+.footnote[ [1] Source: [Happy git with R](http://happygitwithr.com/github-acct.html#username-advice) by Jenny Bryan.]
+
+---
+
+# Forking a project
+
+Navigate to 
+
+---
+
+class: center, middle
+
+# Git and GitHub
+
+---
+
+## How do we collaborate?
+
+- The statistical programming language we'll use is R
+
+- The software we use to interface with R is RStudio
+
+- But how do I get you the course materials that you can build on for your assignments?
+    + Hint: I'm not going to email you documents, that would be a mess!
+  
+---
+
+## Version control
+
+- We introduced GitHub as a platform for collaboration
+
+- But it's much more than that...
+
+- It's actually desiged for version control
+
+---
+
+## Versioning
+
+![Lego versions](l01/img/lego-steps.png)
+
+---
+
+## Versioning
+
+with human readable messages
+
+![Lego versions with commit messages](l01/img/lego-steps-commit-messages.png)
+
+---
+
+## Why do we need version control?
+
+![PhD Comics](l01/img/phd_comics_vc.gif)
+
+---
+
+# Git and GitHub tips
+
+- Git is a version control system -- like “Track Changes” features from Microsoft Word on steroids. GitHub is the home for your Git-based projects on the internet -- like DropBox but much, much better).
+
+--
+
+- There are millions of git commands -- ok, that's an exaggeration, but there are a lot of them -- and very few people know them all. 99% of the time you will use git to add, commit, push, and pull.
+
+--
+
+- We will be doing Git things and interfacing with GitHub through RStudio, but if you google for help you might come accross methods for doing these things in the command line -- skip that and move on to the next resource unless you feel comfortable trying it out.
+
+--
+
+- There is a great resource for working with git and R: [happygitwithr.com](http://happygitwithr.com/). Some of the content in there is beyond the scope of this course, but it's a good place to look for help.
+
+*Note:* [Jenny Bryan](https://github.com/jennybc), the author of Happy Git with R as well as some Tidyverse packages, will also be joining us on Feb 5. So start collecting your questions for her too.
+
+
+## Recap: What did we just do?
+
+- Locate a repository on **GitHub**
+
+- Clone and open the project in **RStudio**
+
+- Run the analysis using **R Markdown**
+
+- Edit the analysis to exclude reviews from "Other" reviewers using **R** syntax
+
+- Re-run the analysis using **R Markdown**
+
 
 ---
 
@@ -176,7 +279,7 @@ library(package_name)
 ## What is the Tidyverse?
 
 .pull-left[
-![](img/tidyverse.png)
+![](l01/img/tidyverse.png)
 ]
 
 .pull-right[
@@ -260,70 +363,6 @@ Concepts introduced:
 
 ---
 
-class: center, middle
-
-# Git and GitHub
-
----
-
-## How do we collaborate?
-
-- The statistical programming language we'll use is R
-
-- The software we use to interface with R is RStudio
-
-- But how do I get you the course materials that you can build on for your assignments?
-    + Hint: I'm not going to email you documents, that would be a mess!
-  
----
-
-## Version control
-
-- We introduced GitHub as a platform for collaboration
-
-- But it's much more than that...
-
-- It's actually desiged for version control
-
----
-
-## Versioning
-
-![Lego versions](img/lego-steps.png)
-
----
-
-## Versioning
-
-with human readable messages
-
-![Lego versions with commit messages](img/lego-steps-commit-messages.png)
-
----
-
-## Why do we need version control?
-
-![PhD Comics](img/phd_comics_vc.gif)
-
----
-
-# Git and GitHub tips
-
-- Git is a version control system -- like “Track Changes” features from Microsoft Word on steroids. GitHub is the home for your Git-based projects on the internet -- like DropBox but much, much better).
-
---
-
-- There are millions of git commands -- ok, that's an exaggeration, but there are a lot of them -- and very few people know them all. 99% of the time you will use git to add, commit, push, and pull.
-
---
-
-- We will be doing Git things and interfacing with GitHub through RStudio, but if you google for help you might come accross methods for doing these things in the command line -- skip that and move on to the next resource unless you feel comfortable trying it out.
-
---
-
-- There is a great resource for working with git and R: [happygitwithr.com](http://happygitwithr.com/). Some of the content in there is beyond the scope of this course, but it's a good place to look for help.
-
-*Note:* [Jenny Bryan](https://github.com/jennybc), the author of Happy Git with R as well as some Tidyverse packages, will also be joining us on Feb 5. So start collecting your questions for her too.
 
 ---
 
@@ -367,6 +406,8 @@ Can you answer these questions?
 - Tomorrow in lab you'll get to really sink your teeth into everything we demoed today
 
 - Having difficulty? Ask on GitHub or come to office hours!
+
+--- 
 
 # Acknowledgments
 
