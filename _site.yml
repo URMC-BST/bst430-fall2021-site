@@ -10,5 +10,5 @@ navbar:
     - text: "About"
       href: about.html
 output: distill::distill_article
-include: "static/"
-exclude: ["renv/", "renv.lock"]
+#include: "static/"
+exclude: ["renv/", "renv.lock", ".Rproj.user", ".DS_Store"]

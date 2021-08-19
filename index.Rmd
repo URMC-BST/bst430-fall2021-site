@@ -28,9 +28,10 @@ MW 11:00-12:40, SRB 1402
 # Content
 
 0. [Introduction](lecture/l00-intro.html)
-    * Lab 0 (not for credit)
+    * [Survey and pretest](https://forms.gle/yJ8NVHbsJmanSywz9)
 1. [Meet the toolkit](lecture/01-meet-toolkit.html)
-  
-
+    * Invites to rstudio cloud and github class room are on [blackboard](https://learn.rochester.edu)
+    * Additional reading: https://happygitwithr.com/
+<!-- * Resources: [rstudio](https://www.rstudio.com/products/rstudio/download/#download) https://cran.r-project.org/ -->
 
 

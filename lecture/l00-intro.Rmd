@@ -36,7 +36,7 @@ https://urmc-bst.github.io/bst430-fall2021-site/
 
 https://learn.rochester.edu
 
-**Only to be used as a gradebook and for some polls/ short quizzes, inshallah**
+**Only used as a gradebook, announcements, and some polls/short quizzes, inshallah**
 
 ---
 
@@ -75,7 +75,7 @@ R (and programming) fundamentals with a data science and statistics emphasis. Co
 -  Participation / Quizzes (10%)
 .small[Actively attending class, completing periodic quizzes (delivered in-class) to check understanding.]
 -  Take-home final (30%)
-.small[An open book, no-collaboration-permitted final will be assigned on November 2, and will be due 24 hours later.]
+.small[An open book, no-collaboration-permitted final will be assigned on November 9, and will be due 24 hours later.]
 
 ---
 

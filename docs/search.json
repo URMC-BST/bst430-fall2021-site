@@ -6,15 +6,29 @@
       "description": "Some additional details about the website",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-08-07T12:52:03-04:00"
+      "last_modified": "2021-08-19T16:52:38-04:00"
     },
     {
       "path": "index.html",
       "title": "BST430 - Introduction to Statistical Computing",
       "description": "University of Rochester, Fall 2021",
       "author": [],
-      "contents": "\nAdministrivia\nMW 11:00-12:40, SRB 1402 Instructor: Andrew McDavid Website: https://urmc-bst.github.io/bst430-fall2021-site/ Syllabus\nContent\nIntroduction\nLab 0 (not for credit)\n\nMeet the toolkit\n\n\n\n",
-      "last_modified": "2021-08-07T12:52:04-04:00"
+      "contents": "\nAdministrivia\nMW 11:00-12:40, SRB 1402 Instructor: Andrew McDavid Website: https://urmc-bst.github.io/bst430-fall2021-site/ Syllabus\nContent\nIntroduction\nSurvey and pretest\n\nMeet the toolkit\nInvites to rstudio cloud and github class room are on blackboard\nAdditional reading: https://happygitwithr.com/ \n\n\n\n\n",
+      "last_modified": "2021-08-19T16:53:32-04:00"
+    },
+    {
+      "path": "test.html",
+      "title": "Untitled",
+      "description": "A new article created using the Distill format.\n",
+      "author": [
+        {
+          "name": "Nora Jones",
+          "url": "https://example.com/norajones"
+        }
+      ],
+      "date": "`r Sys.Date()`",
+      "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill for R Markdown at https://rstudio.github.io/distill.\n\n\n\n",
+      "last_modified": "2021-08-19T16:52:41-04:00"
     }
   ],
   "collections": []

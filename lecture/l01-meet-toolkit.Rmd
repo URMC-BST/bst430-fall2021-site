@@ -18,29 +18,29 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-# R options
-options(
-  htmltools.dir.version = FALSE, # for blogdown
-  show.signif.stars = FALSE,     # for regression output
-  warm = 1
-  )
-# Set dpi and height for images
 library(knitr)
-opts_chunk$set(fig.height = 2.65, dpi = 300) 
-# ggplot2 color palette with gray
-color_palette <- list(gray = "#999999", 
-                      salmon = "#E69F00", 
-                      lightblue = "#56B4E9", 
-                      green = "#009E73", 
-                      yellow = "#F0E442", 
-                      darkblue = "#0072B2", 
-                      red = "#D55E00", 
-                      purple = "#CC79A7")
-# For nonsese...
-#library(emo)
-htmltools::tagList(rmarkdown::html_dependency_font_awesome())
-
-
+library(tidyverse)
+library(fontawesome)
+options(
+    htmltools.dir.version = FALSE,
+    knitr.table.format = "html",
+    knitr.kable.NA = ''
+)
+knitr::opts_chunk$set(
+    warning = FALSE,
+    message = FALSE,
+    fig.path = "figs/",
+    fig.width = 7.252,
+    fig.height = 4,
+    comment = "#>",
+    fig.retina = 3 # Better figure resolution
+) 
+# Enables the ability to show all slides in a tile overview by pressing "o"
+xaringanExtra::use_panelset()
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,
+  mute_unhighlighted_code = FALSE
+)
 
 ```
 
@@ -51,9 +51,9 @@ library(tidyverse)
 ## Agenda
 
 - Candy
-- GitHub and git -- make a handle, fork a project, make a commit
+- GitHub, github classroom, and git -- make a handle, accept an assignment, make a commit
 - Demo: A reproducible data analysis
-- R and RStudio
+- R and RStudio cloud
 - R Markdown
 - Recap
 
@@ -67,6 +67,20 @@ library(tidyverse)
 3. Record your weight in grams
 4. Replace the 10 candies
 5. Pass the scale and bag to the next person
+
+---
+
+# Accessing the CandyWeight repository from rstudio cloud
+
+1.  From the BST430 workspace select .blue[New Project] -> .blue[New Project from git repository]
+2.  Paste in the github link to your assigned version of the CandyWeight, eg https://github.com/URMC-BST/candyweight-yourgithubID
+3.  Now we need to make it so that rstudio knows about your github account.
+
+---
+
+# Linking rstudio to github
+
+1.  https://usethis.r-lib.org/articles/articles/git-credentials.html
 
 ---
 
@@ -119,11 +133,6 @@ class: font130
 
 .footnote[ [1] Source: [Happy git with R](http://happygitwithr.com/github-acct.html#username-advice) by Jenny Bryan.]
 
----
-
-# Forking a project
-
-Navigate to 
 
 ---
 
@@ -144,13 +153,19 @@ class: center, middle
   
 ---
 
+# Join the classroom
+
+Please check your email or [blackboard](learn.rochester.edu) for the link to join the github classroom.
+
+---
+
 ## Version control
 
 - We introduced GitHub as a platform for collaboration
 
 - But it's much more than that...
 
-- It's actually desiged for version control
+- It's actually designed for version control
 
 ---
 
@@ -173,7 +188,7 @@ with human readable messages
 ![PhD Comics](l01/img/phd_comics_vc.gif)
 
 ---
-
+class: font120
 # Git and GitHub tips
 
 - Git is a version control system -- like “Track Changes” features from Microsoft Word on steroids. GitHub is the home for your Git-based projects on the internet -- like DropBox but much, much better).
