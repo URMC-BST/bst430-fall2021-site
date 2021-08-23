@@ -46,6 +46,10 @@ https://learn.rochester.edu
 -  For assignments, you are encouraged to use github issues (to be discussed)
 -  For private matters (grading disputes, etc), use email.
 
+### TAs
+
+[Samantha Manning](Samantha_Manning@URMC.Rochester.edu) and [Jonathan Klus](Jonathan_Klus@URMC.Rochester.edu) will be your TAs.  They will assist with grading, and offer an office hour, tentatively scheduled at Thursdays at 1PM.
+
 ---
 
 ## Textbooks
@@ -62,7 +66,9 @@ All materials are available freely online.   Some also have deadtree version ava
 
 # Proposed office hours
 
-??
+Andrew: ?? or by appointment.
+
+Samantha and Jonathan: Thursdays at 1PM or by appointment.
 
 ---
 
@@ -93,8 +99,8 @@ R (and programming) fundamentals with a data science and statistics emphasis. Co
 ## Academic honesty and programming
 
 1.  You may generally work together<sup>1</sup>.
-2.  Cite your sources. 
-3.  Write your own solutions and *own code*.  **This generally means no copy-paste!**  See [syllabus](../static/Syllabus_DRAFT.pdf) for complete details.
+2.  You may generally google it, but cite your sources and see the next item.
+3.  Write your own solutions and *own code*.  **This generally means no copy-paste!**  Let's look at [the syllabus](../static/Syllabus_DRAFT.pdf) for complete details.
 4.  Exception: labs, which will be marked as such, are collaborative within each group.
 
 
