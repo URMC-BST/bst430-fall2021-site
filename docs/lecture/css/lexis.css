@@ -123,6 +123,11 @@ a > code {
   background: var(--color-gray);
 }
 
+.ur-title {
+  color: var(--color-black);
+   background-color: var(--color-yellow);;
+}
+
 .inverse {
   background-color: var(--color-black);
   color: var(--color-white);
@@ -270,6 +275,8 @@ img {
   margin-left: 5px;
   margin-right: 5px;
 }
+
+
 .leftcol {
   float: left;
   width: 49%;

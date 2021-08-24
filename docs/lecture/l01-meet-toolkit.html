@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="author" content="Andrew McDavid" />
     <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/panelset/panelset.css" rel="stylesheet" />
     <script src="libs/panelset/panelset.js"></script>
     <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
@@ -13,12 +14,12 @@
   </head>
   <body>
     <textarea id="source">
-class: center, middle, inverse, title-slide
+class: ur-title, center, middle, title-slide
 
 # BST430 Lecture 1: Meet the toolkit
 ### Andrew McDavid
 ### U of Rochester
-### 2021-08-17 (updated: 2021-08-23)
+### 2021-08-17 (updated: 2021-08-24)
 
 ---
 
@@ -30,6 +31,7 @@ class: center, middle, inverse, title-slide
 ## Agenda
 
 - Candy
+- Reproducibility
 - GitHub, github classroom, and git -- make a handle, accept an assignment, make a commit
 - Demo: A reproducible data analysis
    - R and RStudio cloud
@@ -66,9 +68,52 @@ Long-term goals:
 
 ---
 
-## The Cambria / Calibri Incident
+class: center, middle
+
+## Signing at the beginning increases honesty in comparison to signing at the end 
+or the Cambria / Calibri Incident
 
 
+---
+
+&lt;img src = "l01/img/shu-2012.png"&gt;
+
+In 2012, a team of researchers used laboratory and field experiments to conclude that  signing at the beginning rather than at the end of a self-report significantly reduces dishonesty.
+
+---
+
+&lt;img src = "l01/img/kristal-2020.png"&gt;
+
+--
+In 2020, many of these same researchers published a paper disavowing this finding.  
+
+--
+What happened?
+
+???
+
+Lots of things including a failure of a randomization, but mostly evidence of fraud 
+
+---
+
+## Near duplicated observations
+
+.pull-left[
+-  In the 2020 paper, the data from 2012 was posted (finally) as well, and something curious was noted about the fonts.
+-  In many cases, near duplicate observations were found, with the Cambria observations being `runif(0, 1000)` larger than the Calibri pair.
+-  See this [datacolada](http://datacolada.org/98) post for details.
+]
+.pull-right[&lt;img src = "l01/img/shu-data-colada.png", width = "100%"&gt;
+]
+
+---
+
+# Lessons learned
+
+-  Avoid doing any serious work in excel, and
+- especially don't use it to fabricate data.
+-  Making it easier reproduce analyses may reduce the temptation to commit fraud.
+-  But in most cases, programming errors rather than fraud are a greater risk.  .alert[Reproducible analyses help here too!]
 
 ---
 
@@ -77,9 +122,7 @@ Long-term goals:
 ![toolkit](l01/img/toolkit.png)
 
 - Scriptability `\(\rightarrow\)` R
-
 - Literate programming (code, narrative, output in one place) `\(\rightarrow\)` R Markdown
-
 - Version control `\(\rightarrow\)` Git / GitHub
 ---
 
@@ -93,15 +136,11 @@ class: center, middle
 ## How do we collaborate?
 
 - The statistical programming language we'll use is R
-
 - The software we use to interface with R is RStudio
-
 - But how do I get you the course materials that you can build on for your assignments?
     + ❌ We're not going to email code back and forth, that would be a mess!
-    + ❌ Blackboard has t2007 vibes 
+    + ❌ Blackboard has harsh 2007 vibes.
 ---
-
-class: font130
 
 ## GitHub accounts
 
@@ -122,7 +161,7 @@ class: font130
 
 # Join the classroom
 
-Once you have a github account, please check your email or [blackboard](learn.rochester.edu) for the link to join the github classroom.
+- Once you have a github account, please check your email or [blackboard](learn.rochester.edu) and click the link to join the github classroom.
 
 ---
 
@@ -155,13 +194,29 @@ with human readable messages
 ![PhD Comics](l01/img/phd_comics_vc.gif)
 
 ---
-class: font120
+
 # Git and GitHub tips
 
 - Git is a version control system -- like “Track Changes” features from Microsoft Word on steroids. GitHub is the home for your Git-based projects on the internet -- like DropBox but much, much better).
 - There are hundreds git commands -- it's used for the Linux kernel for chrissakes.  But 95% of the time you will only need five commands: `add`, `commit`, `push`, `pull` and adjust the `remote` repositories you sync with.
 - We will be doing Git things and interfacing with GitHub through RStudio, but if you google for help you might come across methods for doing these things in the command line -- you can skip that and move on to the next resource for the moment.
 - [happygitwithr.com](http://happygitwithr.com/)  is a great resource and reference for working with git and R.
+
+---
+
+class: center, middle
+
+## Add your weights the CandyWeight assignment
+
+DEMO!
+
+---
+
+class: center, middle
+
+## Analyze the weights
+
+DEMO!
 
 ---
 
@@ -173,7 +228,7 @@ class: font120
 
 - Run the analysis using **R Markdown**
 
-- Edit the analysis to exclude reviews from "Other" reviewers using **R** syntax
+- Edit the analysis to add the true weight
 
 - Re-run the analysis using **R Markdown**
 
@@ -190,33 +245,28 @@ class: center, middle
 
 - R is a statistical programming language
 
-- RStudio is a convenient interface for R (an integreated development environment, IDE)
+- RStudio is a convenient interface for R (an integrated development environment, IDE)
 
 ---
 
+class: center, middle
+
 ## Let's take a tour - R / RStudio
 
-&lt;center&gt;
-[DEMO]
-&lt;/center&gt;
+Demo!
 
---
+---
 
 Concepts introduced:
 
 - Opening a project
-
 - Console
-
 - Using R as a calculator
-
 - Environment
-
 - Loading and viewing a data frame
-
 - Accessing a variable in a data frame
-
 - R functions
+- Getting help
 
 ---
 
@@ -283,33 +333,15 @@ class: center, middle
 
 - Simple markdown syntax for text
 
-- Code goes in chunks, defined by three backticks, narrative goes outside of chunks
+- Code goes in chunks, defined by three backticks (`), narrative goes outside of chunks
 
 ---
 
+class: center, middle
+
 ## Let's take a tour -- R Markdown
 
-&lt;center&gt;
-[DEMO]
-&lt;/center&gt;
-
-Before we move on...
-
-.question[&lt;i class="fa fa-user" aria-hidden="true"&gt;&lt;/i&gt; &amp;nbsp; What is the Bechdel test?]
-
---
-
-The Bechdel test asks whether a work of fiction features at least two women who talk to each other about something other than a man, and there must be two women named characters.
-
---
-
-Concepts introduced:
-
-- Importing a project from git
-
-- Knitting documents
-
-- R Markdown and (some) R syntax
+Demo!
 
 ---
 
@@ -318,11 +350,6 @@ Concepts introduced:
 - Keep the [R Markdown cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf) and Markdown Quick Reference (Help -&gt; Markdown Quick Reference) handy, we'll refer to it often as the course progresses
 
 - The workspace of your R Markdown document is separate from the Console
-
-&lt;br&gt;&lt;br&gt;
-&lt;center&gt;
-[DEMO]
-&lt;/center&gt;
 
 ---
 
@@ -337,34 +364,18 @@ Concepts introduced:
 ---
 
 
----
-
-## Let's take a tour -- Git / GitHub
-
-
-Concepts introduced:
-
-- Connect an R project to Github repository
-
-- Working with a local and remote repository
-
-- Committing, Pushing and Pulling
 
 
 
----
-
-#  Accessing the CandyWeight repository from rstudio cloud
+&lt;!-- Accessing the CandyWeight repository from rstudio cloud
 
 1.  From the BST430 workspace select .blue[New Project] -&gt; .blue[New Project from git repository]
 2.  Paste in the github link to your assigned version of the CandyWeight, eg https://github.com/URMC-BST/candyweight-yourgithubID
 3.  Now we need to make it so that rstudio knows about your github account.
 
----
-
-# Linking rstudio to github
-
 1.  https://usethis.r-lib.org/articles/articles/git-credentials.html
+
+--&gt;
 
 ---
 
@@ -382,20 +393,22 @@ Can you answer these questions?
 - What is version control, and why do we care?
 - What is R vs RStudio?
 - What is git vs GitHub (and do I need to care)?
+--
+- Okay, now please take some chocolate.  Seriously. Save me from myself.
 
 ---
 
 ## Before next class
-
-- Readings for next Monday posted
-r4ds chapters 3.1-3.5, r4ds chapter 4
-
+By next Monday 30 Aug:
+- Read r4ds chapters 3.1-3.5, r4ds chapter 4
+- Make sure you can access the github classroom
+- Test out your access to rstudio cloud
 
 ---
 
 # Acknowledgments
 
-These materials were adapted from [Mine Çetinkaya-Rundel and colleagues](https://github.com/Sta199-S18/website/blob/master/static/slides/lec-slides/01-meet-toolkit.Rmd)
+These materials are adapted from [Mine Çetinkaya-Rundel and colleagues](https://github.com/Sta199-S18/website/blob/master/static/slides/lec-slides/01-meet-toolkit.Rmd).
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
@@ -403,7 +416,7 @@ These materials were adapted from [Mine Çetinkaya-Rundel and colleagues](https:
 "highlightStyle": "github",
 "highlightLines": true,
 "countIncrementalSlides": false,
-"ratio": "4:3"
+"ratio": "3:2"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
