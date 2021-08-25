@@ -380,10 +380,6 @@ Demo!
 
 - The amount of scaffolding in the template will decrease over the semester
 
----
-
-
-
 
 
 <!-- Accessing the CandyWeight repository from rstudio cloud
@@ -395,6 +391,26 @@ Demo!
 1.  https://usethis.r-lib.org/articles/articles/git-credentials.html
 
 -->
+
+---
+
+## What went wrong with our sampling scheme?
+
+-  What went wrong?
+--
+
+-  **Ascertainment bias**! Not all types of candy were equally likely to be sampled, and the variable of interest was a function of the sampling probability
+-  What are some other settings with ascertainment bias?
+--
+
+-  How do we fix it?
+--
+
+-  Change the sampling scheme to ensure uniform random sampling.  .small[Define the **sampling frame** (candies numbered 1-100), and a scheme to cover it (a random number generator)]
+-  What if I told you that there were 51 kisses, 25 twix, 15 milky way, 6 kit kat and 3 Hershey bars?
+--
+
+-  We could change the estimation procedure to account for this. .small[Either weight the samples inversely by their propensity to be ascertained, or stratify the sampling (eg by candy type) and adjust the estimate.]
 
 ---
 
@@ -413,6 +429,7 @@ Can you answer these questions?
 - What is R vs RStudio?
 - What is git vs GitHub (and do I need to care)?
 --
+
 - Okay, now please take some chocolate.  Seriously. Save me from myself.
 
 ---

@@ -6,3 +6,6 @@
 renv/**
 lecture/**/*.html
 lecture/libs/**
+_WIP-lecture.md
+_WIP.md
+docs/**/*.Rmd
