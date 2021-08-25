@@ -6,7 +6,7 @@
       "description": "Some additional details about the website",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-08-24T22:52:14-04:00"
+      "last_modified": "2021-08-25T12:49:30-04:00"
     },
     {
       "path": "index.html",
@@ -14,7 +14,7 @@
       "description": "University of Rochester, Fall 2021",
       "author": [],
       "contents": "\nAdministrivia\nMW 11:00-12:40, SRB 1402 Instructor: Andrew McDavid Website: https://urmc-bst.github.io/bst430-fall2021-site/ Syllabus\nContent\nIntroduction\nSurvey and pretest\n\nMeet the toolkit\nInvites to rstudio cloud and github class room are on blackboard\nReq readings: r4ds 3.1-3.5, 4. Optional: https://happygitwithr.com/  \n\n\n\n\n",
-      "last_modified": "2021-08-24T22:52:15-04:00"
+      "last_modified": "2021-08-25T12:49:31-04:00"
     }
   ],
   "collections": []
