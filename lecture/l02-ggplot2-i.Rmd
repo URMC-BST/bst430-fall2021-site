@@ -51,7 +51,7 @@ htmltools::tagList(rmarkdown::html_dependency_font_awesome())
     + Similarly, add your name (first and last) to your RStudio.Cloud profile 
     as well
     
-- Tips for asking questions via GitHub issues
+<!-- - Tips for asking questions via GitHub issues-->
 
 ---
 
@@ -76,16 +76,13 @@ class: center, middle
 
 ## What is EDA?
 
+![EDA is often a cyclic process. From R4DS Chapter 2.](l02/img/data-science-explore.png)
+
 - Exploratory data analysis (EDA) is an approach to analyzing data sets to summarize its main characteristics.
 
 - Often, this is visual. That's what we're focusing on today.
 
-- But we might also calculate summary statistics and perform data wrangling/manipulation/transformation at (or before) this stage of the analysis. That's what we'll focus on on Thursday.
-
----
-
-Wickham data science graph
-
+- But we might also calculate summary statistics and perform data wrangling/manipulation/transformation at (or before) this stage of the analysis.
 
 ---
 
@@ -146,15 +143,16 @@ class: center, middle
 
 ## Dataset terminology
 
-<div class="question">
-What does each row represent? What does each column represent?
-</div>
-
+&nbsp;
 .scroll-box-14[
-```{r message=FALSE}
+```{r}
 starwars
 ```
 ]
+
+<div class="question">
+What does each row represent? What does each column represent?
+</div>
 
 ---
 
@@ -193,6 +191,29 @@ How many rows and columns does this dataset have? What does each row represent? 
 Make a prediction: What relationship do you expect to see between height and mass?
 </div>
 
+---
+
+## Danged computer, stop doing what I tell you to do.
+
+<div class = "middle">
+<div class="question">
+What will happen if you entered this into the Console:
+</div>
+
+```{r, eval = FALSE}
+glimpse(Starwars)
+```
+
+--
+
+```{r, error = TRUE}
+glimpse(Starwars)
+```
+
+--
+
+.alert[R is case sensitive!]
+</div>
 ---
 
 ## Mass vs. height
@@ -366,7 +387,7 @@ ggplot(data = starwars, mapping = aes(x = height, y = mass)) +
 
 ## Facet summary
 
-- `facet_grid()`: 2d grid, `rows ~ cols`, `.` for no split
+- `facet_grid()`: 2d grid, `rows ~ cols`, `.` if only using one variable.
 
 - `facet_wrap()`: 1d ribbon wrapped into 2d
 
@@ -523,6 +544,12 @@ ggplot(data = starwars, mapping = aes(x = gender, fill = hair_color)) +
 <div class="question">
 Which of the previous two bar plots is a more useful representation for visualizing the relationship between gender and hair color?
 </div>
+
+---
+class:middle, center
+
+## On to Lab 1!
+
 
 ---
 
