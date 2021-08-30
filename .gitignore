@@ -4,8 +4,15 @@
 .httr-oauth
 .DS_Store
 renv/**
+# we'll try to only commit these once:
+# source goes in lecture/
+# output goes in docs
 lecture/**/*.html
+docs/**/*.Rmd
+lecture/*_files/
 lecture/libs/**
+hw_lab_instruction/*.html
+hw_lab_instruction/*_files/
 _WIP-lecture.md
 _WIP.md
-docs/**/*.Rmd
+
