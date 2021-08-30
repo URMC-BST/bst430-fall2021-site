@@ -105,7 +105,8 @@ class: center, middle
 
 - ggplot2 is a data visualization package
 - To use ggplot2 functions, first load tidyverse
-```{r}
+```{r, message = FALSE, results = 'hide', echo =  2}
+suppressPackageStartupMessages(library(tidyverse))
 library(tidyverse)
 ```
 - In ggplot2 the structure of the code for plots can often be summarized as
