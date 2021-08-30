@@ -11,7 +11,7 @@ lecture/**/*.html
 docs/**/*.Rmd
 lecture/*_files/
 lecture/libs/**
-hw_lab_instruction/*.html
+hw_lab_instruction/**/*.html
 hw_lab_instruction/*_files/
 _WIP-lecture.md
 _WIP.md
