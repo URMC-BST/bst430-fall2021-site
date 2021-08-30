@@ -133,7 +133,9 @@ Before we can get started we need to take care of some required housekeeping. Sp
 Follow the instructions.  **Be sure to save the PAT in a password manager**, it seems that you will have to re-enter it every time you start a new project on rstudio cloud, and possibly as often as a once a day otherwise.
 
 # Warm up
-
+```{marginfigure}
+NB: you should enter your PAT rather than your password, and actually it doesn't matter what you enter for your userid.  Your PAT will be cached, so you won't have to keep entering it 😎
+```
 Before we introduce the data, let's warm up with some simple exercises. The following video is an overview of some of these warmup exercises.
 
 <iframe width="600" height="320" src="https://www.youtube.com/embed/XE8h8jIyu04" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>

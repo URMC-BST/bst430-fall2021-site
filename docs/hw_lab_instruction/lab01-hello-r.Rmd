@@ -1,13 +1,16 @@
 ---
 title: "Lab 01 - Hello R!"
-date: "2018-01-18"
+date: "2018-01-18 (updated 2021-08-29 by AM)"
 author: "Mine Cetinkaya-Rundel and colleagues"
 output: 
   tufte::tufte_html:
     tufte_variant: "envisioned"
     highlight: pygments
     css: lab.css
-link-citations: yes
+    link-citations: yes
+    self_contained: FALSE
+  html_document:
+    self_contained: FALSE
 ---
 
 ```{r include=FALSE}
@@ -40,11 +43,15 @@ And to make versioning simpler, this is a solo lab. Additionally, we want to mak
 
 # Getting started
 
-Each of your assignments will begin with the following steps. You saw these once in class yesterday, they're outlined in detail here again. Going forward each lab will start with a "Getting started" section but details will be a bit more sparse than this. You can always refer back to this lab for a detailed list of the steps involved for getting started with an assignment.
+Each of your assignments will begin with the following steps. You can always refer back to this lab for a detailed list of the steps involved for getting started with an assignment.
 
-The following screencast also walks you through these steps:
 
-<div style="position:relative;height:0;padding-bottom:40%"><iframe width="600" height="320" src="https://www.youtube.com/embed/8Ta_SJq3MrU" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+```{marginfigure}
+Note that some of the steps in this video are now out of date, due to changes in how github handles authenication.   So you might watch this in order to get an overview, but read below for the details.
+```
+The following screencast also walks you through these steps, **though as of August 2021, some of this is now out of date**:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8Ta_SJq3MrU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 - Click on the assignment link that you should have received in your email to create your GitHub repository (which we'll refer to as "repo" going forward) for the assignment. This repo contains a template you can build on to complete your assignment.
 
@@ -64,9 +71,12 @@ knitr::include_graphics("lab01-hello-r/img/new-project-from-gh.png")
 knitr::include_graphics("lab01-hello-r/img/paste-gh-repo-url.png")
 ```
 
-- Copy and paste the URL of your assignment repo into the dialog box:
+- Copy and paste (AM: OK to copy-paste here) the URL of your assignment repo into the dialog box:
+- If haven't linked rstudio cloud to github, you should now be prompted to link rstudio cloud to your github account.  Do this, and make sure you click the "enable private repo link".  This page can also be found by clicking on your username / avatar in the top right corner of the screen, then browsing to the "Authentication" page there.  It should look like this once you are done:
 
-- Hit OK, and you're good to go!
+```{r gh-authenication, echo = FALSE, fig.width = 4}
+knitr::include_graphics('lab01-hello-r/img/rsc-gh-authentication.png')
+```
 
 # Packages
 
@@ -77,9 +87,10 @@ Install these packages by running the following in the console.
 ```{r eval = FALSE}
 install.packages("tidyverse")
 install.packages("datasauRus")
+install.packages('usethis')
 ```
 
-Now that the necessary packages are installed, you should be able to Knit your document and see the results.
+Now that the necessary packages are installed, you should be able to Knit your document and see the results.  This last package is only necessary as a helper to configure git to know about your github account.
 
 If you'd like to run your code in the Console as well you'll also need to load the packages there. To do so, run the following in the console. 
 
@@ -98,51 +109,40 @@ Your email address is the address tied to your GitHub account and your name shou
 
 Before we can get started we need to take care of some required housekeeping. Specifically,  we need to configure your git so that RStudio can communicate with GitHub. This requires two pieces of information: your email address and your name.
 
-The following screencast is a demo of what you need to do to configure your git.
+-  Let git know about your github username and email by editing this as appropriate and entering it into the Console:
+  ```{r, eval = FALSE}
+  usethis::use_git_config(
+  scope = "user",
+  user.name = "Firstname Lastname",
+  user.email = "your-github-email@example.com"
+)
+   ```
+  For instance, I put 
+  ```{r, eval = FALSE}
+  usethis::use_git_config(
+  scope = "user",
+  user.name = "Andrew McDavid",
+  user.email = "andrew.n.mcdavid@gmail.com"
+)
+  ```
 
-<div style="position:relative;height:0;padding-bottom:40%"><iframe width="600" height="320"` src="https://www.youtube.com/embed/nD6_3C-OZyM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
-
-To do so, follow these steps:
-
-- Go to the *Terminal* pane
-- Type the following two lines of code, replacing the information in the quotation marks with your info:
-
-```{bash eval=FALSE}
-git config --global user.email "your@email.com"
-git config --global user.name "your name"
-```
-
-For example, for me these are
-
-```{bash eval=FALSE}
-git config --global user.email "mine@stat.duke.edu"
-git config --global user.name "Mine Cetinkaya-Rundel"
-```
-
-To confirm that the changes have been implemented, run the following
-
-```{bash eval=FALSE}
-git config --global user.email
-git config --global user.name
-```
-
+-  Next, we need to set up a personal access token so that you can write from rstudio cloud to github. To do this, enter use the following command into the Console:
+   ```{r, eval = FALSE}
+   usethis::create_github_token()
+   ```
+Follow the instructions.  **Be sure to save the PAT in a password manager**, it seems that you will have to re-enter it every time you start a new project on rstudio cloud, and possibly as often as a once a day otherwise.
 
 # Warm up
-
+```{marginfigure}
+NB: you should enter your PAT rather than your password, and actually it doesn't matter what you enter for your userid.  Your PAT will be cached, so you won't have to keep entering it 😎
+```
 Before we introduce the data, let's warm up with some simple exercises. The following video is an overview of some of these warmup exercises.
 
-<div style="position:relative;height:0;padding-bottom:40%"><iframe width="600" height="320" src="https://www.youtube.com/embed/XE8h8jIyu04" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+<iframe width="600" height="320" src="https://www.youtube.com/embed/XE8h8jIyu04" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-## Project name: 
-
-Currently your project is called *Untitled Project*. Update the name of your project to be "Lab 01 - Hello R".
-
-```{r untitled-project, fig.fullwidth=TRUE, echo = FALSE}
-knitr::include_graphics("lab01-hello-r/img/untitled-project.png")
-```
 
 ```{marginfigure}
-The top portion of your R Markdown file (between the three dashed lines) is called YAML. It stands for "YAML Ain't Markup Language". It is a human friendly data serialization standard for all programming languages. All you need to know is that this area is called the YAML (we will refer to it as such) and that it contains meta information about your document.
+The top portion of your R Markdown file (between the three dashed lines) is called YAML. It stands for "YAML Ain't Markup Language". It is a (allegedly) human friendly way to represent data, and is used in multiple programming languages. All you need to know is that this area is called the YAML (we will refer to it as such) and that it contains meta information about your document.
 ```
 
 ## YAML: 
@@ -169,11 +169,7 @@ You don't have to commit after every change, this would get quite cumbersome. Yo
 
 Now that you have made an update and committed this change, it's time to push these changes to the web! Or more specifically, to your repo on GitHub. Why? So that others can see your changes. And by others, we mean the course teaching team (your repos in this course are private to you and us, only). 
 
-In order to push your changes to GitHub, click on **Push**. This will prompt a dialogue box where you first need to enter your user name, and then your password. This might feel cumbersome. Bear with me... We *will* teach you how to save your password so you don't have to enter it every time. But for this one assignment you'll have to manually enter each time you push in order to gain some experience with it.
-
-## Thought exercise:
-
-For which of the above steps (changing project name, making updates to the document, committing, and pushing changes) do you need to have an internet connection? Discuss with your classmates.
+In order to push your changes to GitHub, click on **Push**. This will prompt a dialogue box where you first need to enter your user name, and then your PAT.
 
 # Data
 

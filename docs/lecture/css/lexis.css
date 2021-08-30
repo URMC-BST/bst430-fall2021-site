@@ -123,9 +123,16 @@ a > code {
   background: var(--color-gray);
 }
 
+/* Additional classes*/
 .ur-title {
   color: var(--color-black);
    background-color: var(--color-yellow);;
+}
+
+.question {
+  background-color: #EECFA1;
+  padding: 0.25px;
+  font-style: italic;
 }
 
 .inverse {
@@ -419,3 +426,38 @@ img {
 }
 
 .smaller {font-size: 80%; }
+
+/* scrolling classes from sydney theme */
+
+.scroll-box-8 {
+  height:8em;
+  overflow-y: scroll;
+}
+.scroll-box-10 {
+  height:10em;
+  overflow-y: scroll;
+}
+.scroll-box-12 {
+  height:12em;
+  overflow-y: scroll;
+}
+.scroll-box-14 {
+  height:14em;
+  overflow-y: scroll;
+}
+.scroll-box-16 {
+  height:16em;
+  overflow-y: scroll;
+}
+.scroll-box-18 {
+  height:18em;
+  overflow-y: scroll;
+}
+.scroll-box-20 {
+  height:20em;
+  overflow-y: scroll;
+}
+.scroll-output {
+  height: 90%;
+  overflow-y: scroll;
+}
