@@ -9,6 +9,8 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
+    - text: "Cheatsheets"
+      href: https://www.rstudio.com/resources/cheatsheets/
 output: distill::distill_article
 #include: "static/"
 exclude: ["renv/", "renv.lock", ".Rproj.user", ".DS_Store"]
