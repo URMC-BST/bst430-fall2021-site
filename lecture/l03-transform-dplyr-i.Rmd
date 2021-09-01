@@ -28,7 +28,7 @@ library(emo)
 # library(mosaicData)
 # library(openintro)
 library(DT)
-knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+# knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
 ```
 
 ```{r setup, include=FALSE}
