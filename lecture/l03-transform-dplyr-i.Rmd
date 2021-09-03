@@ -65,8 +65,8 @@ dev.off <- function(){
 ## Announcements
 
 - Reminder: lab 1 due Friday 5pm.
-- Jonathan and Sam will have their office hour tomorrow 12:15-1:15.
-- Andrew will have an office hour Friday 10am-11am, via zoom.  (Link on blackboard).
+- Jonathan and Sam will have their office hour tomorrow 12:15-1:15, in the TA office.
+- Andrew will have an office hour Friday 10am-11am, in his office or via zoom.  (Link on blackboard).
 
 ---
 
