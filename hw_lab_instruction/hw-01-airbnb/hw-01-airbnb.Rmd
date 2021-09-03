@@ -56,7 +56,7 @@ You can load them, and the `nycbnb` data by running the following in your Consol
 
 ```{r load-packages, message = FALSE}
 library(tidyverse)
-nycbnb = read_csv('data/nylistings.csv')
+nycbnb = read_csv("https://urmc-bst.github.io/bst430-fall2021-site/hw_lab_instruction/hw-01-airbnb/data/nylistings.csv")
 ```
 
 ## Data
@@ -116,7 +116,7 @@ Let's de-construct this code:
 
 6.  Does there appear to be a relationship between the review scores (`review_scores_rating`) and price?  Make a plot and explain what you think might be going on.
 7.   Can you think of any weaknesses with how price is being defined in this dataset that affect the ability to make conclusions about it and its relationship with location and rating?  
-8.  [**extracredit**] Come up with a proposal using other variables present in the data set to ameliorate one or more of the weaknesses identified in 7, and implement it.
+8.  [**extracredit**] Come up with a proposal using other variables present in the data set to ameliorate one or more of the weaknesses identified in 7, and implement it.  Choose one of the previous questions to demonstrate if your proposal worked as intended.
 
 🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document on GitHub to make sure you're happy with the final state of your work.*
 
