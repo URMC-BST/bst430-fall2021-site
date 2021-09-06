@@ -38,8 +38,8 @@ MW 11:00-12:40, SRB 1402
     * Lab 1 [instructions](hw_lab_instruction/lab01-hello-r.html) and repo (accept GH classroom invite). Due 5pm Sept 3.
 3.  [dplyr(i)](lecture/l03-transform-dplyr-i.html)
     * Continue working on lab 1
-<!-- 4.  Lecture 4, data types.  Continue dplyr(i) lecture.
-    * HW 1 assigned.  [instructions](hw_lab_instruction/hw-01-airbnb/hw-01-airbnb.html) and repo (accept GH classroom invite).  Due 5pm EDT, Sept 13. -->
+4.  [Data types in R](lecture/l04-data-types.html). Finish dplyr(i) lecture.
+    * HW 1 assigned.  [instructions](hw_lab_instruction/hw-01-airbnb/hw-01-airbnb.html) and repo (accept GH classroom invite).  Due 5pm EDT, Sept 13.
 
 
 
