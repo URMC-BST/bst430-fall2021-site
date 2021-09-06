@@ -135,6 +135,11 @@ blockquote {
   color: var(--color-gray);
 }
 
+/* data science in a box overide */
+.light-blue {
+  color: var(--color-darkblue);
+}
+
 /* Additional font sizes */
 .small {
   font-size: 70%;
@@ -231,4 +236,18 @@ blockquote {
 }
 .font200 {
   font-size: 200%;
+}
+
+.midi { 
+  font-size: 85%;
+}
+
+.midi .remark-code { 
+  font-size: 85%; 
+}
+
+/* Handwriting */
+.hand{
+  font-family: var(--font-fancy);
+  font-size: 125%;
 }
