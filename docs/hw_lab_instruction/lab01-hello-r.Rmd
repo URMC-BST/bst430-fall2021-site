@@ -297,3 +297,8 @@ Once again click on the gear icon in on top of the R Markdown document, and sele
 
 *Yay, you're done! Commit all remaining changes, use the commit message "Done with Lab 1!", and push. Before you wrap up the assignment, make sure all documents are updated on your GitHub repo.*
 
+## Rubric (15 points possible)
+
+10 points if code and descriptions are complete for all questions.
+5 points for >= five commits with informative messages made to the repo.
+
