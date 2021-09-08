@@ -884,11 +884,11 @@ class: center, middle
 Factor objects are how R stores data for categorical variables (fixed numbers of discrete values).
 
 ```{r}
-(x = factor(c("BS", "MS", "PhD", "MS")))
+x = factor(c("BS", "MS", "PhD", "MS"))
 ```
 
 ```{r}
-str(x)
+attributes(x)
 ```
 
 ```{r}
@@ -938,9 +938,9 @@ ggplot(cat_lovers, mapping = aes(x = handedness)) +
 ![](l04/img/05b/hex-forcats.png)
 ]
 
-- R uses factors to handle categorical variables, variables that have a fixed and known set of possible values. Historically, factors were much easier to work with than character vectors, so many base R functions automatically convert character vectors to factors.
+- R uses factors to handle categorical variables, variables that have a fixed and known set of possible values. For historical reasons many base R functions automatically convert character vectors to factors, and have been heartily cursed by generations of R programmers for this default behavior.
 
-- However, factors are still useful when you have true categorical data, and when you want to override the ordering of character vectors to improve display. The goal of the forcats package is to provide a suite of useful tools that solve common problems with factors.
+- Factors **are** useful when you have true categorical data, and when you want to override the ordering of character vectors to improve display. The forcats package provides a suite of useful tools that solve common problems with factors.
 
 Source: [forcats.tidyverse.org](http://forcats.tidyverse.org/)
 
@@ -954,7 +954,7 @@ Source: [forcats.tidyverse.org](http://forcats.tidyverse.org/)
     
 - Be careful about data types / classes
     + Sometimes `R` makes silly assumptions about your data class 
-        + Using `tibble`s help, but it might not solve all issues
+        +  tibble`s have safer defaults, but won't fold your laundry for you
         + Think about your data in context, e.g. 0/1 variable is most likely a `factor`
     + If a plot/output is not behaving the way you expect, first
     investigate the data class with `str`
