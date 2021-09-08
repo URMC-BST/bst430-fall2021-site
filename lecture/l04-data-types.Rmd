@@ -135,6 +135,9 @@ cat_lovers %>%
   summarise(mean_cats = mean(number_of_cats))
 ```
 
+???
+
+This generates a warning for unknown (case_when specific) reasons
 ---
 
 ## Now that we know what we're doing...
@@ -556,7 +559,7 @@ R uses `NA` to represent missing values in its data structures.
 typeof(NA)
 ```
 
-.footnote[But there are also `NA_integer_`, `NA_real_` and `NA_character_`, which will be used in a vector of those types.]
+.footnote[There are also ```NA_integer_```, ```NA_real_``` and ```NA_character_```, occasionally needed to avoid warnings or errors about unplanned coercions.]
 ---
 
 ## Mental model for `NA`s
@@ -661,7 +664,7 @@ y[[2]]
 
 ## Vectors vs lists: the punchline
 
-*  vectors must be flat and "atomic"--comprised of only a single base R type: `logical`, `integer`, `numeric` or `character`.
+*  Plain vectors must be flat and "atomic"--comprised of only a single base R type: `logical`, `integer`, `numeric`, `complex` or `character`.
 
 *  Lists can be arbitrarily nested and contain any R object.
 
@@ -738,7 +741,9 @@ attributes(starwars)
 
 ## classes are compounds
 
-Classes are an `attribute` that signify a compound type (made of multiple elements or compounds).
+`class` is an `attribute` that signifies a **compound type** (made up of multiple elements or compounds).
+
+`class` is a special attribute. It affects what flavor of a function is applied.  We'll discuss this in greater detail in a few weeks.
 
 ---
 class: code70
@@ -839,6 +844,9 @@ cat_lovers %>%
 Do you believe this number? Why, why not?
 ]
 
+???
+
+Why this works within an error or warning is an entirely different question, and relates to the bowels of the `data.frame` methods for the `groupGeneric`.  I still can't figure out what method is being dispatched here and why it does what it does...
 ---
 
 ## A result of a pipeline is always a tibble
