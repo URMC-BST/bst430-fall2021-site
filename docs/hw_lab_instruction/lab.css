@@ -107,6 +107,16 @@ pre {
 
 /* Exercise counter */
 
+pro {
+	font-style: normal;
+	color: #FFA500;
+}
+
+con {
+	font-style: normal;
+	color: #00008B;
+}
+
 ol {
 	/* Remove the default left padding */
 	padding-left: 0;
