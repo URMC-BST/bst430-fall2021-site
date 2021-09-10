@@ -36,12 +36,12 @@ class: middle
 
 # .hand[We...]
 
-.huge[.green[have]] .hand[jingus data]
+.huge[.green[have]] .hand[unformatted or untidy data]
 
-.huge[.pink[want]] .hand[to reorganise the data to carry on with our analysis]
+.huge[.pink[want]] .hand[to reorganize the data to carry on with our analysis]
 
 ---
-
+class: code50
 ## Data: Sales
 
 ```{r include=FALSE}
@@ -56,10 +56,11 @@ prices = read_csv("l05-WIP/data/sales/prices.csv")
 
 .pull-left[
 ### .green[We have...]
+.code50[
 ```{r echo=FALSE}
 customers
 ```
-]
+]]
 
 --
 .pull-right[
@@ -82,9 +83,9 @@ include_graphics("l05-WIP/img/tidyr-part-of-tidyverse.png")
 .pull-right[
 The goal of tidyr is to help you tidy your data via
 
-- pivoting for going between wide and long data
+- **pivoting** between wide and long data
 - splitting and combining character columns
-- nesting and unnesting columns
+- **nesting** and unnesting columns
 - clarifying how `NA`s should be treated
 ]
 
@@ -253,8 +254,8 @@ purchases %>%
 
 .pull-left-narrow[
 - `data` (as usual)
-- `names_from`: which column in the long format contains the what should be column names in the wide format
-- `values_from`: which column in the long format contains the what should be values in the new columns in the wide format
+- `names_from`:  column in the long data pointing to the column names for the wide format
+- `values_from`: column in the long data containing the values in the new columns for the wide format
 ]
 .pull-right-wide[
 ```{r}
@@ -270,16 +271,16 @@ purchases %>%
 
 class: middle
 
-# Case study: Approval rating of Donald Trump
+# Case study: Approval rating of Joseph Biden
 
 ---
 
 ```{r echo=FALSE, out.width="70%"}
-knitr::include_graphics("l05-WIP/img/trump-approval.png")
+knitr::include_graphics("l05-WIP/img/biden-approval.png")
 ```
 
 .footnote[
-Source: [FiveThirtyEight](https://projects.fivethirtyeight.com/trump-approval-ratings/adults/)
+Source: [FiveThirtyEight](https://projects.fivethirtyeight.com/biden-approval-rating/adults/)
 ]
 
 ---
@@ -287,11 +288,11 @@ Source: [FiveThirtyEight](https://projects.fivethirtyeight.com/trump-approval-ra
 ## Data
 
 ```{r include=FALSE}
-trump = read_csv("l05-WIP/data/trump/trump.csv")
+biden = read_csv("l05-WIP/data/trump/biden.csv")
 ```
 
 ```{r}
-trump
+biden
 ```
 
 ---
@@ -300,7 +301,7 @@ trump
 
 .pull-left-wide[
 ```{r echo=FALSE, out.width="100%"}
-trump %>%
+biden %>%
   pivot_longer(
     cols = c(approval, disapproval),
     names_to = "rating_type",
@@ -314,7 +315,7 @@ trump %>%
   labs( 
     x = "Date", y = "Rating", 
     color = NULL, 
-    title = "How (un)popular is Donald Trump?", 
+    title = "How (un)popular is Joseph Biden?", 
     subtitle = "Estimates based on polls of all adults and polls of likely/registered voters", 
     caption = "Source: FiveThirtyEight modeling estimates" 
   ) + 
@@ -338,14 +339,14 @@ trump %>%
 ## Pivot
 
 ```{r output.lines=11}
-trump_longer = trump %>%
+biden_longer = biden %>%
   pivot_longer(
     cols = c(approval, disapproval),
     names_to = "rating_type",
     values_to = "rating_value"
   )
 
-trump_longer
+biden_longer
 ```
 
 ---
@@ -353,7 +354,7 @@ trump_longer
 ## Plot
 
 ```{r fig.asp = 0.5}
-ggplot(trump_longer, 
+ggplot(biden_longer, 
        aes(x = date, y = rating_value, color = rating_type, group = rating_type)) +
   geom_line() +
   facet_wrap(~ subgroup)
@@ -364,8 +365,8 @@ ggplot(trump_longer,
 .panelset[
 
 .panel[.panel-name[Code]
-```{r "trump-plot", fig.show="hide"}
-ggplot(trump_longer, 
+```{r "biden-plot", fig.show="hide"}
+ggplot(biden_longer, 
        aes(x = date, y = rating_value, 
            color = rating_type, group = rating_type)) +
   geom_line() +
@@ -374,7 +375,7 @@ ggplot(trump_longer,
   labs( #<<
     x = "Date", y = "Rating", #<<
     color = NULL, #<<
-    title = "How (un)popular is Donald Trump?", #<<
+    title = "How (un)popular is Joseph Biden?", #<<
     subtitle = "Estimates based on polls of all adults and polls of likely/registered voters", #<<
     caption = "Source: FiveThirtyEight modeling estimates" #<<
   ) #<<
@@ -382,7 +383,7 @@ ggplot(trump_longer,
 ]
 
 .panel[.panel-name[Plot]
-```{r ref.label="trump-plot", echo = FALSE, out.width="75%"}
+```{r ref.label="biden-plot", echo = FALSE, out.width="75%"}
 ```
 ]
 
@@ -393,8 +394,8 @@ ggplot(trump_longer,
 .panelset[
 
 .panel[.panel-name[Code]
-```{r "trump-plot-2", fig.show="hide"}
-ggplot(trump_longer, 
+```{r "biden-plot-2", fig.show="hide"}
+ggplot(biden_longer, 
        aes(x = date, y = rating_value, 
            color = rating_type, group = rating_type)) +
   geom_line() +
@@ -403,7 +404,7 @@ ggplot(trump_longer,
   labs( 
     x = "Date", y = "Rating", 
     color = NULL, 
-    title = "How (un)popular is Donald Trump?", 
+    title = "How (un)popular is Joseph Biden?", 
     subtitle = "Estimates based on polls of all adults and polls of likely/registered voters", 
     caption = "Source: FiveThirtyEight modeling estimates" 
   ) + 
@@ -413,7 +414,7 @@ ggplot(trump_longer,
 ]
 
 .panel[.panel-name[Plot]
-```{r ref.label="trump-plot-2", echo = FALSE, out.width="75%", fig.width=6}
+```{r ref.label="biden-plot-2", echo = FALSE, out.width="75%", fig.width=6}
 ```
 ]
 
@@ -731,7 +732,7 @@ class: middle
 ## Student records
 
 - Have:
-  - Enrolment: official university enrolment records
+  - Enrollment: official university enrollment records
   - Survey: Student provided info missing students who never filled it out and including students who filled it out but dropped the class
 - Want: Survey info for all enrolled in class 
 
@@ -858,3 +859,18 @@ purchases %>%
 
 ]
 
+---
+class: middle
+
+.huge[.hand[Just a lil' bit more dplyr]]
+
+---
+
+* grouped mutates and filters
+* grouping by multiple variables
+* ungrouping
+* beware empty groups when tabulating
+* repeating an operation on multiple columns with `across`
+* special selection operators
+* row names and row numbers
+* list columns (save for later?)
