@@ -140,6 +140,10 @@ blockquote {
   color: var(--color-darkblue);
 }
 
+.pink {
+  color: var(--color-orange);
+}
+
 /* Additional font sizes */
 .small {
   font-size: 70%;
