@@ -123,3 +123,8 @@ Let's de-construct this code:
 
 🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document on GitHub to make sure you're happy with the final state of your work.*
 
+# Rubric: 26 points total
+
+* 21 points for responses to Ex1-Ex7 @ 3 points per Ex.
+* 5 points for consistent and informative commit messages
+* Up to 5 points extra credit available for Ex 8.  Needs to be an excellent answer to get all five points, though!
