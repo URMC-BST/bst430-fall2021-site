@@ -19,7 +19,8 @@ output:
       titleSlideClass: ['ur-title', 'center', 'middle']
       ratio: "3:2"
 ---
-  
+class: middle
+
 ```{r setup, include=FALSE}
 # R options
 options(
@@ -44,9 +45,8 @@ htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 library(tidyverse)
 ```
   
-class: middle
 
-.huge[.hand[Just a lil' bit more dplyr]]
+.hand[# A lil' bit more dplyr]
 
 ---
 
@@ -95,6 +95,10 @@ It's easy to group by multiple variables:
 flights %>% group_by(<var_1>, <var_2>, ..., <var_n>) %>%
    summarize()
 ```
+
+---
+
+## `group_by()` caveat
 
 Be aware that this only returns the combinations of var_1, var_2, ... that exist in the data. This can lead to erroneous calculations if you are joining tables downstream. To get the Cartesian product:
 
@@ -154,9 +158,7 @@ In general you should set `.groups` explicitly.
 
 ---
 
-## `ungroup()`
-
-Use `ungroup()` to remove grouping variables.
+## `ungroup()` to remove grouping variables.
 
 .pull-left[
 Default
