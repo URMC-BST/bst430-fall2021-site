@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>BST430 Lecture 5b</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Andrew McDavid" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/lexis.css" type="text/css" />
+    <link rel="stylesheet" href="css/lexis-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: ur-title, center, middle, title-slide
+
+# BST430 Lecture 5b
+## dplyr ii
+### Andrew McDavid
+### U of Rochester
+### 2021-09-12 (updated: 2021-09-12)
+
+---
+
+  
+
+  
+class: middle
+
+.huge[.hand[Just a lil' bit more dplyr]]
+
+---
+
+## Agenda
+
+* grouping by multiple variables
+* Empty groups and summarizing
+* ungrouping
+* grouped mutates and filters
+* repeating an operation on multiple columns with `across`
+* special selection operators
+* row names and row numbers
+
+---
+class: code70
+
+## grouping
+
+As we saw in lecture 3 by adding `group_by()` to a pipeline, we stratify by a categorical variable when we `summarize()`:
+.pull-left[
+**Grand margin**
+
+```r
+library(nycflights13)
+ontime = flights %&gt;% 
+  mutate(ontime = arr_delay &lt;= 0)  
+ontime %&gt;% 
+  summarize(ontime_pct = mean(ontime, na.rm = TRUE)*100)
+```
+
+```
+## # A tibble: 1 × 1
+##   ontime_pct
+##        &lt;dbl&gt;
+## 1       59.4
+```
+]
+
+.pull-right[
+**stratified by carrier**
+
+```r
+ontime %&gt;% group_by(carrier) %&gt;% 
+* summarize(ontime_pct = mean(ontime, na.rm = TRUE)*100)
+```
+
+```
+## # A tibble: 16 × 2
+##    carrier ontime_pct
+##    &lt;chr&gt;        &lt;dbl&gt;
+##  1 9E            61.6
+##  2 AA            66.5
+##  3 AS            73.3
+##  4 B6            56.3
+##  5 DL            65.6
+##  6 EV            52.1
+##  7 F9            42.4
+##  8 FL            40.3
+##  9 HA            71.6
+## 10 MQ            53.3
+## 11 OO            65.5
+## 12 UA            61.5
+## 13 US            62.9
+## 14 VX            65.9
+## 15 WN            56.0
+## 16 YV            52.6
+```
+]
+
+---
+
+## `group_by()` multiple variables
+
+It's easy to group by multiple variables:
+
+```r
+flights %&gt;% group_by(&lt;var_1&gt;, &lt;var_2&gt;, ..., &lt;var_n&gt;) %&gt;%
+   summarize()
+```
+
+Be aware that this only returns the combinations of var_1, var_2, ... that exist in the data. This can lead to erroneous calculations if you are joining tables downstream. To get the Cartesian product:
+
+1.  Convert `var1`, `var2`, ... to factors with `factor`.&lt;sup&gt;1&lt;/sup&gt;
+2.  Set  `group_by(..., .drop = FALSE)`.
+
+.footnote[[1] We'll discuss the pain and pleasure&lt;sup&gt;2&lt;/sup&gt; of factors in greater detail next week.
+
+[2] If you are a masochist.]
+
+---
+
+class: code70
+## `group_by()` multiple variables
+
+.pull-left[
+
+```r
+ontime_drop = ontime %&gt;% group_by(carrier, dest) %&gt;% 
+  summarize(ontime_pct = mean(ontime, na.rm  = TRUE)*100)
+ontime_drop
+```
+
+```
+## # A tibble: 314 × 3
+## # Groups:   carrier [16]
+##    carrier dest  ontime_pct
+##    &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt;
+##  1 9E      ATL         50  
+##  2 9E      AUS         50  
+##  3 9E      AVL         80  
+##  4 9E      BGR        NaN  
+##  5 9E      BNA         61.1
+##  6 9E      BOS         66.0
+##  7 9E      BTV        100  
+##  8 9E      BUF         64.5
+##  9 9E      BWI         62.7
+## 10 9E      CAE         66.7
+## # … with 304 more rows
+```
+]
+
+.pull-right[
+
+```r
+ontime = ontime %&gt;% 
+* mutate(carrier = factor(carrier), dest = factor(dest))
+ontime_keep = ontime %&gt;% group_by(carrier, dest, 
+*                                 .drop = FALSE) %&gt;%
+  summarize(ontime_pct = mean(ontime, na.rm  = TRUE)*100)
+ontime_keep
+```
+
+```
+## # A tibble: 1,680 × 3
+## # Groups:   carrier [16]
+##    carrier dest  ontime_pct
+##    &lt;fct&gt;   &lt;fct&gt;      &lt;dbl&gt;
+##  1 9E      ABQ          NaN
+##  2 9E      ACK          NaN
+##  3 9E      ALB          NaN
+##  4 9E      ANC          NaN
+##  5 9E      ATL           50
+##  6 9E      AUS           50
+##  7 9E      AVL           80
+##  8 9E      BDL          NaN
+##  9 9E      BGR          NaN
+## 10 9E      BHM          NaN
+## # … with 1,670 more rows
+```
+]
+
+---
+
+## Show an example of a join error when we don't group_by multiple
+
+---
+
+
+
+## grouping is contagious
+
+Note the message:
+
+&gt;  `summarise()` has grouped output by 'carrier'. You can override using the `.groups` argument.
+
+This is telling us that by default, the output will be grouped if we use it in another pipeline.
+
+For the same of screen real estate, I'm going to turn off this message going forward:
+
+```r
+options(dplyr.summarise.inform = FALSE)
+```
+
+In general you should set `.groups` explicitly.
+
+---
+
+## `ungroup()`
+
+Use `ungroup()` to remove grouping variables.
+
+.pull-left[
+Default
+
+```r
+ontime_drop %&gt;% summarize(n_dest = n_distinct(dest))
+```
+
+```
+## # A tibble: 16 × 2
+##    carrier n_dest
+##    &lt;chr&gt;    &lt;int&gt;
+##  1 9E          49
+##  2 AA          19
+##  3 AS           1
+##  4 B6          42
+##  5 DL          40
+##  6 EV          61
+##  7 F9           1
+##  8 FL           3
+##  9 HA           1
+## 10 MQ          20
+## 11 OO           5
+## 12 UA          47
+## 13 US           6
+## 14 VX           5
+## 15 WN          11
+## 16 YV           3
+```
+]
+
+.pull-right[
+ungrouped
+
+```r
+*ontime_drop %&gt;% ungroup() %&gt;%
+  summarize(n_dest = n_distinct(dest))
+```
+
+```
+## # A tibble: 1 × 1
+##   n_dest
+##    &lt;int&gt;
+## 1    105
+```
+]
+---
+
+## `group_by() filter()`
+
+We can combine group_by with filter, mutate or arrange to evaluate these verbes on each group.
+
+
+```r
+ontime_1500 = ontime %&gt;% group_by(dest) %&gt;% filter(n() &gt; 1500) %&gt;%
+  mutate(n_flights_dest = n(), .after = 1)
+
+ontime_1500 %&gt;% arrange(n_flights_dest)
+```
+
+```
+## # A tibble: 314,599 × 21
+## # Groups:   dest [53]
+##     year n_flights_dest month   day dep_time sched_dep_time
+##    &lt;int&gt;          &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013           1525     1     1     1304           1227
+##  2  2013           1525     1     1     1732           1630
+##  3  2013           1525     1     2      834            823
+##  4  2013           1525     1     2     1228           1229
+##  5  2013           1525     1     2     1909           1621
+##  6  2013           1525     1     3      856            820
+##  7  2013           1525     1     3     1311           1230
+##  8  2013           1525     1     3     1637           1616
+##  9  2013           1525     1     4      818            822
+## 10  2013           1525     1     4     1302           1230
+## # … with 314,589 more rows, and 15 more variables:
+## #   dep_delay &lt;dbl&gt;, arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;fct&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;fct&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, ontime &lt;lgl&gt;
+```
+
+---
+
+## Carrier performance by destination
+
+
+```r
+ontime_drop = ontime_1500 %&gt;% group_by(dest, carrier) %&gt;%  
+  summarize(ontime_pct = mean(ontime, na.rm  = TRUE)*100)
+ggplot(ontime_drop, aes(y = ontime_pct, x = dest)) + geom_point() + coord_flip()
+```
+
+![](l05b-advanced-dplyr_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+.question[What's with the carriers with 0% or 100% ontime percentages for a destination?]
+
+---
+
+## Law of small numbers
+
+
+```r
+ontime_drop = ontime_1500 %&gt;% group_by(dest, carrier) %&gt;%  
+  summarize(ontime_pct = mean(ontime, na.rm  = TRUE)*100,
+            n_departed = sum(!is.na(ontime)))
+
+ggplot(ontime_drop, aes(y = ontime_pct, x = dest, color = n_departed&lt;10)) + geom_point() + coord_flip()
+```
+
+![](l05b-advanced-dplyr_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+---
+
+## Without small numbers
+
+
+```r
+ontime_drop_10 = filter(ontime_drop, n_departed &gt; 10)
+ggplot(ontime_drop_10, aes(y = ontime_pct, x = dest)) + geom_boxplot() + coord_flip()
+```
+
+![](l05b-advanced-dplyr_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+This is better, but it's hard to figure out which routes have the worst systematic performance.
+
+---
+
+## A sensible plot order
+
+
+```r
+ ontime_drop_10 = ontime_drop_10 %&gt;% ungroup() %&gt;% 
+  mutate(dest = forcats::fct_reorder(dest, ontime_pct))
+ggplot(ontime_drop_10, aes(x = dest, y = ontime_pct)) + geom_boxplot() + coord_flip()
+```
+
+![](l05b-advanced-dplyr_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+We'll discuss the `fct_reorder` business in greater detail next week.
+
+---
+class: middle
+
+.hand[# Repeating an operation with `across`]
+
+---
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "3:2"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

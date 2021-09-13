@@ -1,0 +1,245 @@
+---
+title: "BST430  Lecture 5b"
+subtitle: "dplyr ii"
+author: "Andrew McDavid"
+institute: "U of Rochester"
+date: "2021-09-12 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    css:
+      - default
+      - css/lexis.css
+      - css/lexis-fonts.css
+    lib_dir: libs
+    seal: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      titleSlideClass: ['ur-title', 'center', 'middle']
+      ratio: "3:2"
+---
+  
+```{r setup, include=FALSE}
+# R options
+options(
+  htmltools.dir.version = FALSE, # for blogdown
+  show.signif.stars = FALSE    # for regression output
+)
+# Set dpi and height for images
+library(knitr)
+opts_chunk$set(fig.height = 2.65, dpi = 300) 
+# ggplot2 color palette with gray
+color_palette <- list(gray = "#999999", 
+                      salmon = "#E69F00", 
+                      lightblue = "#56B4E9", 
+                      green = "#009E73", 
+                      yellow = "#F0E442", 
+                      darkblue = "#0072B2", 
+                      red = "#D55E00", 
+                      purple = "#CC79A7")
+# For nonsese...
+#library(emo)
+htmltools::tagList(rmarkdown::html_dependency_font_awesome())
+library(tidyverse)
+```
+  
+class: middle
+
+.huge[.hand[Just a lil' bit more dplyr]]
+
+---
+
+## Agenda
+
+* grouping by multiple variables
+* Empty groups and summarizing
+* ungrouping
+* grouped mutates and filters
+* repeating an operation on multiple columns with `across`
+* special selection operators
+* row names and row numbers
+
+---
+class: code70
+
+## grouping
+
+As we saw in lecture 3 by adding `group_by()` to a pipeline, we stratify by a categorical variable when we `summarize()`:
+.pull-left[
+**Grand margin**
+```{r}
+library(nycflights13)
+ontime = flights %>% 
+  mutate(ontime = arr_delay <= 0)  
+ontime %>% 
+  summarize(ontime_pct = mean(ontime, na.rm = TRUE)*100)
+```
+]
+
+.pull-right[
+**stratified by carrier**
+```{r}
+ontime %>% group_by(carrier) %>% 
+  summarize(ontime_pct = mean(ontime, na.rm = TRUE)*100) #<<
+```
+]
+
+---
+
+## `group_by()` multiple variables
+
+It's easy to group by multiple variables:
+
+```r
+flights %>% group_by(<var_1>, <var_2>, ..., <var_n>) %>%
+   summarize()
+```
+
+Be aware that this only returns the combinations of var_1, var_2, ... that exist in the data. This can lead to erroneous calculations if you are joining tables downstream. To get the Cartesian product:
+
+1.  Convert `var1`, `var2`, ... to factors with `factor`.<sup>1</sup>
+2.  Set  `group_by(..., .drop = FALSE)`.
+
+.footnote[[1] We'll discuss the pain and pleasure<sup>2</sup> of factors in greater detail next week.
+
+[2] If you are a masochist.]
+
+---
+
+class: code70
+## `group_by()` multiple variables
+
+.pull-left[
+```{r}
+ontime_drop = ontime %>% group_by(carrier, dest) %>% 
+  summarize(ontime_pct = mean(ontime, na.rm  = TRUE)*100)
+ontime_drop
+```
+]
+
+.pull-right[
+```{r}
+ontime = ontime %>% 
+  mutate(carrier = factor(carrier), dest = factor(dest)) #<<
+ontime_keep = ontime %>% group_by(carrier, dest, 
+                                  .drop = FALSE) %>% #<<
+  summarize(ontime_pct = mean(ontime, na.rm  = TRUE)*100)
+ontime_keep
+```
+]
+
+---
+
+## Show an example of a join error when we don't group_by multiple
+
+---
+
+
+
+## grouping is contagious
+
+Note the message:
+
+>  `summarise()` has grouped output by 'carrier'. You can override using the `.groups` argument.
+
+This is telling us that by default, the output will be grouped if we use it in another pipeline.
+
+For the same of screen real estate, I'm going to turn off this message going forward:
+```{r}
+options(dplyr.summarise.inform = FALSE)
+```
+
+In general you should set `.groups` explicitly.
+
+---
+
+## `ungroup()`
+
+Use `ungroup()` to remove grouping variables.
+
+.pull-left[
+Default
+```{r}
+ontime_drop %>% summarize(n_dest = n_distinct(dest))
+```
+]
+
+.pull-right[
+ungrouped
+```{r}
+ontime_drop %>% ungroup() %>% #<<
+  summarize(n_dest = n_distinct(dest))
+```
+]
+---
+
+## `group_by() filter()`
+
+We can combine group_by with filter, mutate or arrange to evaluate these verbes on each group.
+
+```{r}
+ontime_1500 = ontime %>% group_by(dest) %>% filter(n() > 1500) %>%
+  mutate(n_flights_dest = n(), .after = 1)
+
+ontime_1500 %>% arrange(n_flights_dest)
+
+```
+
+---
+
+## Carrier performance by destination
+
+```{r, fig.width = 10, fig.asp=2}
+ontime_drop = ontime_1500 %>% group_by(dest, carrier) %>%  
+  summarize(ontime_pct = mean(ontime, na.rm  = TRUE)*100)
+ggplot(ontime_drop, aes(y = ontime_pct, x = dest)) + geom_point() + coord_flip()
+```
+
+.question[What's with the carriers with 0% or 100% ontime percentages for a destination?]
+
+---
+
+## Law of small numbers
+
+```{r}
+ontime_drop = ontime_1500 %>% group_by(dest, carrier) %>%  
+  summarize(ontime_pct = mean(ontime, na.rm  = TRUE)*100,
+            n_departed = sum(!is.na(ontime)))
+
+ggplot(ontime_drop, aes(y = ontime_pct, x = dest, color = n_departed<10)) + geom_point() + coord_flip()
+```
+
+---
+
+## Without small numbers
+
+```{r}
+ontime_drop_10 = filter(ontime_drop, n_departed > 10)
+ggplot(ontime_drop_10, aes(y = ontime_pct, x = dest)) + geom_boxplot() + coord_flip()
+```
+
+This is better, but it's hard to figure out which routes have the worst systematic performance.
+
+---
+
+## A sensible plot order
+
+```{r}
+ ontime_drop_10 = ontime_drop_10 %>% ungroup() %>% 
+  mutate(dest = forcats::fct_reorder(dest, ontime_pct))
+ggplot(ontime_drop_10, aes(x = dest, y = ontime_pct)) + geom_boxplot() + coord_flip()
+```
+
+We'll discuss the `fct_reorder` business in greater detail next week.
+
+---
+class: middle
+
+.hand[# Repeating an operation with `across`]
+
+---
+
+
+
+

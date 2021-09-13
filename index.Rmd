@@ -40,6 +40,10 @@ MW 11:00-12:40, SRB 1402
     * Continue working on lab 1
 4.  [Data types in R](lecture/l04-data-types.html). Finish dplyr(i) lecture.
     * HW 1 assigned.  [instructions](hw_lab_instruction/hw-01-airbnb/hw-01-airbnb.html) and repo (accept GH classroom invite).  Due 5pm EDT, Sept 13.
+5.  [Reshaping and combining data frames](lecture/l05a-reshape-merge.html). Finish data types lecture.
+    *  [Lab 2](hw_lab_instruction/lab02-merge-conflict/lab02-merge-conflict.html). You will need to accept an invitation to join the URMC-BST organization to get access to your repositories to complete these.  Most labs will be completed **in groups** going forward -- if you cannot attend class in person for whatever reason, let me know and I'll set up zoom so you can participate **synchronously and remotely.**
+6.  Dplyr(ii), style guide.
+    *  [Lab 3](hw_lab_instruction/lab03-laquinta-uno/lab03-laquinta-uno.html).  To be completed in same group as lab 2.
 
 
 
