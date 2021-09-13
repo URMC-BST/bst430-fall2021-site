@@ -105,7 +105,7 @@ I recommend putting your hands in your pockets or sitting on them when it's not 
 
 🛑 Make sure the previous role has finished before moving on to the next step.
 
-**Role 4:**
+**Role 4 (pick anyone except the Role 3 participant)**
 
 -   Change the label of the first code chunk to something other than previous role did.
 -   Knit, commit, push. You should get an error.
@@ -113,7 +113,12 @@ I recommend putting your hands in your pockets or sitting on them when it's not 
 
 🛑 Make sure the previous role has finished before moving on to the next step.
 
-**Everyone:** Pull, and observe the changes in your document.
+**Everyone:** Pull, and observe the changes in your document.  
+
+Discuss the following in your group: 
+
+1.  does anyone need to push anything at this point for the exercise to be completed as far as your instructors or TAs are concerned?
+2.  Does anyone need to pull anything at this point for their local version of the repository to be complete?  If so, go ahead and do this.
 
 ## Tips for collaborating via GitHub
 
