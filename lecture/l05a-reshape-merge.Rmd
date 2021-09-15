@@ -30,6 +30,8 @@ output:
 
 ## Announcements
 
+1.  Office hours Friday moved to noon (or by appointment) and will be virtual.
+<br>
 1.  Make sure that you don't have any "M" status in your homework 1 -- these are files with modifications that haven't been pushed to github.  I have observed that some people  haven't pushed the .md files.
 2.  If you are having troubles, I am available for consult after class.
 3.  Remember that you can always make corrections to an assignment for partial credit.
