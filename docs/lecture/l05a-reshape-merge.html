@@ -1396,6 +1396,119 @@ survey %&gt;%
 ]
 
 ---
+class: code50
+
+## Specify key(s) with `by`
+
+.pull-left[
+
+```r
+left_join(enrollment, survey)
+```
+
+```
+## Joining, by = c("id", "name")
+```
+
+```
+## # A tibble: 3 × 3
+##      id name            username            
+##   &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;               
+## 1     1 Dave Friday     &lt;NA&gt;                
+## 2     2 Hermine         bakealongwithhermine
+## 3     3 Sura Selvarajah &lt;NA&gt;
+```
+.question[What happened?]
+]
+
+--
+
+.pull-right[
+
+```r
+left_join(enrollment, survey, by = 'id')
+```
+
+```
+## # A tibble: 3 × 4
+##      id name.x          name.y  username            
+##   &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt;               
+## 1     1 Dave Friday     &lt;NA&gt;    &lt;NA&gt;                
+## 2     2 Hermine         Hermine bakealongwithhermine
+## 3     3 Sura Selvarajah Sura    surasbakes
+```
+]
+
+---
+
+## Specify the joining key(s) with `by`
+
+Can also provide the mapping between keys with 
+```r
+something_join(x, y, c(xkey1 = 'ykey1', xkey2 = 'ykey2'))
+```
+
+
+```r
+survey_rn = survey %&gt;% rename(survey_id = id, first_name = name)
+survey_rn
+```
+
+```
+## # A tibble: 4 × 3
+##   survey_id first_name username            
+##       &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;               
+## 1         2 Hermine    bakealongwithhermine
+## 2         3 Sura       surasbakes          
+## 3         4 Peter      peter_bakes         
+## 4         5 Mark       thebakingbuddha
+```
+
+---
+class: code50
+
+## Specifying joining keys with `by`
+
+.pull-left[
+Enrollment on left, `left_join`
+
+```r
+left_join(enrollment, survey_rn, by = c(id = "survey_id"))
+```
+
+```
+## # A tibble: 3 × 4
+##      id name            first_name username            
+##   &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;               
+## 1     1 Dave Friday     &lt;NA&gt;       &lt;NA&gt;                
+## 2     2 Hermine         Hermine    bakealongwithhermine
+## 3     3 Sura Selvarajah Sura       surasbakes
+```
+]
+
+.pull-right[
+Enrollment on right, `right_join`
+
+```r
+right_join(survey_rn, enrollment, by = c(survey_id = "id"))
+```
+
+```
+## # A tibble: 3 × 4
+##   survey_id first_name username             name           
+##       &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;                &lt;chr&gt;          
+## 1         2 Hermine    bakealongwithhermine Hermine        
+## 2         3 Sura       surasbakes           Sura Selvarajah
+## 3         1 &lt;NA&gt;       &lt;NA&gt;                 Dave Friday
+```
+]
+
+.question[What is similar and what is different about this?]
+
+--
+
+.alert[Punchline: same column names should imply same key type!] (Converse need not hold.)
+---
 
 class: middle
 

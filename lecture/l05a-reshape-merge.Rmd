@@ -918,6 +918,64 @@ survey %>%
 ]
 
 ---
+class: code50
+
+## Specify key(s) with `by`
+
+.pull-left[
+```{r, message = TRUE}
+left_join(enrollment, survey)
+```
+.question[What happened?]
+]
+
+--
+
+.pull-right[
+```{r, message = TRUE}
+left_join(enrollment, survey, by = 'id')
+```
+]
+
+---
+
+## Specify the joining key(s) with `by`
+
+Can also provide the mapping between keys with 
+```r
+something_join(x, y, c(xkey1 = 'ykey1', xkey2 = 'ykey2'))
+```
+
+```{r}
+survey_rn = survey %>% rename(survey_id = id, first_name = name)
+survey_rn
+```
+
+---
+class: code50
+
+## Specifying joining keys with `by`
+
+.pull-left[
+Enrollment on left, `left_join`
+```{r}
+left_join(enrollment, survey_rn, by = c(id = "survey_id"))
+```
+]
+
+.pull-right[
+Enrollment on right, `right_join`
+```{r}
+right_join(survey_rn, enrollment, by = c(survey_id = "id"))
+```
+]
+
+.question[What is similar and what is different about this?]
+
+--
+
+.alert[Punchline: same column names should imply same key type!] (Converse need not hold.)
+---
 
 class: middle
 
