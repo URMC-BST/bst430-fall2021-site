@@ -1145,6 +1145,13 @@ However, it can be very helpful to think about dividing data into a primary tabl
 
 .footnote[[1] See Kimball and Ross. *The Data Warehouse Toolkit* for details.  It's surprisingly interesting and relevant.]
 
+
+---
+
+# Class survey
+
+[How are things going so far?]( https://docs.google.com/forms/d/e/1FAIpQLSc2ThD_7Q9yCWJs5ucHpnVeDg9JougMe7shI__Wb332UmAVzg/viewform?usp=sf_link)
+
 ---
 # Acknowledgments
 
