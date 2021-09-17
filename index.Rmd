@@ -44,7 +44,7 @@ MW 11:00-12:40, SRB 1402
     *  [Lab 2](hw_lab_instruction/lab02-merge-conflict/lab02-merge-conflict.html). You will need to accept an invitation to join the URMC-BST organization to get access to your repositories to complete these.  Most labs will be completed **in groups** going forward -- if you cannot attend class in person for whatever reason, let me know and I'll set up zoom so you can participate **synchronously and remotely.**
 6.  Finish L5a.
     *  [Lab 3](hw_lab_instruction/lab03-laquinta-uno/lab03-laquinta-uno.html).  To be completed in same group as lab 2.
-<!--7.  [dplyr(ii)](lecture/l05b-advanced-dplyr.html), [styleguide](lecture/l06-style.html)
-    * Lab 4.-->
+7.  [dplyr(ii)](lecture/l05b-advanced-dplyr.html), [styleguide](lecture/l06-style.html)
+    *  [Lab 4](hw_lab_instruction/lab04-laquinta-dos/lab04-laquinta-dos.html).  New groups!
 
 
