@@ -19,7 +19,7 @@ class: ur-title, center, middle, title-slide
 ## Coding Style
 ### Andrew McDavid
 ### U of Rochester
-### 2021-09-10 (updated: 2021-09-10)
+### 2021-09-10 (updated: 2021-09-16)
 
 ---
 
@@ -52,7 +52,8 @@ class: middle
 
 .hand[.light-blue[But seriously...]]
 
-- Applying a sensible and consistent style reduces bugs and increases the maintainability of your code.
+Applying a sensible and consistent style:
+- reduces bugs and increases the maintainability of your code.
 - Allows a temporary illusion of control over an otherwise chaotic and indifferent universe.
 --
 
@@ -109,7 +110,7 @@ acs_subsetted_for_males
 # Good
 average = mean(feet / 12 + inches, na.rm = TRUE)
 
-# Also good
+# Also OK
 average = mean(feet/12 + inches, na.rm = TRUE)
 
 
@@ -154,7 +155,11 @@ x = 2
 x &lt;- 2
 ```
 
+* This is a provocative take.
+
 ---
+## `&lt;-` Assignment
+
 .pull-left[
 .blue[###Pros]
 
@@ -168,6 +173,9 @@ paste0("x = ", x, " and y = ", y)
 ```
 ## [1] "x = 10 and y = 10"
 ```
+*  Could reduce confusion between `==` and 
+`=`?
+*  Looks cooler?
 ]
 .pull-right[
 .orange[### Cons]
@@ -175,9 +183,9 @@ paste0("x = ", x, " and y = ", y)
 *  It causes confusion:
 
 ```r
-x = 0
+y = 0
 cube_root = function(x) return(x^(1/3))
-*cube_root(x &lt;- 8)
+*cube_root(y &lt;- 8)
 ```
 
 ```
@@ -185,7 +193,7 @@ cube_root = function(x) return(x^(1/3))
 ```
 
 ```r
-x
+y
 ```
 
 ```
@@ -222,8 +230,20 @@ class: middle
 
 ---
 
+## Linting on github
 
+*  Your labs and homeworks will have "lint" (commentary based on the style guide) provided automatically via the (dark) magic of github Actions.
+*  Having lint-free (or as close as practical) at the time of final submission will be a part of your grade.
+*  The style guide and what I wrote here is ultimately the controlling source. It a bit more lenient then the lint (eg infix spacing).
+*  So if you have no lint warnings, you'll get full credit on this criteria.
 
+[demo]
+
+---
+
+### Acknowledgments
+
+[Data science in a box](https://www2.stat.duke.edu/courses/Spring18/Sta199/slides/lec-slides/05b-coding-style-data-types.html#1)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
