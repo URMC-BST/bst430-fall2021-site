@@ -89,7 +89,7 @@ You can find out more about the dataset in the NY open data portal:  https://dat
 4.  Recreate the following plot, and describe in context of the data. 
 
 ```{r, echo = FALSE, fig.fullwidth = TRUE, message = FALSE, results = 'hide'}
-foo = crashes %>% 
+crashes = crashes %>% 
   mutate(severity = fct_recode(`Crash Descriptor`,
                                          Fatal = "Fatal Accident",
                                          "Injury & Property" = "Property Damage & Injury Accident",
@@ -99,7 +99,7 @@ foo = crashes %>%
          is_weekend = ifelse(`Day of Week` %in% c('Saturday', 'Sunday'), 'weekend', 'weekday'), 
          decimal_hours = hour(Time) + minute(Time)/60)
 
-foo %>%
+crashes %>%
   ggplot(aes(x = decimal_hours, fill = severity)) +
   geom_density(alpha = 0.5) +
   facet_wrap(~is_weekend, ncol = 1) +
@@ -121,7 +121,7 @@ Describe the patterns you see for Property accidents vs Fatal accidents on the w
 5.  Recreate this plot:
 
 ```{r, echo = FALSE, fig.fullwidth = TRUE, message = FALSE, results = 'hide'}
-by_date = foo %>% count(dt, severity, .drop = FALSE) %>% mutate(`Day of Week` = weekdays(dt), is_weekend = ifelse(weekdays(dt) %in% c('Saturday', 'Sunday'), 'weekend', 'weekday'))
+by_date = crashes  %>% count(dt, severity, .drop = FALSE)
 
 date_severity = by_date %>% group_by(dt) %>% mutate(Total = sum(n)) %>%
   pivot_wider(c(dt, Total), names_from = severity, values_from = n) %>%
@@ -135,8 +135,9 @@ ggplot(date_severity, aes(x = Total, y = Fatal, color = season)) + geom_jitter(h
     subtitle = "New York, 2018-2019") + 
   theme_minimal() + scale_color_manual(labels = c("Nov-Apr", "May-Oct"), values = c('purple', 'orange'))
 ```
+Hint: use `lubridate::month`to extract the numeric index of the month.
 
-6. Upon what date did the highest total number of accidents occur?  Examine the data and columns provided, and see if you can determine a cause for the date with the highest total number of accidents.  In general, what a possible explanation for the pattern observed between warm-season (May-Oct) and cold-season (Nov-Apr) Total and Fatal accidents?
+6. Upon what date did the highest total number of accidents occur?  Examine the data and columns provided, and see if you can determine a cause for the date with the highest total number of accidents.  In general, what is a possible explanation for the pattern observed between warm-season (May-Oct) and cold-season (Nov-Apr) Total and Fatal accidents?
 
 7.  Create another data visualization based on these data and interpret it. You can choose any variables and any type of visualization you like, but it must have at least three variables, e.g. a scatterplot of x vs. y isn't enough, but if points are colored or faceted by z, that's fine. In your answer, don't forget to label your R chunk as well (where it says, `label-me-2`).
 
