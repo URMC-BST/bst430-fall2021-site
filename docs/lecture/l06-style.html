@@ -19,7 +19,7 @@ class: ur-title, center, middle, title-slide
 ## Coding Style
 ### Andrew McDavid
 ### U of Rochester
-### 2021-09-10 (updated: 2021-09-16)
+### 2021-09-10 (updated: 2021-09-19)
 
 ---
 
@@ -108,14 +108,13 @@ acs_subsetted_for_males
 
 ```r
 # Good
-average = mean(feet / 12 + inches, na.rm = TRUE)
+average = mean(feet * 12 + inches, na.rm = TRUE)
 
 # Also OK
-average = mean(feet/12 + inches, na.rm = TRUE)
-
+average = mean(feet*12 + inches, na.rm = TRUE)
 
 # Bad
-average=mean(feet/12+inches,na.rm=TRUE)
+average=mean(feet*12+inches,na.rm=TRUE)
 ```
 
 ---
@@ -224,6 +223,80 @@ y = 1
 * [This](https://stackoverflow.com/questions/1741820/what-are-the-differences-between-and-assignment-operators-in-r) is a [matter](https://colinfay.me/r-assignment/) [of](https://win-vector.com/2013/04/23/prefer-for-assignment-in-r/) [debate](http://www.separatinghyperplanes.com/2018/02/why-you-should-use-and-never.html).
 
 ---
+
+## Magic `numeric()` or string literals
+
+* Avoid repeated use of literal constants
+
+
+```r
+# bad 
+volume = 3.14159 * r^3
+area = 4/3 * 3.14159 * r^2
+
+# good
+pi = 3.14159
+volume = pi * r^3
+area = 4/3 * pi * r^2
+```
+
+---
+
+## Convoluted logical expressions
+
+* Logical operators take the `TRUE` path when the condition evaluates to `TRUE`
+
+--
+* Corollary: never need to test `==TRUE` or `!=FALSE`.
+
+
+```r
+# Bad
+ifelse(is.na(x) == TRUE, 0, 1)
+```
+
+```
+## [1] 1
+```
+
+```r
+# Good
+ifelse(is.na(x), 0, 1)
+```
+
+```
+## [1] 1
+```
+
+---
+
+## Naughty shadowing
+
+* Avoid shadowing common R functions: `c`, `t`, `T`, `F`
+
+```r
+c = 'uhoh'
+c("uhoh", c)
+```
+
+```
+## [1] "uhoh" "uhoh"
+```
+
+* Corollary: don't use the sketchy `T` and `F` shortcuts for `TRUE` and `FALSE`:
+
+
+```r
+F = TRUE
+if(F) print("This shouldn't happen. I have broken the universe.")
+```
+
+```
+## [1] "This shouldn't happen. I have broken the universe."
+```
+
+---
+
 class: middle
 
 &lt;img src="https://media1.giphy.com/media/3o7abA4a0QCXtSxGN2/giphy.gif?cid=ecf05e47sgk0h030uln8hkxkyg8tsgtmuk0bajy04l5tt7wj&amp;rid=giphy.gif&amp;ct=g" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen&gt;&lt;/iframe&gt;&lt;p&gt;&lt;a href="https://giphy.com/gifs/futurama-professor-farnsworth-good-news-everyone-3o7abA4a0QCXtSxGN2"&gt;via GIPHY&lt;/a&gt;&lt;/p&gt;
@@ -237,7 +310,11 @@ class: middle
 *  The style guide and what I wrote here is ultimately the controlling source. It a bit more lenient then the lint (eg infix spacing).
 *  So if you have no lint warnings, you'll get full credit on this criteria.
 
-[demo]
+--
+
+* Much of the linting can be handled by Rstudio -&gt; Code -&gt; Reformat code!
+
+[demo of lint_assignment]
 
 ---
 
