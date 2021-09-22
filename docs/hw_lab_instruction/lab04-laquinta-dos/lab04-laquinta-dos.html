@@ -167,7 +167,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="packages" class="section level2">
 <h2>Packages</h2>
-<p>We’ll use the <strong>tidyverse</strong> package for much of the data wrangling and visualisation and the data lives in the <strong>dsbox</strong> package. We’ll be using <code>lintr</code> to check the code formatting, but the mechanics of this being handled by scripts the <code>lintr</code> directory. These packages are already installed for you. You can load them by running the following in your Console:</p>
+<p>We’ll use the <strong>tidyverse</strong> package for much of the data wrangling and visualization and the data lives in the <strong>dsbox</strong> package. We’ll be using <code>lintr</code> to check the code formatting, but the mechanics of this being handled by scripts the <code>lintr</code> directory. These packages are already installed for you. You can load them by running the following in your Console:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dsbox) </span></code></pre></div>
 <p><label for="tufte-mn-1" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-1" class="margin-toggle"><span class="marginnote"><span style="display: block;">Feel free to poke around in the <code>lintr</code> directory if you are curious. If you want to experiment with different arguments to the lintr you may do so locally, but you will want to keep the <code>revert</code> button handy on the git pane so you can easily undo your changes. <strong>Don’t push any changes to files here or you might unleash skynet, or at least a bitcoin mining farm.</strong></span></span></p>
@@ -190,14 +190,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Exercises</h1>
 <ol start="0" style="list-style-type: decimal">
 <li><p><em>i.</em>🧹 Run <code>lint_assignment()</code>. What messages do you get in the “Markers” panel? Report them here. <em>ii.</em> Fix the formatting of the code in the <code>lintr-warm-up</code> chunk, and run <code>lint_assignment()</code> again. Verify that you now get no messages. <em>iii.</em> Push and verify that you have no annotations on the <em>lint-project</em> Action tab on github.com.</p></li>
-<li><p>Filter the Denny’s dataframe for Alaska (AK) and save the result as <code>dn_ak</code>. How many Denny’s locations are there in Alaska?</p></li>
+<li><p>Filter the Denny’s data frame for Alaska (AK) and save the result as <code>dn_ak</code>. How many Denny’s locations are there in Alaska?</p></li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dn_ak <span class="ot">=</span> dennys <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">&quot;AK&quot;</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dn_ak)</span></code></pre></div>
 <pre><code>## [1] 3</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li>Filter the La Quinta dataframe for Alaska (AK) and save the result as <code>lq_ak</code>. How many La Quinta locations are there in Alaska?</li>
+<li>Filter the La Quinta data frame for Alaska (AK) and save the result as <code>lq_ak</code>. How many La Quinta locations are there in Alaska?</li>
 </ol>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lq_ak <span class="ot">=</span> laquinta <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">&quot;AK&quot;</span>)</span>
@@ -248,7 +248,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ol start="4" style="list-style-type: decimal">
 <li>How many observations are in the joined <code>dn_lq_ak</code> data frame? What are the names of the variables in this data frame.</li>
 </ol>
-<p><code>.x</code> in the variable names means the variable comes from the <code>x</code> data frame (the first argument in the <code>full_join</code> call, i.e. <code>dn_ak</code>), and <code>.y</code> means the variable comes from the <code>y</code> data frame. These varibles are renamed to include <code>.x</code> and <code>.y</code> because the two data frames have the same variables and it’s not possible to have two variables in a data frame with the exact same name.</p>
+<p><code>.x</code> in the variable names means the variable comes from the <code>x</code> data frame (the first argument in the <code>full_join</code> call, i.e. <code>dn_ak</code>), and <code>.y</code> means the variable comes from the <code>y</code> data frame. These variables are renamed to include <code>.x</code> and <code>.y</code> because the two data frames have the same variables and it’s not possible to have two variables in a data frame with the exact same name.</p>
 <p>Now that we have the data in the format we wanted, all that is left is to calculate the distances between the pairs.</p>
 <p>🧹 🧶 ✅ ⬆️ Lint, Knit, <em>commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.</em></p>
 <p>One way of calculating the distance between any two points on the earth is to use the Haversine distance formula. This formula takes into account the fact that the earth is not flat, but instead spherical.</p>
@@ -275,19 +275,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>A parameter by which to round the responses</li>
 </ul>
 <ol start="5" style="list-style-type: decimal">
-<li><p>Calculate the distances between all pairs of Denny’s and La Quinta locations and save this variable as <code>distance</code>. Make sure to save this variable in THE <code>dn_lq_ak</code> data frame so that you can use it later.</p></li>
+<li><p>Still considering the state of Alaska, calculate the distances between all pairs of Denny’s and La Quinta locations and save this variable as <code>distance</code>. Save this variable in <code>dn_lq_ak</code> data frame so that you can use it later.</p></li>
 <li><p>Calculate the minimum distance between a Denny’s and La Quinta for each Denny’s location. To do so we group by Denny’s locations and calculate a new variable that stores the information for the minimum distance.</p></li>
 </ol>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dn_lq_ak_mindist <span class="ot">=</span> dn_lq_ak <span class="sc">%&gt;%</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(address.x) <span class="sc">%&gt;%</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">closest =</span> <span class="fu">min</span>(distance))</span></code></pre></div>
 <ol start="7" style="list-style-type: decimal">
-<li>Describe the distribution of the distances Denny’s and the nearest La Quinta locations in Alaska. Also include an appripriate visualization and relevant summary statistics.</li>
+<li>Describe the distribution of the nearest La Quinta location for each Denny’s in Alaska. Include an appropriate visualization.</li>
 </ol>
 <p>🧶 ✅ ⬆️ Knit, <em>commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.</em></p>
 <ol start="8" style="list-style-type: decimal">
 <li><p>Repeat the same analysis for New York: (i) filter Denny’s and La Quinta Data Frames for NY, (ii) join these data frames to get a complete list of all possible pairings, (iii) calculate the distances between all possible pairings of Denny’s and La Quinta in NY, (iv) find the minimum distance between each Denny’s and La Quinta location, (v) visualize and describe the distribution of these shortest distances using appropriate summary statistics.</p></li>
-<li><p>Repeat the same analysis for a state of your choosing, different than the ones we covered so far.</p></li>
+<li><p>Repeat the same analysis for a state of your choosing, different than the ones we covered so far. Note that there’s a way you could execute steps 8 and 9 simultaneously and generate a faceted visualization. If you understand how to do this, feel free to do so.</p></li>
 <li><p>Among the states you examined, where is Mitch Hedberg’s joke most likely to hold true? Explain your reasoning.</p></li>
 </ol>
 <p>🧹 🧶 ✅ ⬆️ Lint ,Knit, <em>commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document on GitHub to make sure you’re happy with the final state of your work.</em></p>

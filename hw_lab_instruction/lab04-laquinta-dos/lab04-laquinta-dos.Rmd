@@ -36,7 +36,7 @@ If anything is missing, commit and push again.
 
 ## Packages
 
-We'll use the **tidyverse** package for much of the data wrangling and visualisation and the data lives in the **dsbox** package.  We'll be using `lintr` to check the code formatting, but the mechanics of this being handled by scripts the `lintr` directory.
+We'll use the **tidyverse** package for much of the data wrangling and visualization and the data lives in the **dsbox** package.  We'll be using `lintr` to check the code formatting, but the mechanics of this being handled by scripts the `lintr` directory.
 These packages are already installed for you.
 You can load them by running the following in your Console:
 
@@ -72,7 +72,7 @@ You can also find this information [here](https://rstudio-education.github.io/ds
 
 0.  *i.*`r emo::ji("broom")` Run `lint_assignment()`.  What messages do you get in the "Markers" panel?  Report them here.  *ii.* Fix the formatting of the code in the `lintr-warm-up` chunk, and run `lint_assignment()` again.   Verify that you now get no messages.  *iii.* Push and verify that you have no annotations on the *lint-project* Action tab on github.com.
 
-1.  Filter the Denny's dataframe for Alaska (AK) and save the result as `dn_ak`. How many Denny's locations are there in Alaska?
+1.  Filter the Denny's data frame for Alaska (AK) and save the result as `dn_ak`. How many Denny's locations are there in Alaska?
 
 ```{r}
 dn_ak = dennys %>%
@@ -80,7 +80,7 @@ dn_ak = dennys %>%
 nrow(dn_ak)
 ```
 
-2.  Filter the La Quinta dataframe for Alaska (AK) and save the result as `lq_ak`. How many La Quinta locations are there in Alaska?
+2.  Filter the La Quinta data frame for Alaska (AK) and save the result as `lq_ak`. How many La Quinta locations are there in Alaska?
 
 ```{r}
 lq_ak = laquinta %>%
@@ -151,7 +151,7 @@ dn_lq_ak
 4.  How many observations are in the joined `dn_lq_ak` data frame? What are the names of the variables in this data frame.
 
 `.x` in the variable names means the variable comes from the `x` data frame (the first argument in the `full_join` call, i.e. `dn_ak`), and `.y` means the variable comes from the `y` data frame.
-These varibles are renamed to include `.x` and `.y` because the two data frames have the same variables and it's not possible to have two variables in a data frame with the exact same name.
+These variables are renamed to include `.x` and `.y` because the two data frames have the same variables and it's not possible to have two variables in a data frame with the exact same name.
 
 Now that we have the data in the format we wanted, all that is left is to calculate the distances between the pairs.
 
@@ -186,8 +186,8 @@ This function takes five arguments:
 -   Longitude and latitude of the second location
 -   A parameter by which to round the responses
 
-5.  Calculate the distances between all pairs of Denny's and La Quinta locations and save this variable as `distance`.
-    Make sure to save this variable in THE `dn_lq_ak` data frame so that you can use it later.
+5.  Still considering the state of Alaska, calculate the distances between all pairs of Denny's and La Quinta locations and save this variable as `distance`.
+    Save this variable in `dn_lq_ak` data frame so that you can use it later.
 
 6.  Calculate the minimum distance between a Denny's and La Quinta for each Denny's location.
     To do so we group by Denny's locations and calculate a new variable that stores the information for the minimum distance.
@@ -198,13 +198,13 @@ dn_lq_ak_mindist = dn_lq_ak %>%
   summarise(closest = min(distance))
 ```
 
-7.  Describe the distribution of the distances Denny's and the nearest La Quinta locations in Alaska. Also include an appripriate visualization and relevant summary statistics.
+7.  Describe the distribution of the nearest La Quinta location for each Denny's in Alaska. Include an appropriate visualization.
 
 🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.*
 
 8.  Repeat the same analysis for New York: (i) filter Denny's and La Quinta Data Frames for NY, (ii) join these data frames to get a complete list of all possible pairings, (iii) calculate the distances between all possible pairings of Denny's and La Quinta in NY, (iv) find the minimum distance between each Denny's and La Quinta location, (v) visualize and describe the distribution of these shortest distances using appropriate summary statistics.
 
-9. Repeat the same analysis for a state of your choosing, different than the ones we covered so far.
+9. Repeat the same analysis for a state of your choosing, different than the ones we covered so far.  Note that there's a way you could execute steps 8 and 9 simultaneously and generate a faceted visualization.  If you understand how to do this, feel free to do so.
 
 10. Among the states you examined, where is Mitch Hedberg's joke most likely to hold true?
     Explain your reasoning.
