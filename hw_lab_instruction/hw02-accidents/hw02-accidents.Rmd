@@ -73,12 +73,6 @@ You can find out more about the dataset in the NY open data portal:  https://dat
 
 1.  How many observations (rows) does the dataset have? Instead of hard coding the number in your answer, use inline code.
 
-```{r inline-nrows, include = F}
-nrows <- nrow(crashes)
-```
-
-The data set contains `r nrows` rows.
-
 ```{marginfigure}
 **Tired of typing your password?** Chances are your browser has already saved your password, but if not, you can ask Git to save (cache) your password for a period of time, where you indicate the period of time in seconds. For example, if you want it to cache your password for 1 hour, that would be 3,600 seconds. To do so, run the following *in the Console*: `usethis::use_git_config(credential.helper = "cache --timeout=3600")`. If you want to cache it for a longer time, you can adjust the number of seconds in the code.
 ```
@@ -122,8 +116,6 @@ crashes %>%
 
 Describe the patterns you see for Property accidents vs Fatal accidents on the weekdays vs weekends.
 
-On weekdays, fatal accidents seem to increase towards the afternoon, peaking around rush hour. During the weekends, fatal accidents are more steady, peaking slightly around 2AM and the afternoon. Property accidents on the other hand appear to have a bimodal distribution on weekdays, peaking around 9AM and 5PM. On weekends, there is a milder peak around 2PM. 
-
 `emo::ji("broom")` 🧶 ✅ ⬆️ Lint, Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.*
 
 5.  Recreate this plot:
@@ -147,30 +139,6 @@ Hint: use `lubridate::month`to extract the numeric index of the month.
 
 6. Upon what date did the highest total number of accidents occur?  Examine the data and columns provided, and see if you can determine a cause for the date with the highest total number of accidents.  In general, what is a possible explanation for the pattern observed between warm-season (May-Oct) and cold-season (Nov-Apr) Total and Fatal accidents?
 
-```{r finding most accidents, include=F}
-worst.date<-date_severity$dt[which.max(date_severity$Total)]
-mean(crashes$`Weather Conditions`[crashes$dt == worst.date] == "Snow")
-```
-
-The date with the highest total number of accidents was `r worst.date`. This could have been due to heavy snow on this date, as over half the crashes occurred under this condition. One possible explanation to the pattern is that, in the cold season, weather increases the number of accidents, but these are typically lower speed collisions, resulting in fewer fatalities. In the summer, there are fewer weather conditions to cause accidents, but the ability to drive at higher speeds increases the proportion of fatal accidents.
-
-
-7.  Create another data visualization based on these data and interpret it. You can choose any variables and any type of visualization you like, but it must have at least three variables, e.g. a scatterplot of x vs. y isn't enough, but if points are colored or faceted by z, that's fine. In your answer, don't forget to label your R chunk as well (where it says, `label-me-2`).
-
-```{r one-example}
-by_date_w = crashes  %>% count(dt, `Weather Conditions`, .drop = FALSE)
-date_severity_weather = by_date_w %>% group_by(dt) %>% mutate(Total = sum(n)) %>%
-  pivot_wider(c(dt, Total), names_from = `Weather Conditions`, values_from = n) %>%
-  mutate(m = month(dt), season = case_when(
-    m >= 11 | m <= 4 ~ 'cold',
-    TRUE ~ 'warm'))
-
-ggplot(date_severity_weather, aes(x = Total, y = Clear, color = season)) + geom_jitter(height = .2) + 
-  labs(y = 'N. Clear', x = 'N. Total',   
-       title = "Daily Clear Weather Accidents vs Daily Total Accidents",
-    subtitle = "New York, 2018-2019") + 
-  theme_minimal() + scale_color_manual(labels = c("Nov-Apr", "May-Oct"), values = c('blue', 'red'))
-
-```
+7.  Create another data visualization based on these data and interpret it. You can choose any variables and any type of visualization you like, but it must have at least three variables, e.g. a scatterplot of x vs. y isn't enough, but if points are colored or faceted by z, that's fine. In your answer, don't forget to label your R chunk as well.
 
 `r emo::ji("broom")` 🧶 ✅ ⬆️ Lint, Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document, and the lintr report on GitHub to make sure you're happy with the final state of your work.*

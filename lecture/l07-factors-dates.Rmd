@@ -339,6 +339,12 @@ flights %>%
 
 ---
 
+## Flights by day of week
+
+[code](l07/flights_day_of_week.R)
+
+---
+
 ## Other lubridate date functions
 
 *  Construct from month day year `mdy()`, or day month year `dmy()`
