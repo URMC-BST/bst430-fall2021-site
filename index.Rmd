@@ -48,5 +48,7 @@ MW 11:00-12:40, SRB 1402
     *  [Lab 4](hw_lab_instruction/lab04-laquinta-dos/lab04-laquinta-dos.html).  New groups!
 8.  [Factors and dates](lecture/l07-factors-dates.html)
     *  [HW 2](hw_lab_instruction/hw02-accidents/hw02-accidents.html) assigned.
+9.  Effective data visualization [video](https://youtu.be/ZrifrBvFWgg) and [slides](https://rstudio-education.github.io/datascience-box/course-materials/slides/u2-d14-effective-dataviz/u2-d14-effective-dataviz.html#1),  [rstudio.cloud project](https://rstudio.cloud/spaces/162296/project/2929636) and [quiz](https://docs.google.com/forms/d/e/1FAIpQLSdHAZGSFmErFF0FnZNRgbrxOPfcjFAQsjNA2Xlj-SdsOnWyqw/viewform?usp=sf_link).
+    * Continue working on lab 4.
 
 
