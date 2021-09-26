@@ -324,14 +324,27 @@ img {
   float: right;
   width: 59%;
 }
+
 .leftcol65 {
   float: left;
   width: 64%;
 }
+
+.pull-left-wide{
+  float: left;
+  width: 64%;
+}
+
+.pull-right-narrow{
+  float: right;
+  width: 34%;
+}
+
 .rightcol35 {
   float: right;
   width: 34%;
 }
+
 .leftcol35 {
   float: left;
   width: 34%;
