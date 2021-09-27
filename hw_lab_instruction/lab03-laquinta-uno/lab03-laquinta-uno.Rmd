@@ -225,3 +225,9 @@ Reiser's blog post focuses on scraping data from Denny's and La Quinta Inn and S
 In this lab we focus on visualization and analysis of these data.
 However note that the data scraping was also done in R, and we we will discuss web scraping using R later in the course.
 But for now we focus on the data that has already been scraped and tidied for you.
+
+## Rubric
+
+29 points:
+-  2 points per exercise for correctness of code and adequate prose description (where specified)
+-  5 points for adequately commented commits
