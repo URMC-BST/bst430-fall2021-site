@@ -1,5 +1,5 @@
 ---
-title: "Lab 06 - Take a sad plot and make it better"
+title: "Lab 05 - Take a sad plot and make it better"
 output: 
   tufte::tufte_html:
     css: ../lab.css
@@ -14,10 +14,10 @@ knitr::opts_chunk$set(eval = TRUE)
 
 Given below are two data visualizations that violate many data visualization best practices.
 Improve these visualizations using R and the tips for effective visualizations that we introduced in class.
-You should produce one visualization per dataset.
+For exercises 4 and 6, you should produce one visualization per dataset.
 Your visualization should be accompanied by a brief paragraph describing the choices you made in your improvement, specifically discussing what you didn't like in the original plots and why, and how you addressed them in the visualization you created.
 
-On the due date you will give a brief presentation describing one of your improved visualizations and the reasoning for the choices you made.
+In class on 6 October, you will give a brief presentation describing one of your improved visualizations and the reasoning for the choices you made.  For this, it's fine to just step through your markdown explaining the plot and code.
 
 # Learning goals
 
@@ -27,7 +27,7 @@ On the due date you will give a brief presentation describing one of your improv
 
 # Getting started
 
-Go to the course GitHub organization and locate your homework repo, clone it in RStudio and open the R Markdown document.
+Go to the course GitHub organization and locate your repo, clone it in RStudio and open the R Markdown document.
 Knit the document to make sure it compiles without errors.
 
 ## Warm up
