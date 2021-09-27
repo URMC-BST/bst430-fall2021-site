@@ -150,7 +150,7 @@ ggplot(edibnb_badnames, aes(x = Number of bathrooms, y = Price)) +
   geom_point()
 ```
 
-.footnote[[1] Must escape with backticks,e.g,  `\` Number of bathrooms \``]
+.footnote[[1] Must escape the object's name with backticks,e.g,  \`.]
 ---
 class: code70
 
@@ -273,7 +273,8 @@ Wondering where you remember these from?
 ]
 
 ```{r message=TRUE, output.lines=7}
-read_csv("l09/data/df-na.csv")
+data = read_csv("l09/data/df-na.csv")
+spec(data)
 ```
 
 ---
@@ -507,11 +508,13 @@ sales %>%
 
 ## File organization and rstudio cloud
 
--  We'll touch on this again, later when we pull off the training wheels and make and manage our own Rstudio projects using the desktop version of Rstudio
 -  Picking a sensible and consistent way to organize raw and processed data will save many headaches!
--  Hint: generally data should live in its own folder in the analysis project, but sometimes the loading and tidying of the data might be its own project, per se...
--  And sometimes data is too big or too sensitive to put on github.
--  Use of Rstudio cloud, here, does limit potential solutions.  Note it is possible to upload and download files to and from your desktop using the "files" pane.
+-  .alert[Generally data should live in its own folder in the analysis project]
+  -  But: Sometimes the loading and tidying of the data might be its own project, per se,
+  -  Sometimes data will need to be reused across many different projects,
+  -  And sometimes data is too big or too sensitive to put on github.
+-  In Rstudio cloud, it is possible to upload, download files and move files  using the "files" pane, and move
+-  We'll touch project organization again, when we remove the training wheels and make and manage our own desktop Rstudio projects
 
 ---
 
