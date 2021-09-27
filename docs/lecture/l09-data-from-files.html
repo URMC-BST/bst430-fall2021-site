@@ -21,7 +21,7 @@ class: ur-title, center, middle, title-slide
 ## Data from files
 ### Andrew McDavid
 ### U of Rochester
-### 2021-09-24 (updated: 2021-09-26)
+### 2021-09-24 (updated: 2021-09-27)
 
 ---
 
@@ -134,7 +134,7 @@ read_csv("l09/data/df.csv")
 .your-turn[
 ### .hand[Your turn!]
 
-- [RStudio Cloud &gt; `l09 - Application Exercise - Nobels and Sales`](https://rstudio.cloud/spaces/162296/project/2939203) &gt; open `nobels-csv.Rmd` and knit.
+- [RStudio Cloud &gt; l09 - Application Exercise - Nobels and Sales](https://rstudio.cloud/spaces/162296/project/2939203) &gt; open `nobels-csv.Rmd` and knit.
 - Read in the `nobels.csv` file from the `data-raw/` folder.
 - Split into two (STEM and non-STEM): 
   - Create a new data frame, `nobel_stem`, that filters for the STEM fields 
@@ -187,7 +187,7 @@ ggplot(edibnb_badnames, aes(x = Number of bathrooms, y = Price)) +
 ##                                            ^
 ```
 
-.footnote[[1] Must escape with backticks,e.g,  `\` Number of bathrooms \``]
+.footnote[[1] Must escape the object's name with backticks,e.g,  \`.]
 ---
 class: code70
 
@@ -362,7 +362,7 @@ Wondering where you remember these from?
 
 
 ```r
-read_csv("l09/data/df-na.csv")
+data = read_csv("l09/data/df-na.csv")
 ```
 
 ```
@@ -381,15 +381,16 @@ read_csv("l09/data/df-na.csv")
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
+```r
+spec(data)
 ```
-## # A tibble: 9 × 3
-##   x     y              z    
-##   &lt;chr&gt; &lt;chr&gt;          &lt;chr&gt;
-## 1 1     a              hi   
-## 2 &lt;NA&gt;  b              hello
-## 3 3     Not applicable 9999 
-## 4 4     d              ola  
-...
+
+```
+## cols(
+##   x = col_character(),
+##   y = col_character(),
+##   z = col_character()
+## )
 ```
 
 ---
@@ -682,7 +683,7 @@ class: middle
 .your-turn[
 ### .hand[Your turn!]
 .midi[
-- [RStudio Cloud &gt; `l09 - Application Exercise - Nobels and Sales`](https://rstudio.cloud/spaces/162296/project/2939203) &gt; `sales-excel.Rmd`. 
+- [RStudio Cloud &gt; l09 - Application Exercise - Nobels and Sales](https://rstudio.cloud/spaces/162296/project/2939203) &gt; `sales-excel.Rmd`. 
 - Load the `sales.xlsx` file from the `data-raw/` folder, using appropriate arguments for the `read_excel()` function such that it looks like the output on the left.
 - **Stretch goal:** Manipulate the sales data such that it looks like the output on the right.
 ]
@@ -721,11 +722,13 @@ class: middle
 
 ## File organization and rstudio cloud
 
--  We'll touch on this again, later when we pull off the training wheels and make and manage our own Rstudio projects using the desktop version of Rstudio
 -  Picking a sensible and consistent way to organize raw and processed data will save many headaches!
--  Hint: generally data should live in its own folder in the analysis project, but sometimes the loading and tidying of the data might be its own project, per se...
--  And sometimes data is too big or too sensitive to put on github.
--  Use of Rstudio cloud, here, does limit potential solutions.  Note it is possible to upload and download files to and from your desktop using the "files" pane.
+-  .alert[Generally data should live in its own folder in the analysis project]
+  -  But: Sometimes the loading and tidying of the data might be its own project, per se,
+  -  Sometimes data will need to be reused across many different projects,
+  -  And sometimes data is too big or too sensitive to put on github.
+-  In Rstudio cloud, it is possible to upload, download files and move files  using the "files" pane, and move
+-  We'll touch project organization again, when we remove the training wheels and make and manage our own desktop Rstudio projects
 
 ---
 
