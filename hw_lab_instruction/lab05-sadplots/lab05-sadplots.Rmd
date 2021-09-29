@@ -70,30 +70,25 @@ knitr::include_graphics("img/staff-employment.png")
 Let's start by loading the data used to create this plot.
 
 ```{r load-data-staff, message = FALSE}
-staff = read_csv("data/instructional-staff.csv")
+instructors
 ```
 
 Each row in this dataset represents a faculty type, and the columns are the years for which we have data.
 The values are **percentage** of hires of that type of faculty for each year.
 
-```{r echo = FALSE}
-staff
-```
-
 In order to recreate this visualization we need to first pivot the data to have one variable for faculty type and one variable for year. We do the wide to long conversion using `pivot_longer()`, [discussed in lecture 7](https://urmc-bst.github.io/bst430-fall2021-site/lecture/l05a-reshape-merge.html#7).
 
-1. If there are 5 faculty types and 11 years of data, how many rows will the pivotted data have?  Do the pivot and save the data into an object `staff_long`.
+1. If there are 5 faculty types and 11 years of data, how many rows will the pivotted data have?  Do the pivot and save the data into an object `instructors_long`.
 
 ```{r, include = FALSE}
-staff_long = staff %>%
-  pivot_longer(cols = -faculty_type, names_to = "year") %>%
-  mutate(value = as.numeric(value))
+instructors_long = instructors %>%
+  pivot_longer(cols = -year, names_to = "faculty_type")
 ```
 
 Now we can attempt ot make this plot:
 
 ```{r fig.width = 10, fig.fullwidth = TRUE}
-staff_long %>%
+instructors_long %>%
   ggplot(aes(x = year, y = value, color = faculty_type)) +
   geom_line()
 ```
@@ -103,7 +98,7 @@ The message is saying that there is only one observation for each faculty type y
 We can fix this using the `group` aesthetic following.
 
 ```{r fig.width = 10, fig.fullwidth = TRUE}
-staff_long %>%
+instructors_long %>%
   ggplot(aes(x = year, y = value, group = faculty_type, color = faculty_type)) +
   geom_line()
 ```
@@ -136,8 +131,8 @@ knitr::include_graphics("img/fisheries.png")
 
 Load the data.
 
-```{r load-data-fisheries, eval = FALSE}
-fisheries = read_csv("data/fisheries.csv")
+```{r load-data-fisheries}
+fisheries
 ```
 
 5.  Create a new data visualisation for these data that implements the improvements you proposed in the previous exercise (or many of them as you can).

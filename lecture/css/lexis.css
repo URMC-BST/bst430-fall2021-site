@@ -141,6 +141,16 @@ a > code {
   text-shadow: 0 0 0;
 }
 
+.bg-green {
+  background-color: var(--color-darkgreen);
+  color: var(--color-white);
+}
+
+.bg-green .remark-inline-code {
+  color: var(--color-orange);
+  background-color: transparent;
+}
+
 /* https://stackoverflow.com/questions/50919104/horizontally-scrollable-output-on-xaringan-slides */
 
 pre {
