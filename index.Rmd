@@ -50,8 +50,8 @@ MW 11:00-12:40, SRB 1402
     *  [HW 2](hw_lab_instruction/hw02-accidents/hw02-accidents.html) assigned.
 9.  Effective data visualization [video](https://youtu.be/ZrifrBvFWgg) and [slides](https://rstudio-education.github.io/datascience-box/course-materials/slides/u2-d14-effective-dataviz/u2-d14-effective-dataviz.html#1),  [rstudio.cloud project](https://rstudio.cloud/spaces/162296/project/2929636) and [quiz](https://docs.google.com/forms/d/e/1FAIpQLSdHAZGSFmErFF0FnZNRgbrxOPfcjFAQsjNA2Xlj-SdsOnWyqw/viewform?usp=sf_link).
     * Continue working on lab 4.
-10.  [Data from files](lecture/l09-data-from-files.html)
-    * [Lab 5 assigned](hw_lab_instruction/lab05-sadplots/lab05-sadplots.html)
-    * Andrew's office hours will be at 4:30 Thursday this week.
+10. [Data from files](lecture/l09-data-from-files.html)
+    *  [Lab 5 assigned](hw_lab_instruction/lab05-sadplots/lab05-sadplots.html)
+    *  Andrew's office hours will be at 4:30 Thursday this week.
 
 
