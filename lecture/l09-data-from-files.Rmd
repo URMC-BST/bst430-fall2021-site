@@ -281,11 +281,11 @@ spec(data)
 
 class:middle
 
-# Case study: Favourite foods
+# Case study: Favorite foods
 
 ---
 
-## Favourite foods
+## Favorite foods
 
 ```{r echo=FALSE}
 knitr::include_graphics("l09/img/fav-food/fav-food.png")

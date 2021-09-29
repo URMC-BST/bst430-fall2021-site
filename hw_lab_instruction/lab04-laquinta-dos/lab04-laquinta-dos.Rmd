@@ -210,3 +210,10 @@ dn_lq_ak_mindist = dn_lq_ak %>%
     Explain your reasoning.
 
 `r emo::ji("broom")` 🧶 ✅ ⬆️ Lint ,Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document on GitHub to make sure you're happy with the final state of your work.*
+
+## Rubric
+
+37 points total.
+*  11 questions @ 2 points for correct and complete answers
+*  5 points github history
+*  10 points for <= 2 lint, and -0.5 point for every 1 lint thereafter
