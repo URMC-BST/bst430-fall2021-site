@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>BST430 Lecture 10</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Andrew McDavid" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <link href="libs/str_view/str_view.css" rel="stylesheet" />
+    <script src="libs/str_view-binding/str_view.js"></script>
+    <link rel="stylesheet" href="css/lexis.css" type="text/css" />
+    <link rel="stylesheet" href="css/lexis-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: ur-title, center, middle, title-slide
+
+# BST430 Lecture 10
+## Text Processing
+### Andrew McDavid
+### U of Rochester
+### 2021-09-26 (updated: 2021-09-29)
+
+---
+
+  
+
+
+
+
+  
+# To cover
+
+*  Why text processing (bakeoff figure? bakeoff tokenization?)
+*  Why regular expressions?  It's God's find and replace. Ex: extracting encoded identifiers -- TCGA?, powerful string matching and substitution.
+*  Low level processing -- concatenate, glue, nchars, substring, split
+*  Regex
+*  Tokenization / TFIDF
+
+---
+
+## Low level text processing
+
+*  concatenate with `stringr::str_c()` and `glue::glue()`
+*  count characters with `base::nchar()`
+*  extract and replace substrings with `stringr::str_sub()`
+*  split with `str_split_fixed()` (generally) or `str_split()` (less often)
+
+---
+class: middle
+
+.hand[Regular Expressions]: we probably wouldn't have done this way in hindsight.
+
+---
+
+## Regular expressions
+
+&gt; Some people, when confronted with a problem, think "I know, I'll use regular expressions." Now they have two problems.
+-- Jamie Zawinski (creator of Mozilla)
+
+*  Are like find-replace and wild-card * ? searches on steroids **and** psychodelics.
+*  Are found in nearly every computer language
+*  Can be just the ticket to solving some problems
+*  Even a little proficiency can be very handy
+---
+class: bg-green
+
+## Syntax
+
+1.  Write what you want to match
+
+
+```r
+library(stringr)
+lunch = c("one apple", "two appetizers", "three apps")
+str_view(lunch, 'apple')
+```
+
+<div id="htmlwidget-1b4ff99564eb6e8884a5" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1b4ff99564eb6e8884a5">{"x":{"html":"<ul>\n  <li>one <span class='match'>apple<\/span><\/li>\n  <li>two appetizers<\/li>\n  <li>three apps<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+
+---
+class: bg-green
+
+## Match multiple things with wildcards, character classes and disjunction
+
+1. `.` matches any character
+
+
+```r
+str_view(lunch, 'app.')
+```
+
+<div id="htmlwidget-8f836166d559454ecd73" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8f836166d559454ecd73">{"x":{"html":"<ul>\n  <li>one <span class='match'>appl<\/span>e<\/li>\n  <li>two <span class='match'>appe<\/span>tizers<\/li>\n  <li>three <span class='match'>apps<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+
+2. `[&lt;set&gt;]` matches all characters in `&lt;set&gt;`
+
+
+```r
+str_view(lunch, 'app[le]')
+```
+
+<div id="htmlwidget-0d7db73d03839427d3b7" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0d7db73d03839427d3b7">{"x":{"html":"<ul>\n  <li>one <span class='match'>appl<\/span>e<\/li>\n  <li>two <span class='match'>appe<\/span>tizers<\/li>\n  <li>three apps<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+
+3.  `(&lt;x&gt;|&lt;y&gt;)` matches `&lt;x&gt;` or `&lt;y&gt;`.
+
+
+```r
+str_view(lunch, 'app(le|etizer)')
+```
+
+<div id="htmlwidget-c2e3fede5c798441fdae" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c2e3fede5c798441fdae">{"x":{"html":"<ul>\n  <li>one <span class='match'>apple<\/span><\/li>\n  <li>two <span class='match'>appetizer<\/span>s<\/li>\n  <li>three apps<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+
+---
+class: bg-green
+
+## Qualifiers modify matches
+
+1. `*` zero or more matches
+1. `?` zero or one matches
+2. `+` one or more matches
+
+
+```r
+str_view(lunch, 'app.*')
+```
+
+<div id="htmlwidget-a77ad32f6b82562872f5" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a77ad32f6b82562872f5">{"x":{"html":"<ul>\n  <li>one <span class='match'>apple<\/span><\/li>\n  <li>two <span class='match'>appetizers<\/span><\/li>\n  <li>three <span class='match'>apps<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+
+---
+
+## Using regular expressions
+
+*  Test for an expression `str_detect()`
+*  Return first `str_extract()` or all `str_extract_all()` matching portions of string
+*  Return first `str_match()` or all `str_match_all()` matching portions of string **and capture groups**
+*  Replace first `str_replace()`  or all `str_replace_all()` matching portions of string
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "3:2"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

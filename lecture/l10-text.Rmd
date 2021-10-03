@@ -1,0 +1,368 @@
+---
+title: "BST430  Lecture 10"
+subtitle: "Text Processing"
+author: "Andrew McDavid"
+institute: "U of Rochester"
+date: "2021-09-26 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    css:
+      - default
+      - css/lexis.css
+      - css/lexis-fonts.css
+    lib_dir: libs
+    seal: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      titleSlideClass: ['ur-title', 'center', 'middle']
+      ratio: "3:2"
+---
+  
+```{r child = "setup.Rmd"}
+```
+
+  
+# To cover
+
+*  Why text processing (bakeoff figure? bakeoff tokenization?)
+*  Why regular expressions?  It's God's find and replace. Ex: extracting encoded identifiers -- TCGA?, powerful string matching and substitution.
+*  Low level processing -- concatenate, glue, nchars, substring, split
+*  Regex
+*  Tokenization / TFIDF
+
+---
+
+## Low level text processing
+
+*  concatenate with `stringr::str_c()` and `glue::glue()`
+*  count characters with `base::nchar()`
+*  extract and replace substrings with `stringr::str_sub()`
+*  split with `str_split_fixed()` (generally) or `str_split()` (less often)
+
+---
+
+## Packages
+```{r, include = FALSE}
+library(stringr)
+library(glue)
+```
+
+.pull-left[
+`stringr` and `glue` rationalize much of text processing, which is otherwise a bit of a thicket in R.
+]
+.pull-right[
+![](https://raw.githubusercontent.com/tidyverse/stringr/master/man/figures/logo.png)
+![](https://raw.githubusercontent.com/tidyverse/glue/master/man/figures/logo.png)
+
+
+]
+
+---
+
+## Concatenate strings
+
+.pull-left[
+```{r}
+names = c("Jeff", "Larry", "Warren")
+favorite_food = c("caviar", "cake", "Pappy Van Winkle")
+str_c(names, 
+      " likes ", #note additional spaces
+      favorite_food, ".")
+```
+]
+.pull-right[
+```{r}
+dinner = glue::glue("{names} likes {favorite_food}.")
+dinner
+```
+]
+
+---
+
+## Count characters
+
+```{r}
+names
+nchar(names)
+```
+
+---
+
+## Extract substrings
+
+.pull-left[
+Extract
+```{r}
+str_sub(dinner, 1, 9)
+```
+]
+.pull-right[
+Replace
+```{r}
+str_sub(dinner, 
+        #space + l-
+        nchar(names) + 2, 
+        #space + l-o-v-e
+        nchar(names) + 6 
+) = "demands"
+dinner
+```
+]
+
+---
+
+## split strings
+
+Get a character matrix, padding / collapsing excess fields.
+```{r}
+str_split_fixed(dinner, " ",  3)
+```
+
+```{r}
+str_split_fixed(dinner, " ", 5)
+```
+
+---
+
+## split strings
+
+Get exactly what you ask for.
+```{r}
+str_split(dinner, " ")
+```
+
+
+---
+
+class: middle
+
+.hand[Regular Expressions]: we probably wouldn't have done this way in hindsight.
+
+---
+
+## Regular expressions
+
+> Some people, when confronted with a problem, think "I know, I'll use regular expressions." Now they have two problems.
+-- Jamie Zawinski (creator of Mozilla)
+
+*  Are like find-replace, wildcards \* ? on steroids **and** psychedelics.
+*  Are found in nearly every computer language
+*  Can be just the ticket to solving some problems
+
+---
+class: bg-green
+
+## Syntax
+
+Write what you want to match (if it's alpha-numeric).
+
+```{r}
+library(stringr)
+lunch = c("one app", "two appetizers", "three apples")
+str_view_all(lunch, 'apple')
+```
+
+---
+class: bg-green
+
+## Match multiple things: wildcard
+
+`.` is a generic wildcard, matches any character.
+
+```{r}
+str_view_all(lunch, 'app.')
+```
+
+---
+class: bg-green
+
+## Match multiple things: character class
+
+`[<set>]` is a character class, matches all characters in `<set>`.  Specify a range of characters with `[a-z]`.  Invert a class with `[^<set>]`.
+
+```{r}
+str_view_all(lunch, 'app[le]')
+```
+
+---
+class: bg-green
+
+## Match multiple things: disjunction
+
+`(<x>|<y>)` is a disjunction, matches `<x>` or `<y>`.
+
+```{r}
+str_view_all(lunch, 'app(le|etizer)s')
+```
+
+---
+class: bg-green
+
+## Qualifiers modify matches
+
+1. `*` zero or more matches
+2. `?` zero or one matches
+3. `+` one or more matches
+4. `{min,max}` to match between min-max times.
+
+Compare back to `"app."`, which didn't match the first string.
+```{r}
+str_view_all(lunch, 'app.*')
+```
+
+---
+
+## Match without consuming with zero-width identifiers
+
+`^` matches a zero-width "character" present at the start of all lines.  `$` is the analogous character at the end, `\b` is between "words".  For example, the string 
+
+`red tired`
+
+can be thought as
+
+.darkgreen[^\b]red.darkgreen[\b] .darkgreen[\b]tired.darkgreen[\b$]
+
+---
+
+## Require word boundary
+
+class: bg-green
+
+```{r}
+str_view_all("red tired", "\\bred\\b")
+```
+
+---
+class: bg-green
+
+
+## Match unconditionally
+
+```{r}
+str_view_all("red tired", "red")
+```
+
+---
+
+
+## Using regular expressions
+
+*  Test for an expression `str_detect()`.
+*  Return first `str_extract()` or all `str_extract_all()` matching portions of string.
+*  Return first `str_match()` or all `str_match_all()` matching portions of string **and capture groups**.
+*  Replace first `str_replace()`  or all `str_replace_all()` matching portions of stringand capture groups.
+
+---
+
+## `str_detect()`
+
+```{r}
+str_detect(c("A", "AA", "AB", "B"), "A")
+str_detect(lunch, 'app.')
+```
+
+---
+
+## `str_extract()`
+
+```{r}
+feline = c("The fur of cats goes by many names.", 
+           "Infimum (the cat) is a cat with a most baleful meow.",
+           "Dog.")
+str_extract(feline, "cat")
+str_extract_all(feline, "cat")
+```
+
+---
+
+
+## `str_match()`
+
+Behaves like `str_extract()`, but returns **capture groups** `(<expression>)` separately.
+```{r}
+feline = c("The fur of cats goes by many names.", 
+           "Infimum (the cat) is a cat with a most baleful meow.",
+           "Dog.")
+str_match(feline, "cat")
+str_match(feline, "(\\w*) cat.? (\\w*)")
+```
+
+---
+
+## `str_match_all()`
+```{r}
+feline = c("The fur of cats goes by many names.", 
+           "Infimum (the cat) is a cat with a most baleful meow.",
+           "Dog.")
+
+str_match_all(feline, "(\\w*) cat.? (\\w*)")
+
+```
+
+---
+
+## `str_replace()`
+
+```{r}
+feline = c("The fur of cats goes by many names.", 
+           "Infimum (the cat) is a cat with a most baleful meow.",
+           "Dog.")
+
+str_replace(feline, "cat", "murder machine")
+```
+
+---
+
+## `str_replace_all()`
+
+```{r}
+feline = c("The fur of cats goes by many names.", 
+           "Infimum (the cat) is a cat with a most baleful meow.",
+           "Dog.")
+
+str_replace_all(feline, "cat", "murder machine")
+```
+
+---
+
+## `str_replace()` also can use capture groups
+
+Use `\1` to refer to the first capture group, `\2` for the second, etc.  Note the `\\` because `\` must be escaped in R.
+```{r}
+str_replace_all(feline, "(\\w*)", "\\1\\1")
+```
+
+---
+
+class: middle
+
+![](https://raw.githubusercontent.com/juliasilge/tidytext/master/man/figures/tidytext.png)
+
+Text mining using `tidytext`
+
+---
+
+## Text mining using `tidytext`
+
+Text is inherently high-dimensional and noisy data.  We could spent weeks on this. Instead, we'll have to be conten to know what we don't know:
+
+*  Sampling text data and its potential ascertainment biases
+*  Handling non-Roman (ASCII) characters
+*  Parsing into tokens
+*  Filtering low-content words
+*  Dimension reduction, e.g., latent Dirichlet allocation or non-negative matrix factorization
+*  Embeddings using pre-trained neural networks
+
+Julia Silge has [one book on classical text mining](https://www.tidytextmining.com/) and [another on machine learning on text](https://smltar.com/).
+
+---
+
+## Most important functionality
+
+*  `unnest_tokens()` split a string into tokens (words, bigrams, etc) as a data frame
+*  `cast_sparse` convert to a (sparse) document-term matrix.
+*  `bind_tf_idf` calculate term and inverse-document frequencies.
+
+---
