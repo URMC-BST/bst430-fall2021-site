@@ -1,0 +1,124 @@
+---
+title: "HW3 Key"
+author: "Andrew McDavid"
+date: "10/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-packages-data, message = FALSE, eval = TRUE}
+library(tidyverse)
+library(lubridate)
+library(vroom)
+```
+
+```{r load-data}
+crashes = vroom("https://urmc-bst.github.io/bst430-fall2021-site/hw_lab_instruction/hw02-accidents/data/ny_collisions_2018_2019.csv.gz")
+```
+
+## Ex1
+
+```{r}
+crashes = crashes %>% janitor::clean_names() %>% filter(crash_descriptor == "Fatal Accident")
+```
+
+## Ex2
+
+```{r}
+crashes = crashes %>% 
+  mutate(event_descriptor = str_to_lower(event_descriptor),
+         county_name = str_to_title(county_name)) %>% 
+  mutate(is_pedbike = if_else(str_detect(event_descriptor, 'ped|bicy'), 
+                              'Pedestrian/Bicycle', 'Other'))
+```
+## Ex 3
+
+```{r}
+crash_count = crashes %>% count(county_name, is_pedbike) %>% filter( county_name != 'Unknown')
+
+crash_wide = crash_count %>% pivot_wider(names_from = is_pedbike, values_from = n, values_fill = 0)
+
+crash_scatter = ggplot(crash_wide, aes(x = Other, y =`Pedestrian/Bicycle` )) + geom_point()
+crash_scatter
+
+fct_lump_reorder = function(factor_var, n_var){
+   fct_lump_n(fct_reorder({{factor_var}}, {{n_var}}), 50, w = {{n_var}})
+}
+
+plt = ggplot(crash_count, aes(y =fct_lump_reorder(county_name, n), fill = is_pedbike, x = n)) + geom_col() + theme_minimal() +
+  labs(x = 'Count', y = 'County', title = 'Fatal Crashes NY, 2018-2019',
+       fill = 'Type')
+plt
+```
+
+## Ex 4
+
+```{r}
+census = read_csv('data/cc-est2019-agesex-36.csv') %>% 
+  janitor::clean_names() %>% filter(year == 10) %>% mutate(popestimate, county_name = str_remove(ctyname, ' County')) %>% select(county_name, popestimate)
+```
+
+
+
+## Ex 5
+
+```{r}
+crash_count = left_join(crash_count, census, by = 'county_name') %>% 
+  mutate(n_per_100k = n/popestimate*100000)
+
+crash_wide_100k = crash_count %>% pivot_wider(id_cols = county_name, names_from = is_pedbike, values_from = n_per_100k, values_fill = 0)
+
+crash_scatter %+% crash_wide_100k
+
+(plt %+% crash_count) + aes(y = fct_lump_reorder(county_name, n_per_100k), x = n_per_100k)
+```
+
+
+```{r}
+vmt_metro = readxl::read_excel('data/THT_Data_508.xlsx', sheet = 3, na = c('[no data]')) %>% janitor::clean_names()
+
+vmt_metro_ny = filter(vmt_metro, str_detect(urbanized_area, 'NY')) %>% select(urbanized_area)
+
+metro_areas = tribble( ~urbanized_area, ~county_name,
+                    "New York-Newark, NY-NJ-CT", c("Queens", "Kings", "New York", "Bronx", "Richmond"),
+                     "Rochester, NY", c("Monroe"),
+                     "Buffalo, NY", c("Erie"),
+                    "Albany-Schenectady, NY", 'Albany',
+                    "Binghamton, NY-PA", "Broome",
+                    "Elmira, NY", "Chemung",
+                    "Glens Falls, NY", "Warren",
+                    "Ithaca, NY", "Tompkins",
+                    "Kingston, NY", "Ulster",
+                    "Poughkeepsie-Newburgh, NY-NJ", "Dutchess",
+                    "Saratoga Springs, NY", "Saratoga",
+                    "Syracuse, NY", 'Onondaga',
+                    "Utica, NY", "Oneida") %>%
+                     unnest(cols = c(county_name))
+
+vmt_metro_sub = vmt_metro %>% 
+  right_join(metro_areas) %>% 
+  select(vmt = vehicle_miles_traveled_per_capita_raw_value, county_name) %>% 
+  mutate(vmt = as.numeric(vmt))
+```
+
+
+```{r}
+
+```
+
+
+
+
+
+## Ex 6
+
+```{r}
+adjusted = crash_count %>% left_join(vmt_metro_sub) %>%  mutate(n_per_100k_vmt = n_per_100k/vmt)
+
+(plt %+% filter(adjusted, !is.na(vmt))) + aes(y = fct_reorder(county_name,n_per_100k_vmt), x = n_per_100k_vmt)
+```
+
+

@@ -23,14 +23,171 @@ output:
 ```{r child = "setup.Rmd"}
 ```
 
-  
-# To cover
+```{r, include = FALSE}
+library(tidyverse)
+options(
+  htmltools.dir.version = FALSE, # for blogdown
+  show.signif.stars = FALSE,     # for regression output
+  warn = 1,
+  pillar.print_max = 12,
+  pillar.print_min = 8,
+  pillar.max_footer_lines = 3,
+  pillar.width = 65,
+  width = 65)
+knitr::opts_chunk$set(cache = TRUE)
+```
 
-*  Why text processing (bakeoff figure? bakeoff tokenization?)
-*  Why regular expressions?  It's God's find and replace. Ex: extracting encoded identifiers -- TCGA?, powerful string matching and substitution.
-*  Low level processing -- concatenate, glue, nchars, substring, split
-*  Regex
-*  Tokenization / TFIDF
+
+## Cardiac diagnoses
+
+```{r, output.lines = 13}
+diagnoses = read_csv('l10-WIP/data/cardiac-dx.csv')
+diagnoses
+```
+
+.question[How to get all the diagnoses of hypoplastic left heart?]
+
+---
+
+## Attempt 1
+
+```{r}
+diagnoses %>% count(diagnoses) %>% 
+  arrange(desc(n))
+```
+
+--
+
+Too many unique diagnoses to make headway with this.
+
+---
+
+## Using string matching
+
+```{r}
+filter(diagnoses, str_detect(diagnoses, 'hypoplastic'))
+```
+
+.question[What different sort of hypoplasties are there?]
+
+---
+
+## Split into pieces
+
+```{r,  output.lines = 10}
+diagnoses_row = diagnoses %>% 
+  tidyr::separate_rows(diagnoses, 
+                       sep = " \\| ") #WTH? #<< 
+diagnoses_row
+```
+
+---
+
+## Split into pieces
+
+```{r}
+diagnoses_row %>% filter(str_detect(diagnoses, 'hypoplastic')) %>%
+  count(diagnoses) %>% arrange(desc(n))
+```
+
+---
+
+## Plot co-occurances
+
+.panelset[
+
+.panel[.panel-name[Code]
+```{r dx0, fig.show = 'hide'}
+diagnoses_row %>% filter(str_detect(diagnoses, 'hypoplastic')) %>%
+  ggplot(aes(y = diagnoses, x = as.factor(id))) + 
+  geom_tile() + 
+  scale_x_discrete(breaks = NULL) +
+  labs(y = "Diagnosis", x = 'Patient', 
+       main = 'Co-occurance of hypoplastic heart disorders')
+```
+].panel[.panel-name[Plot]
+```{r, ref.label='dx0',  echo = FALSE, out.width="75%"}
+```
+]
+]
+
+---
+
+### Sensible factor orders
+
+.panelset[
+
+.panel[.panel-name[Code]
+```{r dx-tile, fig.show = 'hide'}
+diagnoses_row %>% filter(str_detect(diagnoses, 'hypoplastic')) %>%
+  ggplot(aes(y = fct_infreq(diagnoses), x = fct_infreq(as.factor(id)))) + #<< 
+  geom_tile() + 
+  scale_x_discrete(breaks = NULL) +
+  labs(y = "Diagnosis", x = 'Patient', 
+       main = 'Co-occurance of hypoplastic heart disorders')
+```
+].panel[.panel-name[Plot]
+```{r, ref.label='dx-tile',  echo = FALSE, out.width="75%"}
+```
+]
+]
+
+---
+
+### Wrap text width
+
+.panelset[
+
+.panel[.panel-name[Code]
+```{r dx-tile-wrap, fig.show = 'hide'}
+diagnoses_row %>% filter(str_detect(diagnoses, 'hypoplastic')) %>%
+  mutate(diagnoses = str_wrap(diagnoses, width = 40)) %>% #<<
+  ggplot(aes(y = fct_infreq(diagnoses), x = fct_infreq(as.factor(id)))) + 
+  geom_tile() + 
+  scale_x_discrete(breaks = NULL) +
+  labs(y = "Diagnosis", x = 'Patient', 
+       main = 'Co-occurance of hypoplastic heart disorders')
+```
+].panel[.panel-name[Plot]
+```{r, ref.label='dx-tile-wrap',  echo = FALSE, out.width="75%"}
+```
+]
+]
+
+---
+
+### Adjust text size and justification
+
+.panelset[
+
+.panel[.panel-name[Code]
+```{r dx-tile-wrap-just, fig.show = 'hide'}
+diagnoses_row %>% filter(str_detect(diagnoses, 'hypoplastic')) %>%
+  mutate(diagnoses = str_wrap(diagnoses, width = 40)) %>%
+  ggplot(aes(y = fct_infreq(diagnoses), x = fct_infreq(as.factor(id)))) + 
+  geom_tile() + 
+  theme(axis.text.y = element_text(hjust = 0, vjust = 0, size = 8)) + #<<
+  scale_x_discrete(breaks = NULL) +
+  labs(y = "Diagnosis", x = 'Patient', 
+       main = 'Co-occurance of hypoplastic heart disorders')
+```
+].panel[.panel-name[Plot]
+```{r, ref.label='dx-tile-wrap-just',  echo = FALSE, out.width="75%"}
+```
+]
+]
+
+---
+
+# Topics
+
+*  Why text processing
+*  Low level processing:
+  *  concatenate, count characters, substring, split strings.
+*  Regular expressions (aka regex):
+  *  detect, extract, replace
+*  Text mining
+  *  Tokenizing, filtering, analysis
 
 ---
 
@@ -65,7 +222,7 @@ library(glue)
 
 .pull-left[
 ```{r}
-names = c("Jeff", "Larry", "Warren")
+names = c("Jeff B.", "Larry E.", "Warren B.")
 favorite_food = c("caviar", "cake", "Pappy Van Winkle")
 str_c(names, 
       " likes ", #note additional spaces
@@ -78,6 +235,30 @@ dinner = glue::glue("{names} likes {favorite_food}.")
 dinner
 ```
 ]
+
+
+---
+
+## Some special characters
+
+*  \n newline
+*  \r carriage return
+*  \t tab
+*  \f form feed
+*  \Unnnnnnnn  Unicode character with given code
+*  \\\ literal backslash (.alert[this one will prove to be especially annoying...])
+*  \" literal quote
+
+Others are listed in `?'"'` (the help on the quote function).
+
+---
+
+## Glue with newlines and unicode
+
+```{r}
+glue::glue("{names} \n {favorite_food} \U1F600.")
+```
+
 
 ---
 
@@ -95,7 +276,7 @@ nchar(names)
 .pull-left[
 Extract
 ```{r}
-str_sub(dinner, 1, 9)
+str_sub(dinner, 1, 11)
 ```
 ]
 .pull-right[
@@ -117,11 +298,11 @@ dinner
 
 Get a character matrix, padding / collapsing excess fields.
 ```{r}
-str_split_fixed(dinner, " ",  3)
+str_split_fixed(dinner, " ",  4)
 ```
 
 ```{r}
-str_split_fixed(dinner, " ", 5)
+str_split_fixed(dinner, " ", 6)
 ```
 
 ---
@@ -133,12 +314,20 @@ Get exactly what you ask for.
 str_split(dinner, " ")
 ```
 
+Also recall `tidyr::separate` and `tidyr::separate_rows`.
+
+
+---
+
+## Application Exercise
+
+.hand[Your turn.] Browse to [Lecture 10 - Text - AE](https://rstudio.cloud/spaces/162296/project/2985078) and complete the exercises in text-munge.Rmd.
 
 ---
 
 class: middle
 
-.hand[Regular Expressions]: we probably wouldn't have done this way in hindsight.
+.hand[Regular Expressions]: Uff,  probably wouldn't have done this way in hindsight.
 
 ---
 
@@ -147,9 +336,9 @@ class: middle
 > Some people, when confronted with a problem, think "I know, I'll use regular expressions." Now they have two problems.
 -- Jamie Zawinski (creator of Mozilla)
 
-*  Are like find-replace, wildcards \* ? on steroids **and** psychedelics.
+*  Are like *find-replace*, *wildcards* \* ? on `r emo::ji('pill')`  **and** `r emo::ji('mushroom')`
 *  Are found in nearly every computer language
-*  Can be just the ticket to solving some problems
+*  Can be just the ticket to solving *some* problems
 
 ---
 class: bg-green
@@ -180,7 +369,7 @@ class: bg-green
 
 ## Match multiple things: character class
 
-`[<set>]` is a character class, matches all characters in `<set>`.  Specify a range of characters with `[a-z]`.  Invert a class with `[^<set>]`.
+`[<set>]` is a character class, matches all characters in `<set>`.  Specify a range of characters with `[<char>-<char>]`.  Invert a class with `[^<set>]`.
 
 ```{r}
 str_view_all(lunch, 'app[le]')
@@ -216,7 +405,11 @@ str_view_all(lunch, 'app.*')
 
 ## Match without consuming with zero-width identifiers
 
-`^` matches a zero-width "character" present at the start of all lines.  `$` is the analogous character at the end, `\b` is between "words".  For example, the string 
+*  `^` matches a zero-width "character" present at the start of all lines.
+*  `$` is the analogous character at the end
+*  `\b` is between "words".  
+
+For example, the string:
 
 `red tired`
 
@@ -225,14 +418,16 @@ can be thought as
 .darkgreen[^\b]red.darkgreen[\b] .darkgreen[\b]tired.darkgreen[\b$]
 
 ---
+class: bg-green
 
 ## Require word boundary
 
-class: bg-green
+We must double the `\` to keep R from interpreting it as an escape character.
 
 ```{r}
 str_view_all("red tired", "\\bred\\b")
 ```
+
 
 ---
 class: bg-green
@@ -252,15 +447,16 @@ str_view_all("red tired", "red")
 *  Test for an expression `str_detect()`.
 *  Return first `str_extract()` or all `str_extract_all()` matching portions of string.
 *  Return first `str_match()` or all `str_match_all()` matching portions of string **and capture groups**.
-*  Replace first `str_replace()`  or all `str_replace_all()` matching portions of stringand capture groups.
+*  Replace first `str_replace()`  or all `str_replace_all()` matching portions of string and capture groups.
 
 ---
 
 ## `str_detect()`
 
 ```{r}
-str_detect(c("A", "AA", "AB", "B"), "A")
-str_detect(lunch, 'app.')
+str_detect(string = c("A", "AA", "AB", "B"), 
+           pattern = "A")
+str_detect(string = lunch, pattern = 'app.')
 ```
 
 ---
@@ -271,8 +467,8 @@ str_detect(lunch, 'app.')
 feline = c("The fur of cats goes by many names.", 
            "Infimum (the cat) is a cat with a most baleful meow.",
            "Dog.")
-str_extract(feline, "cat")
-str_extract_all(feline, "cat")
+str_extract(string = feline, pattern = "cat")
+str_extract_all(string = feline, pattern = "cat")
 ```
 
 ---
@@ -280,14 +476,28 @@ str_extract_all(feline, "cat")
 
 ## `str_match()`
 
-Behaves like `str_extract()`, but returns **capture groups** `(<expression>)` separately.
+For simple queries, behaves like `str_extract()`
 ```{r}
 feline = c("The fur of cats goes by many names.", 
            "Infimum (the cat) is a cat with a most baleful meow.",
            "Dog.")
 str_match(feline, "cat")
+```
+
+---
+
+## `str_match()`
+
+But returns **capture groups** `(<expression>)` separately.
+
+```{r}
+feline = c("The fur of cats goes by many names.", 
+           "Infimum (the cat) is a cat with a most baleful meow.",
+           "Dog.")
 str_match(feline, "(\\w*) cat.? (\\w*)")
 ```
+
+`\w = [A-Za-z0-9_]`, we must double the `\` to keep R from interpreting it as an escape character.
 
 ---
 
@@ -334,6 +544,14 @@ Use `\1` to refer to the first capture group, `\2` for the second, etc.  Note th
 str_replace_all(feline, "(\\w*)", "\\1\\1")
 ```
 
+Actually, any regular expression can use a capture group, both for matching and replacing!
+---
+
+## Application exercise
+
+.hand[Your turn]. .alert[Form pairs<sup>1</sup>], and browse again to [Lecture 10 - Text AE](https://rstudio.cloud/spaces/162296/project/2985078) and complete the exercises in regex-text.
+
+.footnote[[1] By this, I highly encourage only one person to code at a time -- the other person should just watch and spout beta.]
 ---
 
 class: middle
@@ -346,7 +564,7 @@ Text mining using `tidytext`
 
 ## Text mining using `tidytext`
 
-Text is inherently high-dimensional and noisy data.  We could spent weeks on this. Instead, we'll have to be conten to know what we don't know:
+Text is inherently high-dimensional and noisy data.  We could spent weeks on this. Instead, we'll have to be content to know what we don't know:
 
 *  Sampling text data and its potential ascertainment biases
 *  Handling non-Roman (ASCII) characters
@@ -361,8 +579,175 @@ Julia Silge has [one book on classical text mining](https://www.tidytextmining.c
 
 ## Most important functionality
 
-*  `unnest_tokens()` split a string into tokens (words, bigrams, etc) as a data frame
+*  `unnest_tokens()` split a string into tokens (words, bi-grams, etc) as a data frame
 *  `cast_sparse` convert to a (sparse) document-term matrix.
 *  `bind_tf_idf` calculate term and inverse-document frequencies.
 
 ---
+
+## Austin vs Kafka
+```{r}
+library(tidytext)
+book_names = tibble(gutenberg_id = c(158, 1342, 5200, 7849),
+                    title = c('Emma', 'Pride and prejudice',
+                              'Metamorphosis', 'The Trial'))
+books = gutenbergr::gutenberg_download(book_names$gutenberg_id) %>% left_join(book_names)
+```
+
+.scroll-box-10[
+```{r, output.lines = 24}
+books %>% group_by(title) %>% slice_head(n=6)
+```
+]
+
+---
+
+## Get words
+
+```{r}
+book_words = unnest_tokens(books, text, output = 'word', drop = TRUE)
+book_words
+```
+
+---
+
+## Count words by book
+
+```{r}
+word_counts = book_words %>%
+  group_by(title) %>% count(title, word) %>% 
+  arrange(desc(n))
+word_counts %>% slice_head(n = 3)
+```
+
+---
+
+## Remove "stop" words
+
+Stop words are common, low-semantic value words.  Sometimes useful to remove.
+
+```{r}
+word_counts %>% anti_join(get_stopwords()) %>% slice_head(n = 3)
+```
+
+---
+
+## Term frequency in Kafka vs Austin
+
+```{r}
+total_words = word_counts %>% 
+  group_by(title) %>% 
+  summarize(total = sum(n))
+word_counts = left_join(word_counts, total_words)
+word_counts 
+```
+
+---
+
+## Term frequency in Kafka vs Austin
+
+
+```{r plottf, warning = FALSE}
+ggplot(word_counts, aes(n/total)) +
+  geom_histogram(show.legend = FALSE) +
+  xlim(NA, 0.0009) + 
+  facet_wrap(~title, ncol = 2, scales = "free_y")
+```
+---
+
+## Zipf's law
+Distributions like those on the previous slide are typical in language.  A classic version of this relationship is called Zipf's law. 
+
+> Zipf's law states that the frequency that a word appears is inversely proportional to its rank. 
+
+---
+
+## Zipf's law
+
+.panelset[
+
+.panel[.panel-name[Code]
+```{r freq_by_rank, fig.show='hide'}
+freq_by_rank = word_counts %>% 
+  group_by(title) %>% 
+  mutate(rank = row_number(), 
+         `term frequency` = n/total) %>%
+  ungroup() 
+
+freq_by_rank %>% 
+  ggplot(aes(x = rank, y = `term frequency`, color = title)) + 
+  geom_abline(intercept = -0.62, slope = -1, 
+              color = "gray50", linetype = 2) +
+  geom_line(size = 1.1, alpha = 0.8, show.legend = FALSE) + 
+  scale_x_log10() +
+  scale_y_log10() + 
+  theme_minimal()
+```
+]
+.panel[.panel-name[Plot]
+```{r ref.label = 'freq_by_rank', echo = FALSE}
+```
+]
+]
+---
+
+## Sentiment analysis
+
+```{r}
+word_sentiments = word_counts %>% 
+  left_join(sentiments) %>% #<<
+  filter(!is.na(sentiment)) %>% 
+  group_by(title) %>% 
+  mutate(word_collapse = fct_lump_n(word, n = 10, w = n),
+    word_collapse = fct_reorder(word_collapse, n, sum)) %>% 
+    select(title, word_collapse, sentiment, n)
+word_sentiments
+```
+
+---
+
+##  Which is more happy?
+
+```{r}
+ggplot(word_sentiments, aes(y = fct_reorder(word_collapse,  n, .fun = sum), x = n, fill = sentiment)) + geom_col() + facet_wrap(~title, scales = 'free_x') + ylab("Word") + xlab("Occurence") + theme_minimal()
+```
+
+---
+
+## Term frequency and inverse document frequency
+
+The inverse document frequency is
+
+$$\text{idf}(\text{term}) = \ln{\left(\frac{n_{\text{documents}}}{n_{\text{documents containing term}}}\right)}$$
+
+The IDF thus ranges from 0 for words that appear in every document up to $log(n)$ for a word unique across documents.
+
+The term frequency is just the word counts, normalized to the number of words per text, so the popular TF-IDF is just
+
+$$\text{tf-idf}(\text{term}) = \text{idf}(\text{term}) \times \text{tf}(\text{term})$$
+
+---
+
+## Calculate TF-IDF
+
+
+```{r calc-tf, output.lines = 12}
+word_counts = word_counts %>% bind_tf_idf(word, title, n)
+word_counts
+```
+
+---
+
+## TF-IDF of Kafka and Austen
+
+This words relatively well to identify signature words -- some represent content,  some represent author style (e.g. contractions used by Kafka)
+
+```{r, echo = FALSE}
+word_counts %>% group_by(title) %>% slice_max(tf_idf, n = 15) %>% ungroup() %>%
+  mutate(word = reorder(word, tf_idf)) %>%
+  ggplot(aes(tf_idf, word)) +
+  geom_col(show.legend = FALSE) +
+  labs(x = "tf-idf", y = NULL) +
+  facet_wrap(~title, ncol = 2, scales = "free") + 
+  theme_minimal()
+```

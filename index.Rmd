@@ -54,5 +54,6 @@ MW 11:00-12:40, SRB 1402
     *  [Lab 5 assigned](hw_lab_instruction/lab05-sadplots/lab05-sadplots.html)
     *  Andrew's office hours will be at 4:30 Thursday this week.
 11. Work on lab 5.
-12. Text processing
+12. [Text processing](lecture/l10-text.html)
+    *  Discuss lab 5.  HW 3 assigned
 
