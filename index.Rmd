@@ -55,5 +55,5 @@ MW 11:00-12:40, SRB 1402
     *  Andrew's office hours will be at 4:30 Thursday this week.
 11. Work on lab 5.
 12. [Text processing](lecture/l10-text.html)
-    *  Discuss lab 5.  HW 3 assigned
+    *  Discuss lab 5.  [HW 3 assigned](hw_lab_instruction/hw03-fatal-geography/hw03-fatal-geography.html).
 

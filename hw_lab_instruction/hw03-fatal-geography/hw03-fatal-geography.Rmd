@@ -23,8 +23,6 @@ knitr::include_graphics("img/512px-Ghostcycle-2005.jpg")
 ```
 
 In this assignment we continue our examination of traffic accidents in New York State.
-The data are made available [online](https://data.gov.uk/dataset/cb7ae6f0-4be6-4935-9277-47e5ce24a11f/road-safety-data/datafile/36f1658e-b709-47e7-9f56-cca7aefeb8fe/preview) by the NY government.
-It covers all recorded accidents in NY in 2018 and 2019.  Some of the variables were modified for the purposes of this assignment.
 
 # Getting started
 
@@ -46,13 +44,12 @@ Before we introduce the data, let's warm up with some simple exercises.
 
 ## Packages
 
-Again, we use the **tidyverse**, `vroom` and `lubridate` packages.
+Again, we use the **tidyverse**, `vroom`, `readxl` and `janitor` packages.
 These packages is already installed for you.
 You can load them by running the following in your Console:
 
 ```{r load-packages-data, message = FALSE, eval = TRUE}
 library(tidyverse)
-library(lubridate)
 library(vroom)
 library(readxl)
 library(janitor)
@@ -87,15 +84,34 @@ Hint: you will want to either remove the "County" part of the `ctyname` in the c
 6.  Download the [vehicle miles traveled (VMT) per capita data](https://www7.transportation.gov/mission/health/transportation-and-health-tool-data-excel) available from the US Department of Transportation.  You can read more about it [here](https://www.transportation.gov/mission/health/vmt-capita#indicatordescription).  Put the file into a sensible place in your rstudio project and load the `Urbanized Area` sheet into R using `readxl`.  Cleanup the column names.
 
 ```{marginfigure}
-**Hint**: your life will be made easier if you construct a "crosswalk" mapping the identifiers between the VMT dataset `urbanized_area` and `county_name` from the crashes data, either as a .csv file that you read in with `read_csv` or using the `tibble` or `tribble` function directly in your markdown. Here's an example of the first seven rows of such a crosswalk:
+**Hint**: your life will be made easier if you construct a "crosswalk" mapping the identifiers between the VMT dataset `urbanized_area` and `county_name` from the crashes data, either as a .csv file that you read in with `read_csv` or using the `tibble` or `tribble` function directly in your markdown. Then join the files using the crosswalk.  Here's an example of the first seven rows of such a crosswalk:
 ![](img/vmt-crosswalk.png)
 ```
 
-7.  Find the 13 rows in the VMT data that are primarily in New York (i.e. ignoring Dansbury and Bridgeport, CT-NY, which honestly do not include much, if any of New York) and contain a non-missing value for `vehicle_miles_traveled_per_capita_raw_value` using `filter` and `str_detect`. Using whatever resources you wish--google works, though it's a bit tedious--to identify the counties corresponding to these `urbanized_areas`, and join this to the table.  (This will not be a one-to-one join.)  Then join the fixed up VMT table to the fatal crash counts.
+7.  Find the 13 rows in the VMT data that are primarily in New York (i.e. ignoring Dansbury and Bridgeport, CT-NY, which honestly do not include much, if any of New York) and contain a non-missing value for `vehicle_miles_traveled_per_capita_raw_value` using `filter` and `str_detect`. Using the list below, identify the counties corresponding to these `urbanized_areas`, and join this to the table.  (This will not be a one-to-one join.)  Then join the fixed up VMT table to the fatal crash counts.
 
+|Metro area              |County |
+|:----------------------------|:-----------|
+|New York-Newark, NY-NJ-CT    |Queens      |
+|New York-Newark, NY-NJ-CT    |Kings       |
+|New York-Newark, NY-NJ-CT    |New York    |
+|New York-Newark, NY-NJ-CT    |Bronx       |
+|New York-Newark, NY-NJ-CT    |Richmond    |
+|Rochester, NY                |Monroe      |
+|Buffalo, NY                  |Erie        |
+|Albany-Schenectady, NY       |Albany      |
+|Binghamton, NY-PA            |Broome      |
+|Elmira, NY                   |Chemung     |
+|Glens Falls, NY              |Warren      |
+|Ithaca, NY                   |Tompkins    |
+|Kingston, NY                 |Ulster      |
+|Poughkeepsie-Newburgh, NY-NJ |Dutchess    |
+|Saratoga Springs, NY         |Saratoga    |
+|Syracuse, NY                 |Onondaga    |
+|Utica, NY                    |Oneida      |
 
-7.  Derive the fatalities per 100,000 vehicle miles traveled, per county, using the crash count table Ex 3 and 5.  Repeat your plot from Ex 5 (though now you will only have 16 counties).  Discuss your findings.
+8.  Derive the fatalities per 100,000 vehicle miles traveled, per county, using the crash count table Ex 3 and 5.  Repeat your plot from Ex 5 (though now you will only have 16 counties).  Discuss your findings.
+
+9.  Which estimate, if any, would be most informative about the hazard rate of being a pedestrian/cyclist in NY state?  What other factors would be helpful in refining your estimate of the hazard?
 
 `r emo::ji("broom")` 🧶 ✅ ⬆️ Lint, Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document, and the lintr report on GitHub to make sure you're happy with the final state of your work.*
-
-

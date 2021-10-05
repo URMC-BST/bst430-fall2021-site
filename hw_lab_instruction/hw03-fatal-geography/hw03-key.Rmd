@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r load-packages-data, message = FALSE, eval = TRUE}
 library(tidyverse)
 library(lubridate)
+library(ggrepel)
 library(vroom)
 ```
 
@@ -22,7 +23,8 @@ crashes = vroom("https://urmc-bst.github.io/bst430-fall2021-site/hw_lab_instruct
 ## Ex1
 
 ```{r}
-crashes = crashes %>% janitor::clean_names() %>% filter(crash_descriptor == "Fatal Accident")
+crashes = crashes %>% janitor::clean_names() %>% #filter(crash_descriptor %in% c("Fatal Accident"))
+  filter(crash_descriptor %in% c("Fatal Accident", 'Injury Accident', 'Property Damage & Injury Accident'))
 ```
 
 ## Ex2
@@ -37,15 +39,15 @@ crashes = crashes %>%
 ## Ex 3
 
 ```{r}
-crash_count = crashes %>% count(county_name, is_pedbike) %>% filter( county_name != 'Unknown')
+crash_count = crashes %>% mutate(across(c(county_name, is_pedbike), as.factor)) %>% count(county_name, is_pedbike, .drop = FALSE) %>% filter( county_name != 'Unknown') %>% replace_na(list(n = 0))
 
 crash_wide = crash_count %>% pivot_wider(names_from = is_pedbike, values_from = n, values_fill = 0)
 
-crash_scatter = ggplot(crash_wide, aes(x = Other, y =`Pedestrian/Bicycle` )) + geom_point()
+crash_scatter = ggplot(crash_wide, aes(x = Other, y =`Pedestrian/Bicycle` )) + geom_point() + geom_text_repel(aes(label = county_name), max.overlaps = 20)
 crash_scatter
 
 fct_lump_reorder = function(factor_var, n_var){
-   fct_lump_n(fct_reorder({{factor_var}}, {{n_var}}), 50, w = {{n_var}})
+   fct_lump_n(fct_reorder({{factor_var}}, {{n_var}}), 20, w = {{n_var}})
 }
 
 plt = ggplot(crash_count, aes(y =fct_lump_reorder(county_name, n), fill = is_pedbike, x = n)) + geom_col() + theme_minimal() +
@@ -73,9 +75,16 @@ crash_wide_100k = crash_count %>% pivot_wider(id_cols = county_name, names_from 
 
 crash_scatter %+% crash_wide_100k
 
-(plt %+% crash_count) + aes(y = fct_lump_reorder(county_name, n_per_100k), x = n_per_100k)
+top_20_popcrash = crash_count %>% group_by(county_name) %>% summarize(total_per_100k = sum(n_per_100k)) %>% 
+  ungroup() %>% mutate(is_top20 = ifelse(min_rank(-total_per_100k)<=20, county_name, "Rest of NY")) 
+
+crash_100k = crash_count %>% left_join(top_20_popcrash %>% select(-total_per_100k), by = 'county_name') %>% 
+  group_by(is_top20, is_pedbike) %>% summarize(n_per_100k = mean(n_per_100k))
+
+(plt %+% crash_100k) + aes(y = fct_reorder(is_top20, n_per_100k), x = n_per_100k)
 ```
 
+## Ex 6
 
 ```{r}
 vmt_metro = readxl::read_excel('data/THT_Data_508.xlsx', sheet = 3, na = c('[no data]')) %>% janitor::clean_names()
@@ -97,7 +106,6 @@ metro_areas = tribble( ~urbanized_area, ~county_name,
                     "Syracuse, NY", 'Onondaga',
                     "Utica, NY", "Oneida") %>%
                      unnest(cols = c(county_name))
-
 vmt_metro_sub = vmt_metro %>% 
   right_join(metro_areas) %>% 
   select(vmt = vehicle_miles_traveled_per_capita_raw_value, county_name) %>% 
@@ -105,20 +113,21 @@ vmt_metro_sub = vmt_metro %>%
 ```
 
 
-```{r}
-
-```
 
 
 
 
-
-## Ex 6
+## Ex 7/8
 
 ```{r}
 adjusted = crash_count %>% left_join(vmt_metro_sub) %>%  mutate(n_per_100k_vmt = n_per_100k/vmt)
 
+adjusted_wide = adjusted %>% select(-n_per_100k, -n) %>% pivot_wider(names_from = is_pedbike, values_from = n_per_100k_vmt)
+crash_scatter %+% adjusted_wide
+
 (plt %+% filter(adjusted, !is.na(vmt))) + aes(y = fct_reorder(county_name,n_per_100k_vmt), x = n_per_100k_vmt)
 ```
 
+## Ex9
 
+The fatalities per 100k VMT is most informative for motorists about their marginal risk of driving.  For pedestrians/cyclists, we really would like to know how many miles pedestrians/cyclists logged in a county in order to adjust for the amount of time they spend on the roads.  This would likely make NYC environs appears less hazardous.
