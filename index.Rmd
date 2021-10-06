@@ -56,4 +56,5 @@ MW 11:00-12:40, SRB 1402
 11. Work on lab 5.
 12. [Text processing](lecture/l10-text.html)
     *  Discuss lab 5.  [HW 3 assigned](hw_lab_instruction/hw03-fatal-geography/hw03-fatal-geography.html).
+    *  Reading: [r4ds chapter 14](https://r4ds.had.co.nz/strings.html)
 

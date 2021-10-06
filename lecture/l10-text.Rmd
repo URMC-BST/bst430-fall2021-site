@@ -41,7 +41,7 @@ knitr::opts_chunk$set(cache = TRUE)
 ## Cardiac diagnoses
 
 ```{r, output.lines = 13}
-diagnoses = read_csv('l10-WIP/data/cardiac-dx.csv')
+diagnoses = read_csv('l10/data/cardiac-dx.csv')
 diagnoses
 ```
 
@@ -92,7 +92,7 @@ diagnoses_row %>% filter(str_detect(diagnoses, 'hypoplastic')) %>%
 
 ---
 
-## Plot co-occurances
+## Plot co-occurrence
 
 .panelset[
 
@@ -103,7 +103,7 @@ diagnoses_row %>% filter(str_detect(diagnoses, 'hypoplastic')) %>%
   geom_tile() + 
   scale_x_discrete(breaks = NULL) +
   labs(y = "Diagnosis", x = 'Patient', 
-       main = 'Co-occurance of hypoplastic heart disorders')
+       main = 'Co-occurrence of hypoplastic heart disorders')
 ```
 ].panel[.panel-name[Plot]
 ```{r, ref.label='dx0',  echo = FALSE, out.width="75%"}
@@ -124,7 +124,7 @@ diagnoses_row %>% filter(str_detect(diagnoses, 'hypoplastic')) %>%
   geom_tile() + 
   scale_x_discrete(breaks = NULL) +
   labs(y = "Diagnosis", x = 'Patient', 
-       main = 'Co-occurance of hypoplastic heart disorders')
+       main = 'Co-occurrence of hypoplastic heart disorders')
 ```
 ].panel[.panel-name[Plot]
 ```{r, ref.label='dx-tile',  echo = FALSE, out.width="75%"}
@@ -146,7 +146,7 @@ diagnoses_row %>% filter(str_detect(diagnoses, 'hypoplastic')) %>%
   geom_tile() + 
   scale_x_discrete(breaks = NULL) +
   labs(y = "Diagnosis", x = 'Patient', 
-       main = 'Co-occurance of hypoplastic heart disorders')
+       main = 'Co-occurrence of hypoplastic heart disorders')
 ```
 ].panel[.panel-name[Plot]
 ```{r, ref.label='dx-tile-wrap',  echo = FALSE, out.width="75%"}
@@ -169,7 +169,7 @@ diagnoses_row %>% filter(str_detect(diagnoses, 'hypoplastic')) %>%
   theme(axis.text.y = element_text(hjust = 0, vjust = 0, size = 8)) + #<<
   scale_x_discrete(breaks = NULL) +
   labs(y = "Diagnosis", x = 'Patient', 
-       main = 'Co-occurance of hypoplastic heart disorders')
+       main = 'Co-occurrence of hypoplastic heart disorders')
 ```
 ].panel[.panel-name[Plot]
 ```{r, ref.label='dx-tile-wrap-just',  echo = FALSE, out.width="75%"}
@@ -285,7 +285,7 @@ Replace
 str_sub(dinner, 
         #space + l-
         nchar(names) + 2, 
-        #space + l-o-v-e
+        #space + l-i-k-e
         nchar(names) + 6 
 ) = "demands"
 dinner
@@ -316,6 +316,14 @@ str_split(dinner, " ")
 
 Also recall `tidyr::separate` and `tidyr::separate_rows`.
 
+---
+
+## Other handy low-level string manipulations
+
+*  Change case `str_to_lower()`, `str_to_upper()`, `str_to_title()`
+*  Remove trailing/leading `str_trim()` or repeated `str_squish()` whitespace
+*  Wrap long lines `stringr::str_wrap()`
+*  Truncate `str_trunc()` or abbreviate `base::abbreviate()` long strings.
 
 ---
 
@@ -348,7 +356,6 @@ class: bg-green
 Write what you want to match (if it's alpha-numeric).
 
 ```{r}
-library(stringr)
 lunch = c("one app", "two appetizers", "three apples")
 str_view_all(lunch, 'apple')
 ```
@@ -551,6 +558,8 @@ Actually, any regular expression can use a capture group, both for matching and 
 
 .hand[Your turn]. .alert[Form pairs<sup>1</sup>], and browse again to [Lecture 10 - Text AE](https://rstudio.cloud/spaces/162296/project/2985078) and complete the exercises in regex-text.
 
+You might also experiment with installing `devtools::install_github("gadenbuie/regexplain")`.  See https://www.garrickadenbuie.com/project/regexplain/ for example usage.
+
 .footnote[[1] By this, I highly encourage only one person to code at a time -- the other person should just watch and spout beta.]
 ---
 
@@ -580,8 +589,8 @@ Julia Silge has [one book on classical text mining](https://www.tidytextmining.c
 ## Most important functionality
 
 *  `unnest_tokens()` split a string into tokens (words, bi-grams, etc) as a data frame
-*  `cast_sparse` convert to a (sparse) document-term matrix.
 *  `bind_tf_idf` calculate term and inverse-document frequencies.
+*  `cast_sparse` convert to a (sparse) document-term matrix.
 
 ---
 
@@ -651,7 +660,7 @@ word_counts
 ggplot(word_counts, aes(n/total)) +
   geom_histogram(show.legend = FALSE) +
   xlim(NA, 0.0009) + 
-  facet_wrap(~title, ncol = 2, scales = "free_y")
+  facet_wrap(~title, ncol = 2, scales = "free_y") + theme_minimal()
 ```
 ---
 
@@ -709,10 +718,12 @@ word_sentiments
 ##  Which is more happy?
 
 ```{r}
-ggplot(word_sentiments, aes(y = fct_reorder(word_collapse,  n, .fun = sum), x = n, fill = sentiment)) + geom_col() + facet_wrap(~title, scales = 'free_x') + ylab("Word") + xlab("Occurence") + theme_minimal()
+ggplot(word_sentiments, aes(y = fct_reorder(word_collapse,  n, .fun = sum), x = n, fill = sentiment)) + geom_col() + facet_wrap(~title, scales = 'free_x') + ylab("Word") + xlab("Occurrence") + theme_minimal()
 ```
 
 ---
+
+
 
 ## Term frequency and inverse document frequency
 
@@ -722,10 +733,10 @@ $$\text{idf}(\text{term}) = \ln{\left(\frac{n_{\text{documents}}}{n_{\text{docum
 
 The IDF thus ranges from 0 for words that appear in every document up to $log(n)$ for a word unique across documents.
 
-The term frequency is just the word counts, normalized to the number of words per text, so the popular TF-IDF is just
+The term frequency is just the word counts, normalized to the number of words per text, so the popular TF-IDF<sup>1</sup> metric is just
 
 $$\text{tf-idf}(\text{term}) = \text{idf}(\text{term}) \times \text{tf}(\text{term})$$
-
+.footnote[[1] Popular, and curiously devoid of an obvious statistical model.  [Some attempts to link to information theory](https://en.wikipedia.org/wiki/Tf%E2%80%93idf#Justification_of_idf) have been made.]
 ---
 
 ## Calculate TF-IDF
@@ -751,3 +762,30 @@ word_counts %>% group_by(title) %>% slice_max(tf_idf, n = 15) %>% ungroup() %>%
   facet_wrap(~title, ncol = 2, scales = "free") + 
   theme_minimal()
 ```
+
+---
+
+## Occurrence matrix
+
+Lastly, we might want to convert our counts to an occurrence matrix $\mathbf X = [x_{ij}]$ where $x_{ij}$ is the number of times document $i$ contains term $j$.
+
+Most $x_{ij}$ will be zero, reflecting Zipf's law.  We will almost always want to store it in a special format called a .alert[sparse matrix], that only stores the non-zero entries and their index in the matrix.
+
+---
+
+## `cast_sparse()`
+
+```{r}
+X = cast_sparse(word_counts, title, word, n)
+class(X)
+dim(X)
+sum(X>0)
+```
+
+This is useful for downstream modeling, such as latent Dirichlet allocation.
+
+---
+
+# Resources
+
+Julia Silge has [one book on classical text mining](https://www.tidytextmining.com/) and [another on machine learning on text](https://smltar.com/).
