@@ -23,8 +23,8 @@ crashes = vroom("https://urmc-bst.github.io/bst430-fall2021-site/hw_lab_instruct
 ## Ex1
 
 ```{r}
-crashes = crashes %>% janitor::clean_names() %>% #filter(crash_descriptor %in% c("Fatal Accident"))
-  filter(crash_descriptor %in% c("Fatal Accident", 'Injury Accident', 'Property Damage & Injury Accident'))
+crashes = crashes %>% janitor::clean_names() %>% filter(crash_descriptor %in% c("Fatal Accident"))
+#  filter(crash_descriptor %in% c("Fatal Accident", 'Injury Accident', 'Property Damage & Injury Accident'))
 ```
 
 ## Ex2
@@ -47,7 +47,7 @@ crash_scatter = ggplot(crash_wide, aes(x = Other, y =`Pedestrian/Bicycle` )) + g
 crash_scatter
 
 fct_lump_reorder = function(factor_var, n_var){
-   fct_lump_n(fct_reorder({{factor_var}}, {{n_var}}), 20, w = {{n_var}})
+   fct_lump_n(fct_reorder({{factor_var}}, {{n_var}}), 20, w = {{n_var}}, other_level = "Rest of NY")
 }
 
 plt = ggplot(crash_count, aes(y =fct_lump_reorder(county_name, n), fill = is_pedbike, x = n)) + geom_col() + theme_minimal() +

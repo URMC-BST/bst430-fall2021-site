@@ -22,8 +22,7 @@ knitr::opts_chunk$set(
 knitr::include_graphics("img/accident.jpg")
 ```
 
-In this assignment we'll look at traffic accidents in New York State
-The data are made available [online](https://data.gov.uk/dataset/cb7ae6f0-4be6-4935-9277-47e5ce24a11f/road-safety-data/datafile/36f1658e-b709-47e7-9f56-cca7aefeb8fe/preview) by the NY government.
+In this assignment we'll look at traffic accidents in New York State.
 It covers all recorded accidents in NY in 2018 and 2019.  Some of the variables were modified for the purposes of this assignment.
 
 # Getting started
@@ -39,7 +38,7 @@ The output will be in the file markdown `.md` file with the same name.
 Before we introduce the data, let's warm up with some simple exercises.
 
 -   Update the YAML, changing the author name to your name, and **knit** the document.
--   `emo::ji("broom")` Run `lint_assignment()` and verify that you are lint free.
+-   `r emo::ji("broom")` Run `lint_assignment()` and verify that you are lint free.
 -   Commit your changes with a meaningful commit message.
 -   Push your changes to GitHub.
 -   Go to your repo on GitHub and confirm that your changes are visible in your Rmd **and** md files. If anything is missing, commit and push again.
@@ -116,7 +115,7 @@ crashes %>%
 
 Describe the patterns you see for Property accidents vs Fatal accidents on the weekdays vs weekends.
 
-`emo::ji("broom")` 🧶 ✅ ⬆️ Lint, Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.*
+`r emo::ji("broom")` 🧶 ✅ ⬆️ Lint, Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.*
 
 5.  Recreate this plot:
 
@@ -142,3 +141,9 @@ Hint: use `lubridate::month`to extract the numeric index of the month.
 7.  Create another data visualization based on these data and interpret it. You can choose any variables and any type of visualization you like, but it must have at least three variables, e.g. a scatterplot of x vs. y isn't enough, but if points are colored or faceted by z, that's fine. In your answer, don't forget to label your R chunk as well.
 
 `r emo::ji("broom")` 🧶 ✅ ⬆️ Lint, Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document, and the lintr report on GitHub to make sure you're happy with the final state of your work.*
+
+## Rubric: 39 points total
+
+*  8 ex @ 3 pts per
+*  5 points github commits
+*  10 points lint 0-2 lint, -.5 point for every lint past 2.
