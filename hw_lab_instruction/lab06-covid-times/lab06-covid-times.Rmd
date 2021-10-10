@@ -1,0 +1,129 @@
+---
+title: "Lab 06 - Covid time series"
+output: 
+  tufte::tufte_html:
+    css: ../lab.css
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = TRUE)
+```
+
+In class on 25 October, you will give a brief presentation and the reasoning for the choices you made.  For this, it's fine to just step through your markdown explaining the plot and code.
+
+# Learning goals
+
+-   Making and using functions
+-   Manipulating matrices
+
+# Getting started
+
+Go to the course GitHub organization and locate your repo, clone it in RStudio and open the R Markdown document.
+Knit the document to make sure it compiles without errors.
+
+## Warm up
+
+Before we introduce the data, let's warm up with some simple exercises.
+Update the YAML of your R Markdown file with your information, knit, commit, and push your changes.
+Make sure to commit with a meaningful commit message.
+Then, go to your repo on GitHub and confirm that your changes are visible in your Rmd **and** md files.
+If anything is missing, commit and push again.
+
+## Packages
+
+We'll use the **tidyverse** package for much of the data wrangling and visualisation.
+These packages are already installed for you.
+You can load them by running the following in your Console:
+
+```{r eval = TRUE, message = FALSE}
+library(tidyverse) 
+```
+
+## Data
+
+These data are from the New York Times covid tracking page.  Read more [here](https://github.com/nytimes/covid-19-data).  They are from manual curation of state, county and national announcements and records.  They represent the **cumulative total** of cases and deaths at the county level from selected states, since October 2020.
+
+(I will avoid comment as to why these data are more readily found from a newspaper than from the CDC.) 
+
+```{r}
+cases = read_csv('data/daily-selected-counties.csv')
+```
+
+
+# Exercises
+
+1.  Consider Alabama, Arizona, California, Florida, New York and Texas.  Make a line plot of daily cases and deaths in each county in these states.  (Facet by state, group by county.)
+
+```{r, include = FALSE}
+sub_counties = filter(cases, state %in% c("Alabama", "Arizona", 'California', 'Florida', 'New York', 'Texas'))
+sub_county_long = pivot_longer(sub_counties, c(cases, deaths), names_to = 'stat')
+ggplot(sub_county_long, aes(x = date, y = value, group = county, color = stat)) + 
+  geom_line(alpha = .5, position = 'stack') + facet_wrap(~state+stat, scales = 'free') + theme_minimal() +
+  scale_color_viridis_d()
+```
+What problem do you see with Florida?  Remove this "county" going forward.
+
+```{r, include = FALSE}
+whack = sub_counties %>% group_by(state, county) %>% arrange(date) %>% summarize(whack = any(diff(cases)<0))
+
+semi_join(sub_counties, filter(whack, whack)) %>% 
+  group_by(state, county) %>% mutate(diff_case = c(NA, diff(cases))) %>% 
+  filter(diff_case<0) %>% slice_head(n = 10)
+
+padded_diff = function(x) c(NA, diff(x))
+sub_counties = filter(sub_counties, county != 'Unknown')
+sub_counties = sub_counties %>% group_by(state, county) %>% arrange(date) %>% mutate(across(c(cases, deaths), list(new = padded_diff)))
+```
+
+2.  Let's convert the cumulative cases into incident cases.  Hint: use the `diff` function.  Amend the previous plot to now show incident cases and deaths.
+
+```{r}
+sub_county_long = pivot_longer(sub_counties, c(cases_new, deaths_new), names_to = 'stat')
+plt = ggplot(sub_county_long, aes(x = date, y = value, group = county, color = stat)) + 
+  geom_line(alpha = .5) + facet_wrap(~state+stat, scales = 'free') + theme_minimal() +
+  scale_color_viridis_d()
+plt
+```
+3.  What other pecularity do you note about Florida?
+
+```{r}
+smooth_n = function(x, n = 7) stats::filter(x, rep(1/n, n), method = 'convolution', sides = 1)
+
+smoothed = sub_counties %>%
+  group_by(state, county) %>% mutate(across(c(cases_new, deaths_new), smooth_n))
+
+waves =  as.Date(c("2020-03-01", "2020-07-01", "2020-09-15", "2021-04-01", "2021-07-01", "2021-11-01"))
+
+plt %+% (smoothed %>% pivot_longer(c(cases_new, deaths_new), names_to = 'stat')) + geom_vline(data = tibble(date = waves), aes(xintercept = date))
+
+```
+
+
+3.  A commonly-stated rule of thumb is that deaths lag cases by 14 days.  
+```{r}
+states = smoothed %>% group_by(state, date) %>% summarize(across(c(cases_new, deaths_new), sum)) %>% ungroup()
+states = states %>% mutate(wave = cut(date, breaks =waves))
+plt %+% (states %>% pivot_longer(c(cases_new, deaths_new), names_to = 'stat')) + aes(group = NULL)
+acfs = states %>% group_by(state, wave) %>% summarize(acf = list(acf(cbind(cases_new, deaths_new), na.action = na.pass, lag.max = 60)))
+```
+
+
+`r emo::ji("broom")`  🧶 ✅ ⬆️ Lint, Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.*
+
+
+
+`r emo::ji("broom")` 🧶 ✅ ⬆️ Lint, Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document on GitHub to make sure you're happy with the final state of your work.*
+
+# Wrapping up
+
+Go back through your write up to make sure you're following coding style guidelines we discussed in class.
+Make any edits as needed.
+
+Also, make sure all of your R chunks are properly labelled, and your figures are reasonably sized.
+
+Once the team leader for the week pushes their final changes, others should *pull* the changes and knit the R Markdown document to confirm that they can reproduce the report.
