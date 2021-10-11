@@ -38,7 +38,7 @@ Andrew's Office hours at 4:30-5:30 Thursday by zoom.
 
 ## Motivation: time series
 
-Let's suppose [we tabulate](#tabulate-flights) the average delay at the NYC airports at every hour during the month of June.
+Let's suppose we tabulate&lt;sup&gt;1&lt;/sup&gt; the average delay at the NYC airports at every hour during the month of June.
 
 
 
@@ -60,7 +60,7 @@ delay_june %&gt;% slice_max(n = 1, order_by = total_delay)
 ## 4 6     26    6     EWR            617
 ## # … with 50 more rows
 ```
-
+.footnote[[1] See appendix.]
 ---
 
 
@@ -68,15 +68,6 @@ delay_june %&gt;% slice_max(n = 1, order_by = total_delay)
 dstat = ggplot(delay_june, aes(x = as.numeric(hour), y = total_delay, color = origin)) + 
   geom_point() + geom_smooth() 
 dstat
-```
-
-```
-## Warning: Removed 625 rows containing non-finite values
-## (stat_smooth).
-```
-
-```
-## Warning: Removed 625 rows containing missing values (geom_point).
 ```
 
 &lt;img src="l11-linear-algebra-indexing_files/figure-html/unnamed-chunk-3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -884,6 +875,8 @@ delay_matrix2
 
 ## Mind your NAs
 
+`cor(&lt;MATRIX&gt;, use = ..., method = c("pearson", "kendall", "spearman"))`
+
 .pull-left[
 
 ```r
@@ -941,7 +934,7 @@ delay_matrix[,'EWR'] # or delay_matrix[,1]
 
 ---
 
-## row indexing
+## A second taste 
 
 
 ```r
@@ -1805,6 +1798,15 @@ w
 ## -0.63  0.18 -0.84  1.60  0.33 -0.82  0.49  0.74
 ```
 
+```r
+w[c('a', 'b', 'd')]
+```
+
+```
+##     a     b     d 
+## -0.63  0.18  1.60
+```
+
 
 ---
 
@@ -1838,7 +1840,7 @@ w[w &lt; 0]
 ## -0.63 -0.84 -0.82
 ```
 
-`which()` gives the elements of a Boolean vector that are `TRUE`.
+`which()` gives the elements of a Boolean vector that are `TRUE`, excludes .alert[NA].
 
 ---
 
@@ -2401,7 +2403,7 @@ In summary:
 
 Under the hood, of course, matrices are just vectors with some extra facilities for indexing. R uses column-major order: the columns are stacked up one after the other. (Contrast to C and Python which use row-major order).
 
-&lt;img src="l11-WIP/img/major-order.svg" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="l11/img/major-order.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
 

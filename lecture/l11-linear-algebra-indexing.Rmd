@@ -31,7 +31,7 @@ Andrew's Office hours at 4:30-5:30 Thursday by zoom.
 
 ## Motivation: time series
 
-Let's suppose [we tabulate](#tabulate-flights) the average delay at the NYC airports at every hour during the month of June.
+Let's suppose we tabulate<sup>1</sup> the average delay at the NYC airports at every hour during the month of June.
 
 ```{r tabulate-delay, include = FALSE}
 library(nycflights13)
@@ -59,10 +59,10 @@ theme_set(theme_minimal())
 ```{r}
 delay_june %>% slice_max(n = 1, order_by = total_delay)
 ```
-
+.footnote[[1] See appendix.]
 ---
 
-```{r}
+```{r, warning=FALSE}
 dstat = ggplot(delay_june, aes(x = as.numeric(hour), y = total_delay, color = origin)) + 
   geom_point() + geom_smooth() 
 dstat
@@ -125,7 +125,7 @@ cowplot::plot_grid(
 ]
 .panel[.panel-name[Plot]
 .pull-left[
-```{r, echo = FALSE, ref.label="delay-cow",  warning=FALSE, message=FALSE, fig.asp = 1, fig.width = 6}
+```{r, echo = FALSE, ref.label="delay-cow",  warning=FALSE, message=FALSE, fig.asp = 1, fig.width = 7}
 ```
 ]
 .pull-right[
@@ -157,6 +157,8 @@ delay_matrix2
 
 ## Mind your NAs
 
+`cor(<MATRIX>, use = ..., method = c("pearson", "kendall", "spearman"))`
+
 .pull-left[
 ```{r}
 cor(delay_matrix) 
@@ -184,7 +186,7 @@ delay_matrix[,'EWR'] # or delay_matrix[,1]
 
 ---
 
-## row indexing
+## A second taste 
 
 ```{r}
 ## 10th row, 10am
@@ -446,6 +448,7 @@ Common ways to index a vector:
 w
 names(w) = letters[seq_along(w)]
 w
+w[c('a', 'b', 'd')]
 ```
 
 
@@ -459,7 +462,7 @@ which(w < 0)
 w[w < 0]
 ```
 
-`which()` gives the elements of a Boolean vector that are `TRUE`.
+`which()` gives the elements of a Boolean vector that are `TRUE`, excludes .alert[NA].
 
 ---
 
@@ -711,7 +714,7 @@ In summary:
 Under the hood, of course, matrices are just vectors with some extra facilities for indexing. R uses column-major order: the columns are stacked up one after the other. (Contrast to C and Python which use row-major order).
 
 ```{r, echo = FALSE, fig.width=4}
-knitr::include_graphics('l11-WIP/img/major-order.svg')
+knitr::include_graphics('l11/img/major-order.png') 
 ```
 
 ---
