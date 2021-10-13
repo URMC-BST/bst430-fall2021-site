@@ -53,7 +53,7 @@ cases = read_csv('data/us-states.csv')
 
 ```{r, eval = FALSE}
 # replace with link to data on web
-cases = read_csv('data/us-states.csv')
+cases = readr::read_csv("https://urmc-bst.github.io/bst430-fall2021-site/hw_lab_instruction/lab06-covid-times/data/us-states.csv")
 ```
 
 
