@@ -59,7 +59,7 @@ cases = readr::read_csv("https://urmc-bst.github.io/bst430-fall2021-site/hw_lab_
 
 # Exercises
 
-1.  Consider Alabama, Arizona, California, Florida, New York and Texas from **2020-03-01** onward.  Make a line plot akin to the one below of daily cases and deaths in each county in these states.  Facet by state.  (Your plot does not need to be identical, merely needs to convey the same information.)
+1.  Consider Alabama, Arizona, California, Florida, New York and Texas from **2020-03-01** onward.  Make a line plot akin to the one below of daily cases and deaths in each of these states.  Facet by state.  (Your plot does not need to be identical, merely needs to convey the same information.)
 
 ```{r, echo = FALSE}
 sub_counties = filter(cases, state %in% c("Alabama", "Arizona", 'California', 'Florida', 'New York', 'Texas'), date >= as.Date('2020-03-01'))
