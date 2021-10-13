@@ -59,5 +59,6 @@ MW 11:00-12:40, SRB 1402
     *  Reading: [r4ds chapter 14](https://r4ds.had.co.nz/strings.html)
 13. Continue L10.
 14. [Matrices, indexing, linear algebra](lecture/l11-linear-algebra-indexing.html)
+    * [Lab 6](hw_lab_instruction/lab06-covid-times/lab06-covid-times.html) assigned.
 
 
