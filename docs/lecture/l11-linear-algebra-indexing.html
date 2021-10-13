@@ -21,7 +21,7 @@ class: ur-title, center, middle, title-slide
 ## Vectors, matrices and linear algebra
 ### Andrew McDavid
 ### U of Rochester
-### 2021-09-27 (updated: 2021-10-11)
+### 2021-09-27 (updated: 2021-10-13)
 
 ---
 
@@ -85,15 +85,6 @@ delay_june = delay_june %&gt;% group_by(hour, origin, month) %&gt;%
 (dstat %+% delay_june) + aes(y = residual_total_delay)
 ```
 
-```
-## Warning: Removed 625 rows containing non-finite values
-## (stat_smooth).
-```
-
-```
-## Warning: Removed 625 rows containing missing values (geom_point).
-```
-
 &lt;img src="l11-linear-algebra-indexing_files/figure-html/unnamed-chunk-4-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
@@ -132,7 +123,7 @@ delay_wide %&gt;% slice(10:15)
 airport_delay_plot = ggplot(delay_wide, aes(x = EWR, y = JFK)) + 
   geom_point(aes(color = as.numeric(hour))) + geom_smooth() + 
   scale_color_viridis_c() 
-airport_delay_plot + labs(title = "Total delay (minutes) on each hour")
+airport_delay_plot + labs(title = "Resid. delay (minutes) on each hour")
 ```
 
 ```
@@ -166,7 +157,7 @@ cowplot::plot_grid(
 ]
 .panel[.panel-name[Plot]
 .pull-left[
-&lt;img src="l11-linear-algebra-indexing_files/figure-html/unnamed-chunk-7-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="l11-linear-algebra-indexing_files/figure-html/unnamed-chunk-7-1.png" width="500px" style="display: block; margin: auto;" /&gt;
 ]
 .pull-right[
 Really, we'd like to examine the correlation matrix between airports, or the correlation matrix between lags at various airports...
@@ -874,8 +865,10 @@ delay_matrix2
 ---
 
 ## Mind your NAs
-
-`cor(&lt;MATRIX&gt;, use = ..., method = c("pearson", "kendall", "spearman"))`
+```
+cor(&lt;MATRIX1&gt;, [&lt;MATRIX2&gt;], use = ..., 
+method = c("pearson", "kendall", "spearman"))
+```
 
 .pull-left[
 
@@ -933,7 +926,7 @@ delay_matrix[,'EWR'] # or delay_matrix[,1]
 ```
 
 ---
-
+class: code70
 ## A second taste 
 
 
@@ -1366,7 +1359,7 @@ Some caveats as to why the output from acf differs slightly from the lagged corr
 *  dplyr is great for one-off analyses!
 *  ...but can be a hassle to program abstracted routines.  
 *  Manipulation of vectors and matrices in R is more flexible and transparent.
-
+*  We'll get more motivation for this when we discuss functions (next week)
 
 ---
 
@@ -2175,7 +2168,7 @@ str(j_dat[c("x", "z")]) # get multiple variables
 ```
 
 ```r
-# But we prefer
+# We prefer in interactive work
 identical(select(j_dat, x, z), j_dat[c("x", "z")])
 ```
 
@@ -2203,6 +2196,7 @@ A matrix is a generalization of an atomic vector and the requirement that all th
 
 
 ---
+class: code70
 
 ## Matrices
 
@@ -2226,6 +2220,7 @@ j_mat
 ## [3,] "x31" "x32" "x33" "x34"
 ## [4,] "x41" "x42" "x43" "x44"
 ```
+
 
 ```r
 str(j_mat)
@@ -2453,6 +2448,7 @@ j_mat
 ```
 
 ---
+class: code90
 
 ## Recycling also works!
 
@@ -2606,6 +2602,10 @@ rbind(vec1, vec2)
 ## vec1    5    4    3    2    1
 ## vec2    2    4    8   16   32
 ```
+
+You may have also seen me use `bind_rows()` and `bind_cols()` -- 
+these are analogous tidyverse functions that you will want to use when working with **data frames**--they don't work with matrices.
+They have nicer defaults for data frames than `cbind()` and `rbind()`.
 
 ---
 
@@ -2997,11 +2997,29 @@ More reading: [r4ds chapter 20](https://r4ds.had.co.nz/vectors.html).
 # Appendix
 
 ---
-class: code50
-
-&lt;a name = "tabulate-flights"&gt;
+class: code70
 
 
+```r
+library(nycflights13)
+library(tidyverse)
+knitr::opts_chunk$set(cache = TRUE)
+delay_stats = flights %&gt;%  filter(month %in% c(3, 6)) %&gt;%
+  mutate(day = factor(day), hour = factor(hour, levels = 0:23), origin = factor(origin), month= factor(month)) %&gt;%
+  group_by(day, hour, origin, month) %&gt;% 
+  mutate(n = n(), pos_delay =  pmax(0, dep_delay)) %&gt;%
+   group_by(day, hour, origin, month, .drop = FALSE) %&gt;% 
+  summarize(n = n(), 
+            total_delay = ifelse(n&gt;0, sum(pos_delay, na.rm = TRUE), NA_real_),
+            total_delay_5 = sum(dep_delay &gt; 5, na.rm = TRUE),
+            prop_delay_5 = total_delay_5/n,
+            mean_delay = total_delay/n) %&gt;%
+  group_by(hour, origin, month) %&gt;%
+  mutate(residual_mean_delay = mean_delay - mean(mean_delay, na.rm = TRUE),
+         residual_total_delay = total_delay - mean(total_delay, na.rm = TRUE))
+delay_june = filter(delay_stats, month == "6") %&gt;% select(day:origin, total_delay)
+theme_set(theme_minimal())
+```
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
