@@ -1,6 +1,6 @@
 ---
 title: "BST430  Lecture 12"
-subtitle: "Functions"
+subtitle: "Functions (i)"
 author: "Andrew McDavid"
 institute: "U of Rochester"
 date: "2021-10-13 (updated: `r Sys.Date()`)"
@@ -21,6 +21,9 @@ output:
 ---
   
 ```{r child = "setup.Rmd"}
+```
+
+```{r links, child="l12/links.md"}
 ```
 
 ```{r, include=FALSE}
@@ -172,7 +175,7 @@ Either check these results "by hand" or apply the "does that even make sense?" t
 
 ### Test on weird stuff
 
-Now we try to break our function. Don't get truly diabolical (yet). Just make the kind of mistakes you can imagine making at 2am when, 3 years from now, you rediscover this useful function you wrote. Give your function inputs it's not expecting.
+Don't get truly diabolical (yet). Just make the kind of mistakes you can imagine making at 2am when, 3 years from now, you rediscover this useful function you wrote.
 
 ```{r error = TRUE}
 max_minus_min(gapminder) ## hey sometimes things "just work" on data.frames!
@@ -180,26 +183,28 @@ max_minus_min(gapminder$country) ## factors are kind of like integer vectors, no
 max_minus_min("eggplants are purple") ## i have no excuse for this one
 ```
 
-How happy are you with those error messages? You must imagine that some entire __script__ has failed and that you were hoping to just `source()` it without re-reading it. If a colleague or future you encountered these errors, do you run screaming from the room? How hard is it to pinpoint the usage problem?
+---
+
+How happy are you with those error messages? You must imagine that some entire __script__ has failed and that you were hoping to just knit it without re-reading it. If a colleague or future you encountered these errors, how hard is it to pinpoint the usage problem?
 
 ---
 
 ### I will scare you now
 
-Here are some great examples STAT545 students devised during class where the function __should break but it does not.__
+Here are some great examples students in UBC's STAT545 devised where the function __should break but it does not.__
 
 ```{r}
 max_minus_min(gapminder[c('lifeExp', 'gdpPercap', 'pop')])
 max_minus_min(c(TRUE, TRUE, FALSE, TRUE, TRUE))
 ```
 
-In both cases, R's eagerness to make sense of our requests is unfortunately successful. In the first case, a data.frame containing just the quantitative variables is eventually coerced into numeric vector. We can compute max minus min, even though it makes absolutely no sense at all. In the second case, a logical vector is converted to zeroes and ones, which might merit an error or at least a warning.
+In the first case, a data.frame containing just the quantitative variables is eventually coerced into numeric vector. The second case is less odious -- a logical vector is converted to zeroes and ones.
 
 ---
 
 ## Check the validity of arguments
 
-For functions that will be used again -- which is not all of them! -- it is good to check the validity of arguments. This implements a rule from [the Unix philosophy][unix-philosophy]:
+For functions that will be used again -- which is not all of them! -- it is good to check the validity of arguments. This implements a rule from [the Unix philosophy](https://homepage.cs.uri.edu/~thenry/resources/unix_art/ch01s06.html):
 
 > Rule of Repair: When you must fail, fail noisily and as soon as possible.
 
@@ -210,15 +215,20 @@ For functions that will be used again -- which is not all of them! -- it is good
 I use it here to make sure the input `x` is a numeric vector.
 
 ```{r error = TRUE}
-mmm = function(x) {
+max_minus_min = function(x) {
   stopifnot(is.numeric(x))
   max(x) - min(x)
 }
-mmm(gapminder)
-mmm(gapminder$country)
-mmm("eggplants are purple")
-mmm(gapminder[c('lifeExp', 'gdpPercap', 'pop')])
-mmm(c(TRUE, TRUE, FALSE, TRUE, TRUE))
+max_minus_min(gapminder)
+max_minus_min(gapminder$country)
+max_minus_min("eggplants are purple")
+```
+
+---
+
+```{r error = TRUE}
+max_minus_min(gapminder[c('lifeExp', 'gdpPercap', 'pop')])
+max_minus_min(c(TRUE, TRUE, FALSE, TRUE, TRUE))
 ```
 
 And we see that it catches all of the self-inflicted damage we would like to avoid.
@@ -230,17 +240,19 @@ And we see that it catches all of the self-inflicted damage we would like to avo
 `stopifnot()` doesn't provide a very good error message. The next approach is very widely used. Put your validity check inside an `if()` statement and call `stop()` yourself, with a custom error message, in the body.
 
 ```{r error = TRUE}
-mmm2 = function(x) {
+max_minus_min = function(x) {
   if(!is.numeric(x)) {
     stop('I am so sorry, but this function only works for numeric input!\n',
          'You have provided an object of class: ', class(x)[1])
   }
   max(x) - min(x)
 }
-mmm2(gapminder)
+max_minus_min(gapminder)
 ```
 
 ---
+
+## Error checking
 
 In addition to a gratuitous apology, the error raised also contains two more pieces of helpful info:
   
@@ -251,41 +263,110 @@ If it is easy to do so, I highly recommend this template: "you gave me THIS, but
 
 The tidyverse style guide has a very useful [chapter on how to construct error messages](https://style.tidyverse.org/error-messages.html).
 
-Also use `stopifnot` for checks in data analytical scripts!
-
 ---
 
-## Wrap-up and what's next?
+## Assertions: not just for functions!
 
-Here's the function we've written so far:
+Also use `stopifnot` and other types of .alert[assertions] for checks in data analytical scripts! E.g.:
 
-```{r end_func1}
-mmm2
-```
+-  No duplicates in primary keys: `stopifnot(any(duplicated(data$primary_key)))`
+-  Data are of the correct type (numeric not character): `stopifnot(is.numeric(data$column))`
+-  Same number of rows after joining on primary keys: `stopifnot(nrow(data)==nrow(data_join))`
 
----
-
-
-## Resources
-
-Packages for runtime assertions (the last 3 seem to be under more active development than `assertthat`):
-
-* assertthat on [CRAN][assertthat-cran] and [GitHub][assertthat-github] - *the Hadleyverse option*
-* ensurer on [CRAN][ensurer-cran] and [GitHub][ensurer-github] - *general purpose, pipe-friendly*
-* assertr on [CRAN][assertr-cran] and [GitHub][assertr-github] - *explicitly data pipeline oriented*
-* assertive on [CRAN][assertive-cran] and [Bitbucket][assertive-bitbucket] - *rich set of built-in functions*
-
-Hadley Wickham's book [Advanced R][adv-r] [-@wickham2015a]:
-
-* Section on [defensive programming][adv-r-defensive-programming]
 
 ---
 class: middle
 
-.hand[What is an R function]
+.hand[Another example of an R function]
 
 ---
 
+## Read page for 23 Oct speech
+
+```{r eval=FALSE}
+url = "https://www.gov.scot/publications/coronavirus-covid-19-update-first-ministers-speech-23-october/"
+speech_page = read_html(url)
+```
+
+```{r include=FALSE}
+url = "https://www.gov.scot/publications/coronavirus-covid-19-update-first-ministers-speech-23-october/"
+speech_page = read_html("l12/data/oct-23.html")
+```
+
+```{r}
+speech_page
+```
+
+---
+
+## Extract components of 23 Oct speech
+
+```{r}
+title = speech_page %>%
+  html_node(".article-header__title") %>%
+  html_text()
+
+date = speech_page %>%
+  html_node(".content-data__list:nth-child(1) strong") %>%
+  html_text() %>%
+  dmy()
+
+location = speech_page %>%
+  html_node(".content-data__list+ .content-data__list strong") %>%
+  html_text()
+
+abstract = speech_page %>%
+  html_node(".leader--first-para p") %>%
+  html_text()
+
+text = speech_page %>%
+  html_nodes("#preamble p") %>%
+  html_text() %>%
+  list()
+```
+
+---
+
+## Put it all in a data frame
+
+.pull-left[
+```{r}
+oct_23_speech = tibble(
+  title    = title,
+  date     = date,
+  location = location,
+  abstract = abstract,
+  text     = text,
+  url      = url
+)
+
+oct_23_speech
+```
+]
+.pull-right[
+```{r echo=FALSE, out.width="75%"}
+knitr::include_graphics("l12/img/fm-speech-oct-23.png")
+```
+]
+
+
+---
+
+## When should you write a function?
+
+--
+.pull-left[
+```{r echo=FALSE, out.width="100%"}
+knitr::include_graphics("l12/img/funct-all-things.png")
+```
+]
+--
+.pull-right[
+When you’ve copied and pasted a block of code more than twice.
+]
+
+
+---
 ## Turn your code into a function
 
 - Pick a short but informative **name**, preferably a verb.
@@ -342,11 +423,10 @@ scrape_speech = function(url){
 ```
 
 ---
+class: code50
 
 ## `scrape_speech()`
 
-.pull-left-wide[
-.small[
 ```{r}
 scrape_speech = function(url) {
   
@@ -380,8 +460,6 @@ scrape_speech = function(url) {
   )
 }
 ```
-]
-]
 
 
 ---
@@ -394,7 +472,6 @@ class: middle
 
 ## What goes in / what comes out?
 
-.pull-left-wide[
 - They take input(s) defined in the function definition
 
 ```{r eval=FALSE}
@@ -415,7 +492,6 @@ scrape_page = function(x){
 ```
 
 - You can define more outputs to be returned in a list as well as nice print methods (but we won't go there for now...)
-]
 
 ---
 
@@ -468,6 +544,25 @@ mean = function(x){
 
 ---
 
+
+## Resources / reading
+
+Reading:
+[R4ds Chapter 20](https://r4ds.had.co.nz/functions.html)
+
+[Advanced R][adv-r] [defensive programming][adv-r-defensive-programming]
+
+
+Packages for runtime assertions (the last 3 seem to be under more active development than `assertthat`):
+
+* assertthat on [CRAN][assertthat-cran] and [GitHub][assertthat-github] - *the Tidyverse option*
+* ensurer on [CRAN][ensurer-cran] and [GitHub][ensurer-github] - *general purpose, pipe-friendly*
+* assertr on [CRAN][assertr-cran] and [GitHub][assertr-github] - *explicitly data pipeline oriented*
+* assertive on [CRAN][assertive-cran] and [Bitbucket][assertive-bitbucket] - *rich set of built-in functions*
+
+
+---
+
 # Acknowledgments
 
-Adapted from Jenny Bryan's STAT545 https://stat545.com/functions-part1.html and data science in a box.
+Adapted from Jenny Bryan's STAT545 https://stat545.com/functions-part1.html and [data science in a box](https://rstudio-education.github.io/datascience-box/course-materials/slides/u2-d21-functions/u2-d21-functions.html#1)

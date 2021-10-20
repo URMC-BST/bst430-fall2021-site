@@ -110,8 +110,14 @@ Hint: you will want to either remove the "County" part of the `ctyname` in the c
 |Syracuse, NY                 |Onondaga    |
 |Utica, NY                    |Oneida      |
 
-8.  Derive the fatalities per 100,000 vehicle miles traveled, per county, using the crash count table Ex 3 and 5.  Repeat your plot from Ex 5 (though now you will only have 16 counties).  Discuss your findings.
+8.  Derive the fatalities per 100,000 vehicle miles traveled, per county, using the crash count table Ex 3 and 5.  Repeat your plot from Ex 5 (though now you will only have <s>16</s> 17 counties).  Discuss your findings.
 
 9.  Which estimate, if any, would be most informative about the hazard rate of being a pedestrian/cyclist in NY state?  What other factors would be helpful in refining your estimate of the hazard?
 
 `r emo::ji("broom")` 🧶 ✅ ⬆️ Lint, Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document, and the lintr report on GitHub to make sure you're happy with the final state of your work.*
+
+## Rubric
+
+*  27 points correct and fully described answers @ 3 points per
+*  5 points adequately describe commit history
+*  10 points 0-2 lints, -.5 point for every lint past 2.
