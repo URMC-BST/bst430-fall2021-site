@@ -327,7 +327,7 @@ life(c("cats", "skiing", "health"))
 
 Also use `stopifnot` and other types of .alert[assertions] for checks in data analytical scripts! E.g.:
 
--  No duplicates in primary keys: `stopifnot(any(duplicated(data$primary_key)))`
+-  No duplicates in primary keys: `stopifnot(all(!duplicated(data$primary_key)))`
 -  Data are of the correct type (numeric not character): `stopifnot(is.numeric(data$column))`
 -  Same number of rows after joining on primary keys: `stopifnot(nrow(data)==nrow(data_join))`
 
