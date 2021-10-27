@@ -62,7 +62,7 @@ MW 11:00-12:40, SRB 1402
     * [Lab 6](hw_lab_instruction/lab06-covid-times/lab06-covid-times.html) assigned.
 15.  Continue with matrices / linear algebra and Lab 6.
 16.  [Functions i](lecture/l12-functions.html), continue to work on lab6.
-17.  [Functions ii and iteration](lecture/l13-functions-ii.html).  Lab07.
+17.  [Functions ii and iteration](lecture/l13-functions-ii.html).  [HW04](hw_lab_instruction/hw04-wrangle-r/hw04-wrangle-r.html) (Due 5PM Nov 5)
     
     
 <!--* Before class (ideally), you should install R 4.1 and rstudio on your personal machine -- I will take a few minutes-->
