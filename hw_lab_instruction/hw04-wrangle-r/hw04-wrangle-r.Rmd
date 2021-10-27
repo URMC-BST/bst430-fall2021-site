@@ -46,7 +46,7 @@ Basically, all you should need to do is always remember to click the "use renv" 
 renv::snapshot()
 ```
 periodically to record the state of the package libraries.  Then, someone else who is working on your code base can get identical versions of the packages installed with
-```{r}
+```{r, eval = FALSE}
 renv::restore()
 ```
 
@@ -54,7 +54,7 @@ renv::restore()
 # Exercises
 
 1.  In rstudio, make a new project with the "arrow dropdown" in the upper right -> "New Project" -> "New Project".  
-*  Enter **hw04-<your github id>** for the directory name.  (This will be the name of your project and your github repo.)
+*  Enter **hw04-**`<your github id>` for the directory name.  (This will be the name of your project and your github repo.)
 *  Click "Create git repository" and "use renv".
 *  Then create the new project!
 
@@ -110,6 +110,6 @@ renv::snapshot()
 
 to update your renv file and record the software versions you are using.
 
-🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document on GitHub to make sure you're happy with the final state of your work.*
+6.  Add a README file with a sentence or two explaining what this repository is.
 
-6.  Add a README file with a sentence or two explaining what this repository is.  Push again, and check how everything looks in github.
+🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document on GitHub to make sure you're happy with the final state of your work.*
