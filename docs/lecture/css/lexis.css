@@ -363,6 +363,17 @@ img {
   float: right;
   width: 64%;
 }
+
+.pull-left-narrow{
+  float: left;
+  width: 34%;
+}
+
+.pull-right-wide{
+  float: right;
+  width: 64%;
+}
+
 .leftcol70 {
   float: left;
   width: 69%;

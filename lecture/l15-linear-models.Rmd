@@ -532,20 +532,11 @@ class: middle
 
 ---
 
-## Data: Paris Paintings
+## Goal: Predict painting height from width
 
-```{r message=FALSE}
-pp <- read_csv("l15/data/paris-paintings.csv", na = c("n/a", "", "NA"))
-```
-
-- Number of observations: `r nrow(pp)`
-- Number of variables: `r ncol(pp)`
-
----
-
-## Goal: Predict height from width
-
-$$\widehat{height}_{i} = \beta_0 + \beta_1 \times width_{i}$$
+$$\widehat{
+\text{height}}_{i} = \beta_0 + \beta_1 \times 
+\text{width}_{i}$$
 
 ```{r ref.label = "height-width-plot", echo=FALSE, warning=FALSE}
 ```
@@ -565,6 +556,8 @@ knitr::include_graphics("l15/img/tidymodels.png")
 linear_reg()
 ```
 
+[More models...](https://www.tidymodels.org/find/parsnip/)
+
 ---
 
 ## Step 2: Set model fitting *engine*
@@ -574,6 +567,7 @@ linear_reg() %>%
   set_engine("lm") # lm: linear model
 ```
 
+[More engines](https://parsnip.tidymodels.org/reference/linear_reg.html)
 ---
 
 ## Step 3: Fit model & estimate parameters
@@ -611,6 +605,8 @@ linear_reg() %>%
 .large[
 $$\widehat{height}_{i} = 3.62 + 0.781 \times width_{i}$$
 ]
+
+[More classes to tidy](https://broom.tidymodels.org/reference/index.html)
 
 ---
 
@@ -659,20 +655,9 @@ $$\hat{y}_{i} = \beta_0 + \beta_1~x_{i}$$
 - Tough luck, you can't have them...
 
 --
-- So we use sample statistics to estimate them:
+- So we make an estimate (e.g. $\mathbf{b} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}$) from a sample instead:
 
 $$\hat{y}_{i} = b_0 + b_1~x_{i}$$
-
----
-
-## Least squares regression
-
-- The regression line minimizes the sum of squared residuals.
-
---
-- If $e_i = y_i - \hat{y}_i$, then, the regression line minimizes 
-$\sum_{i = 1}^n e_i^2$.
-
 ---
 
 ## Visualizing residuals
@@ -691,53 +676,18 @@ p <- ggplot(data = ht_wt_fit_aug,
   geom_point(alpha = 0.2) + 
   labs(
     title = "Height vs. width of paintings",
-    subtitle = "Just the data",
     x = "Width (inches)",
     y = "Height (inches)"
     ) +
   coord_cartesian(xlim = c(0, 250), ylim = c(0, 200)) +
   theme(plot.subtitle = element_text(colour = "#E48957", face = "bold", size = rel(1.5)))
-p
-```
 
----
-
-## Visualizing residuals (cont.)
-
-```{r vis-res-2, echo=FALSE, out.width="70%"}
-p <- p + 
+p + 
   geom_smooth(method = "lm", color = "#8E2C90", se = FALSE) +
   geom_point(mapping = aes(y = .fitted), color = "#E48957") +
-  labs(subtitle = "Data + least squares line")
-p
-```
-
----
-
-## Visualizing residuals (cont.)
-
-```{r vis-res-3, echo = FALSE, out.width="70%"}
-p + 
   geom_segment(mapping = aes(xend = Width_in, yend = .fitted), color = "#E48957", alpha = 0.4) +
   labs(subtitle = "Data + least squares line + residuals")
 ```
-
----
-
-## Properties of least squares regression
-
-- The regression line goes through the center of mass point, the coordinates corresponding to average $x$ and average $y$, $(\bar{x}, \bar{y})$:  
-
-$$\bar{y} = b_0 + b_1 \bar{x} ~ \rightarrow ~ b_0 = \bar{y} - b_1 \bar{x}$$
-
---
-- The slope has the same sign as the correlation coefficient: $b_1 = r \frac{s_y}{s_x}$
-
---
-- The sum of the residuals is zero: $\sum_{i = 1}^n e_i = 0$
-
---
-- The residuals and $x$ values are uncorrelated
 
 ---
 
@@ -750,7 +700,7 @@ class: middle
 ## Categorical predictor with 2 levels
 
 .pull-left-narrow[
-.small[
+.code50[
 ```{r echo=FALSE}
 pp %>% 
   select(name, Height_in, landsALL) %>%
@@ -837,7 +787,7 @@ dummy_df %>%
 ```
 ]
 .pull-right-narrow[
-.small[
+.code50[
 ```{r echo=FALSE}
 pp %>% 
   select(name, Height_in, school_pntg) %>%
@@ -850,10 +800,11 @@ pp %>%
 
 ## Relationship between height and school
 
-.small[
+.code60[
 ```{r ref.label="ht-school", echo=FALSE}
 ```
-
+]
+.font70[
 - **Austrian school (A)** paintings are expected, on average, to be **14 inches** tall.
 - **Dutch/Flemish school (D/FL)** paintings are expected, on average, to be **2.33 inches taller** than *Austrian school* paintings.
 - **French school (F)** paintings are expected, on average, to be **10.2 inches taller** than *Austrian school* paintings.
@@ -864,7 +815,31 @@ pp %>%
 ]
 
 
+---
 
+## Non-tidy models
+
+I will confess, I don't use tidymodels yet in my typical workflow, though I think it is beneficial to learn because it makes resampling procedures (e.g. cross-validation) much easier.
+
+IMO, it's important to have a feel for the underpinnings of base R models, because their interface appears in many different packages you will use.
+
+---
+
+### Non-tidy models cheatsheet
+
+*  `fit = lm(formula, data)`: fit `formula` to data frame `data`
+
+*  `fit = glm(formula, data, family = binomial)`: fit a logistic regression using `formula` to data frame `data`
+
+*  `coef(fit)` extract coefficients as `numeric` vector
+
+*  `vcov(fit)` extract variance-covariance as `numeric` matrix
+
+*  `residuals(fit, type = ...)` get residuals. `type = ...` is an important argument (standardized, studentized, pearson, etc.)
+
+*  `predict(fit, newdata = ..., type = ...)` get predictions.  If `newdata` is set, it must be a data frame containing the same variable names as `data`. `type = "response"` vs `type = "link"` is important for glm's.
+
+*  `broom::tidy` is still very useful, though!
 ---
 
 # Acknowledgments

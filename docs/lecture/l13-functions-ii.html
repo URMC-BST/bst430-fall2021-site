@@ -21,7 +21,7 @@ class: ur-title, center, middle, title-slide
 ## Functions (ii) and Iteration
 ### Andrew McDavid
 ### U of Rochester
-### 2021-10-23 (updated: 2021-10-26)
+### 2021-10-23 (updated: 2021-10-27)
 
 ---
 
@@ -121,16 +121,6 @@ mean(gapminder$lifeExp &lt; median(gapminder$lifeExp))
 
 Now write a code snippet that takes the difference between two quantiles.
 
-
-```r
-the_probs = c(0.25, 0.75)
-the_quantiles = quantile(gapminder$lifeExp, probs = the_probs)
-max(the_quantiles) - min(the_quantiles)
-```
-
-```
-## [1] 22.6475
-```
 
 ---
 
@@ -316,7 +306,7 @@ qdiff3
 ##   the_quantiles = quantile(x, probs)
 ##   max(the_quantiles) - min(the_quantiles)
 ## }
-## &lt;bytecode: 0x7f9cf04a0450&gt;
+## &lt;bytecode: 0x7fb41446c618&gt;
 ```
 
 ---
@@ -679,7 +669,7 @@ Can also display a function's source by typing its name into the Console, or hov
 curve(quartic_eq, from = -5, to = 5)
 ```
 
-&lt;img src="l13-functions-ii_files/figure-html/unnamed-chunk-27-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="l13-functions-ii_files/figure-html/unnamed-chunk-26-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ```r
 optimize(quartic_eq, interval = c(-5, 5))
@@ -1018,7 +1008,7 @@ purrr::map_dfr(weird_list, function(x){
 ```
 
 ```
-## # A tibble: 4 × 3
+## # A tibble: 4 x 3
 ##   item  length class    
 ##   &lt;chr&gt;  &lt;int&gt; &lt;chr&gt;    
 ## 1 1          5 numeric  
@@ -1048,8 +1038,8 @@ In purrr, you can also create anonymous functions using [`~ .x`](https://purrr.t
 ```
 
 ```r
-count_even = function(x) sum(x %% 2 &gt; 0)
-apply(A, 1, count_even)
+count_odd = function(x) sum(x %% 2 &gt; 0)
+apply(A, 1, count_odd)
 ```
 
 ```
@@ -1057,7 +1047,7 @@ apply(A, 1, count_even)
 ```
 
 ```r
-apply(A, 2, count_even)
+apply(A, 2, count_odd)
 ```
 
 ```
