@@ -23,7 +23,7 @@ class: ur-title, center, middle, title-slide
 ## Linear Models
 ### Andrew McDavid
 ### U of Rochester
-### 2021-10-28 (updated: 2021-10-28)
+### 2021-10-28 (updated: 2021-11-03)
 
 ---
 
@@ -64,7 +64,7 @@ class: middle
 
 
 ```r
-pp &lt;- read_csv("l15/data/paris-paintings.csv", na = c("n/a", "", "NA"))
+pp = read_csv("l15/data/paris-paintings.csv", na = c("n/a", "", "NA"))
 ```
 
 - Source: Printed catalogs of 28 auction sales in Paris, 1764 - 1780
@@ -401,12 +401,12 @@ ggplot(data = pp, aes(x = Width_in, y = Height_in)) +
 .code40[
 
 ```r
-ht_wt_fit &lt;- linear_reg() %&gt;%
+ht_wt_fit = linear_reg() %&gt;%
   set_engine("lm") %&gt;%
   fit(Height_in ~ Width_in, data = pp)
 
-ht_wt_fit_tidy &lt;- tidy(ht_wt_fit$fit) 
-ht_wt_fit_aug  &lt;- augment(ht_wt_fit$fit) %&gt;%
+ht_wt_fit_tidy = tidy(ht_wt_fit$fit) 
+ht_wt_fit_aug  = augment(ht_wt_fit$fit) %&gt;%
   mutate(res_cat = ifelse(.resid &gt; 0, TRUE, FALSE))
 
 ggplot(data = ht_wt_fit_aug) +
@@ -610,7 +610,7 @@ linear_reg() %&gt;%
 ```
 ## parsnip model object
 ## 
-## Fit time:  4ms 
+## Fit time:  1ms 
 ## 
 ## Call:
 ## stats::lm(formula = Height_in ~ Width_in, data = data)
@@ -1015,7 +1015,7 @@ IMO, it's important to have a feel for the underpinnings of base R models, becau
 
 *  `predict(fit, newdata = ..., type = ...)` get predictions.  If `newdata` is set, it must be a data frame containing the same variable names as `data`. `type = "response"` vs `type = "link"` is important for glm's.
 
-*  `broom::tidy` is still very useful, though!
+*  `broom::tidy` is still very very useful!
 ---
 
 # Acknowledgments

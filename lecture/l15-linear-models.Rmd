@@ -44,7 +44,7 @@ knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
 
 .pull-left[
 ```{r echo = FALSE, out.width = "100%"}
-df1 <- tibble(x = 1:100, y = x + rnorm(100, mean = 0, sd = 5))
+df1 = tibble(x = 1:100, y = x + rnorm(100, mean = 0, sd = 5))
 ggplot(df1, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(method = "lm", color = "#E48957", se = FALSE) +
@@ -57,7 +57,7 @@ ggplot(df1, aes(x = x, y = y)) +
 ]
 .pull-right[
 ```{r echo = FALSE, out.width = "100%"}
-df2 <- tibble(x = seq(-6, 5.9, 0.1), y = (1 / (1+exp(-2*x))) + rnorm(120, mean = 0, sd = 0.1))
+df2 = tibble(x = seq(-6, 5.9, 0.1), y = (1 / (1+exp(-2*x))) + rnorm(120, mean = 0, sd = 0.1))
 ggplot(df2, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(method = "loess", color = "#8E2C90", se = FALSE) +
@@ -79,7 +79,7 @@ class: middle
 ## Paris Paintings
 
 ```{r message=FALSE}
-pp <- read_csv("l15/data/paris-paintings.csv", na = c("n/a", "", "NA"))
+pp = read_csv("l15/data/paris-paintings.csv", na = c("n/a", "", "NA"))
 ```
 
 - Source: Printed catalogs of 28 auction sales in Paris, 1764 - 1780
@@ -369,12 +369,12 @@ ggplot(data = pp, aes(x = Width_in, y = Height_in)) +
 .panel[.panel-name[Code]
 .code40[
 ```{r height-width-plot-residuals, fig.show="hide", warning=FALSE}
-ht_wt_fit <- linear_reg() %>%
+ht_wt_fit = linear_reg() %>%
   set_engine("lm") %>%
   fit(Height_in ~ Width_in, data = pp)
 
-ht_wt_fit_tidy <- tidy(ht_wt_fit$fit) 
-ht_wt_fit_aug  <- augment(ht_wt_fit$fit) %>%
+ht_wt_fit_tidy = tidy(ht_wt_fit$fit) 
+ht_wt_fit_aug  = augment(ht_wt_fit$fit) %>%
   mutate(res_cat = ifelse(.resid > 0, TRUE, FALSE))
 
 ggplot(data = ht_wt_fit_aug) +
@@ -663,15 +663,15 @@ $$\hat{y}_{i} = b_0 + b_1~x_{i}$$
 ## Visualizing residuals
 
 ```{r vis-res-1, echo=FALSE, out.width="70%"}
-ht_wt_fit <- linear_reg() %>%
+ht_wt_fit = linear_reg() %>%
   set_engine("lm") %>%
   fit(Height_in ~ Width_in, data = pp)
 
-ht_wt_fit_tidy <- tidy(ht_wt_fit$fit) 
-ht_wt_fit_aug  <- augment(ht_wt_fit$fit) %>%
+ht_wt_fit_tidy = tidy(ht_wt_fit$fit) 
+ht_wt_fit_aug  = augment(ht_wt_fit$fit) %>%
   mutate(res_cat = ifelse(.resid > 0, TRUE, FALSE))
 
-p <- ggplot(data = ht_wt_fit_aug, 
+p = ggplot(data = ht_wt_fit_aug, 
             aes(x = Width_in, y = Height_in)) +
   geom_point(alpha = 0.2) + 
   labs(
@@ -762,7 +762,7 @@ linear_reg() %>%
 
 .pull-left-wide[
 ```{r echo=FALSE}
-dummy_df <- pp %>% 
+dummy_df = pp %>% 
   select(school_pntg) %>% 
   group_by(school_pntg) %>% 
   sample_n(1) %>%
@@ -839,7 +839,7 @@ IMO, it's important to have a feel for the underpinnings of base R models, becau
 
 *  `predict(fit, newdata = ..., type = ...)` get predictions.  If `newdata` is set, it must be a data frame containing the same variable names as `data`. `type = "response"` vs `type = "link"` is important for glm's.
 
-*  `broom::tidy` is still very useful, though!
+*  `broom::tidy` is still very very useful!
 ---
 
 # Acknowledgments
