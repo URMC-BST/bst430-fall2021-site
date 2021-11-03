@@ -146,7 +146,7 @@ library(tidyverse)
 
 
 
-## Options  (choose a tree!)
+## Choose one option
 
 1. Some of our trees (e.g. the catalpa) have carotid leaf, while others (birch and beech) are ovate, and still others (maple) are palmate.  Implement a [carotid function](https://mathworld.wolfram.com/HeartCurve.html), [a petiolate](https://pdfs.semanticscholar.org/f0d6/60b1ca7a5cdeafd055b59bcd0f225d66be1f.pdf)
 or a [palmate](https://math.stackexchange.com/questions/1587947/the-plot-of-a-leaf) mathematical function and artfully array and color your "leaves".  
@@ -171,3 +171,14 @@ Make any edits as needed.
 Also, make sure all of your R chunks are properly labelled, and your figures are reasonably sized.
 
 Once a team leader for the week pushes their final changes, others should *pull* the changes and knit the R Markdown document to confirm that they can reproduce the report.
+
+# Rubric
+
+27 points total
+
+*  4 points appropriate use of functions to define the leaf shape
+*  4 points appropriate use of iteration
+*  4 points adequate use of ggplot aesthetics
+*  5 points git commit hx
+*  10 points [0-2] lint in .Rmd, -.5 every point thereafter
+*  No penalty for lint in the rartutils, but +2 extra credit these are fixed as well.
