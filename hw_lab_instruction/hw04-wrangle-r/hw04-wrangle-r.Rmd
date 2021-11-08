@@ -113,3 +113,11 @@ to update your renv file and record the software versions you are using.
 6.  Add a README file with a sentence or two explaining what this repository is.
 
 🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document on GitHub to make sure you're happy with the final state of your work.*
+
+# Rubric
+
+23 points.
+
+18 points, apportioned across the six exercises as evenly as possible (recognizing some exercises didn't produce output).
+
+5 points for commit history -- should have 2 commits minimum.
