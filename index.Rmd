@@ -66,4 +66,6 @@ MW 11:00-12:40, SRB 1402
 18.  [Knitr tricks and debugging](lecture/l14-debugging.html).  [Lab 07](hw_lab_instruction/lab07-generative-art/lab07-generative-art.html) due 5PM Nov 12.  [Lab 07 notes](lecture/lab07-art-notes.html).
 19.  [Linear models](lecture/l15-linear-models.html)
 20.  [Multivariate linear models](lecture/l16-multivariate-lm.html)
-
+21.  [Prediction and logistic regression](lecture/l17-resampling-logistic.html)
+     * [HW5](hw_lab_instruction/hw05-modeling-gss/hw-05-modeling-gss.html) due 24 Nov.
+22.  Resampling and hypothesis testing
