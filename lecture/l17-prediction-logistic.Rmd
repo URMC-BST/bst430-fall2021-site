@@ -66,17 +66,19 @@ class: middle
 
 ---
 
-## Logistic regression
+## Generalized Linear Models (GLMs)
 
 - Logistic regression is a *generalized linear model(GLM)* used to model a binary categorical outcome using numerical and categorical predictors
 
 - A GLM is an extension of the least squares linear model $E(Y_i|\mathbf{x}_i) = \mathbf{x}_i \beta$, $\text{Var}(Y|\mathbf{x}_i) = \sigma^2$ to
 $$g(E(Y_i|x_i)) = \eta_i = \mathbf{x}_i \beta$$
-, $Y|X \sim$ Exponential-Family.
+, $Y|X \sim$ Exponential-Family, and $g$ is known as a **link** function.
 
-- Whereby the glm allows non-linear effects in $\beta$, and non-constant residual variance.
+- Whereby the glm allows non-linear effects in $\beta$, and since the conditional distribution of $Y|X$ can include all sorts of interesting families, it also permits non-constant residual variance.
 
 ---
+
+### The Bernoulli GLM with logit link
 
 - To finish specifying the Logistic model we just need to define a reasonable link function that connects $\eta_i$ to $p_i$: logit function
 
@@ -108,11 +110,11 @@ ggplot(d, aes(x = p, y = logit_p)) +
 - The logit function takes a value between 0 and 1 and maps it to a value between $-\infty$ and $\infty$
 
 --
-- Inverse logit (logistic) function:
+- Inverse logit (aka expit) function:
 $$g^{-1}(x) = \frac{\exp(x)}{1+\exp(x)} = \frac{1}{1+\exp(-x)}$$
 
 --
-- The inverse logit function takes a value between $-\infty$ and $\infty$ and maps it to a value between 0 and 1
+- The expit function takes a value between $-\infty$ and $\infty$ and maps it to a value between 0 and 1
 
 --
 - This formulation is also useful for interpreting the model, since the logit can be interpreted as the log odds of a success -- more on this later
@@ -227,8 +229,7 @@ class: middle
 ```{r}
 # Fix random numbers by setting the seed 
 # Enables analysis to be reproducible when random numbers are used 
-#set.seed(20211115)
-set.seed(1116)
+set.seed(20211115)
 
 # Put 80% of the data into the training set 
 email_split = initial_split(email, prop = 0.80)
@@ -637,7 +638,7 @@ email_wflow = workflow() %>%
   add_recipe(email_rec)
 ```
 
-.code70[
+.code60[
 ```{r echo=FALSE}
 email_wflow
 ```
@@ -654,9 +655,9 @@ email_fit = email_wflow %>%
 
 ---
 
-.code60[
-```{r}
-tidy(email_fit) %>% print(n = 31)
+.code50[
+```{r, output.lines=30}
+tidy(email_fit)
 ```
 ]
 
@@ -864,11 +865,12 @@ knitr::include_graphics("l17/img/cross-validation.png")
 ]
 
 ---
+class: code60
 
 ## Fit resamples
 
 .pull-left[
-```{r}
+```{r, warning = FALSE}
 set.seed(456)
 
 email_fit_rs = email_wflow %>%
@@ -915,11 +917,64 @@ collect_metrics(email_fit_rs, summarize = FALSE) %>%
 
 ---
 
+### Training data optimism
+
+In the typical case, we use cross-validation to tune and select between models, then use the train/test split to evaluate the final chosen model
+
 -  In this case, the training data does not severely overestimate the performance in testing or cross-validation.
 -  In general, the gap between training and test is a function of the training *optimism*.
--  $\nearrow$ DOF, $\nearrow$ optimism
+-  $\nearrow$ model flexibility, $\nearrow$ optimism
 -  $\searrow$ training set size, $\nearrow$ optimism.
--  In the typical case, we use cross-validation to tune and select between models, then use the train/test split to evaluate the final choosen model
+
+---
+
+### Example of training optimism
+
+.pull-left[
+```{r, warning=FALSE}
+set.seed(123)
+train_data_small = train_data %>% sample_n(size = 100)
+overfit = fit(email_wflow, data = train_data_small)
+overpredict = predict(overfit, train_data_small, type = "prob") %>% 
+  bind_cols(train_data_small)
+```
+]
+
+.pull-right[
+```{r, echo =FALSE, out.width="90%"}
+ overpredict %>% roc_curve(
+    truth = spam,
+    .pred_1,
+    event_level = "second"
+  ) %>%
+  autoplot()
+
+overpredict %>% roc_auc(
+    truth = spam,
+    .pred_1,
+    event_level = "second"
+  )
+```
+]
+
+---
+
+# Final announcements
+
+*  You will have access to the lectures as long as github exists and provides hosting for websites.  
+*  You will have access to your completed homework assignments on github as long as you have access to your github account.
+*  You will have indefinite access to rstudio cloud and your projects there, but your account will revert back to the "free" tier (5 hours/month) on/around 19 Dec 2021. So you might need to export at the project to do much with it after this point.
+*  I am not distributing the homework keys, but you are welcome to ask about homework during office hours or with a classmate. I would rather that you not electronically redistribute the entirety of a graded assignment with a classmate<sup>1</sup> 
+*  I will accept corrections on labs / homework until +7 days after HW05 is returned.
+
+.footnote[[1] Reminder: sharing graded assignments within a class year isn't technically prohibited, but sharing across class years is prohibited and is a violation of the academic honesty policy per department policy.]
+
+---
+class: middle
+
+## A final request
+
+Since I am not sure how long it will take for you to receive an formal invitation to evaluate this course, please fill out [this short, anonymous survey on the course](https://docs.google.com/forms/d/e/1FAIpQLSeCWQ2FHl8aabut8-Gcj4Ea2Xke8qAM0Yo0ecmHkcv-X-8aqg/viewform?usp=sf_link)
 
 ---
 

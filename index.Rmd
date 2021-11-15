@@ -68,4 +68,4 @@ MW 11:00-12:40, SRB 1402
 20.  [Multivariate linear models](lecture/l16-multivariate-lm.html)
 21.  [Prediction and logistic regression](lecture/l17-prediction-logistic.html)
      * [HW5](hw_lab_instruction/hw05-modeling-gss/hw-05-modeling-gss.html) due 24 Nov.
-22.  Resampling and hypothesis testing
+<!--22.  Resampling and hypothesis testing-->

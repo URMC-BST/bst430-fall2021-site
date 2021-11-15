@@ -5,7 +5,7 @@ output:
     css: ../hw.css
     tufte_variant: "envisioned"
     highlight: pygments
-link-citations: yes
+    link-citations: yes
 ---
 
 ```{r include = FALSE}
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-In this assignment we explore  the [2016 GSS dataset](https://rstudio-education.github.io/dsbox/reference/gss16.html).
+In this assignment we explore the [2016 General Social Survey](https://gss.norc.org/Get-The-Data) data set. The GSS gathers data on contemporary American society in order to monitor and explain trends and constants in attitudes, behaviors, and attributes. Hundreds of trends have been tracked since 1972.
 
 # Getting started
 
@@ -79,9 +79,9 @@ You can do this in various ways. One option is to use the `str_detect()` functio
 
 ```{r eval=FALSE}
 set.seed(___)
-gss16_split <- initial_split(gss16_advfront)
-gss16_train <- training(gss16_split)
-gss16_test  <- testing(gss16_split)
+gss16_split = initial_split(gss16_advfront)
+gss16_train = training(gss16_split)
+gss16_test  = testing(gss16_split)
 ```
 
 5.  Create a recipe with the following steps for predicting `advfront` from `polviews`, `wrkstat`, and `educ`.
@@ -93,7 +93,7 @@ gss16_test  <- testing(gss16_split)
     -   `step_dummy()` to create dummy variables for `all_nominal()` variables that are predictors, i.e. `all_predictors()`
 
 ```{r eval=FALSE}
-gss16_rec_1 <- recipe(___ ~ ___, data = ___) %>%
+gss16_rec_1 = recipe(___ ~ ___, data = ___) %>%
   step_other(wrkstat, threshold = ___, other = "Other") %>%
   step_dummy(all_nominal(), -all_outcomes())
 ```
@@ -101,14 +101,14 @@ gss16_rec_1 <- recipe(___ ~ ___, data = ___) %>%
 6.  Specify a logistic regression model using `"glm"` as the engine. Name this specification `gss16_spec`. Sample code is provided below.
 
 ```{r eval=FALSE}
-gss16_spec <- ___() %>%
+gss16_spec = ___() %>%
   set_engine("___")
 ```
 
 7.  Build a workflow that uses the recipe you defined (`gss16_rec`) and the model you specified (`gss16_spec`). Name this workflow `gss16_wflow_1`. Sample code is provided below.
 
 ```{r eval=FALSE}
-gss16_wflow_1 <- workflow() %>%
+gss16_wflow_1 = workflow() %>%
   add_model(___) %>%
   add_recipe(___)
 ```
@@ -126,9 +126,9 @@ gss16_wflow_1 <- workflow() %>%
 
 ```{r eval=FALSE}
 set.seed(___)
-gss16_folds <- vfold_cv(___, v = ___)
+gss16_folds = vfold_cv(___, v = ___)
 
-gss16_fit_rs_1 <- gss16_wflow_1 %>%
+gss16_fit_rs_1 = gss16_wflow_1 %>%
   fit_resamples(___)
 
 collect_metrics(___, summarize = FALSE)
@@ -150,39 +150,32 @@ collect_metrics(___)
     Explain your reasoning.
     Note: If you haven't yet done so, you'll need to first train your workflows on the training data with the following, and then use these fit objects to calculate predictions for the test data.
 
+
+## Extra credit
+
+12. (**Extra credit**) Refit your model and recipe from Ex5-Ex8 using [glmnet](https://parsnip.tidymodels.org/reference/logistic_reg.html).  Select the `penalty` and `mixture` tuning parameters by [cross-validation over the training data](https://www.tidymodels.org/start/tuning/).
+
+13. (**Extra credit**) Generate a plot comparing the test-data ROC from your model in Ex 12, the results from Ex 11.
+
 ```{r eval=FALSE}
-gss16_fit_1 <- gss16_wflow_1 %>%
+gss16_fit_1 = gss16_wflow_1 %>%
   fit(gss16_train)
 
-gss16_fit_2 <- gss16_wflow_2 %>%
+gss16_fit_2 = gss16_wflow_2 %>%
   fit(gss16_train)
 ```
 
 🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.*
 
-## Part ii: Harassment at work (bootstrapping)
+## Part ii: (many linear models)
 
-In 2016, the GSS added a new question on harassment at work.
-The question is phrased as the following.
-
-> Over the past five years, have you been harassed by your superiors or co-workers at your job, for example, have you experienced any bullying, physical or psychological abuse?
-
-Answers to this question are stored in the `harass5` variable in our dataset.
-
-12. Create a subset of the data that only contains `Yes` and `No` answers for the harassment question. How many responses chose each of these answers?
-13. Describe how bootstrapping can be used to estimate the proportion of Americans who have been harassed by their superiors or co-workers at their job.
-14. Calculate a 95% bootstrap confidence interval for the proportion of Americans who have been harassed by their superiors or co-workers at their job. Interpret the statistical properties of this interval, and in the context of the data.
-
-## Part iii: (many linear models)
-
-15.  Using `gapminder`, fit a linear model over all countries on `log(pop)` vs (years-1990), so that the intercept reflects the log-population in 1990.  Interpet the slope and intercept in terms of the unlogged variables.
+14.  Using `gapminder`, fit a linear model over all countries on `log(pop)` vs (years-1990), so that the intercept reflects the log-population in 1990.  Interpet the slope and intercept in terms of the unlogged variables.
 
 ```{r}
 library(gapminder)
 ```
 
-
-16.  Now, completing the code below, fit this model per country.  In a table, report the top 3 and bottom 3 countries in terms of the population growth rates, and their 95\% confidence intervals.
+15.  Now, completing the code below, and following the example from [lecture 16](https://urmc-bst.github.io/bst430-fall2021-site/lecture/l16-multivariate-lm.html#54), fit this model per country.  In a table, report the top 3 and bottom 3 countries in terms of the population growth rates, and their 95\% confidence intervals.
 
 ```{r, error = TRUE}
 fit_pop = function(){
@@ -205,7 +198,6 @@ many_fits %>%
   mutate(tidy_out = list(tidy(___))) %>%
   unnest(___)
 ```
-
 
 
 🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document on GitHub to make sure you're happy with the final state of your work.*

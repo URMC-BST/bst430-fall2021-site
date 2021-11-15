@@ -58,17 +58,19 @@ class: middle
 
 ---
 
-## Logistic regression
+## Generalized Linear Models (GLMs)
 
 - Logistic regression is a *generalized linear model(GLM)* used to model a binary categorical outcome using numerical and categorical predictors
 
 - A GLM is an extension of the least squares linear model `\(E(Y_i|\mathbf{x}_i) = \mathbf{x}_i \beta\)`, `\(\text{Var}(Y|\mathbf{x}_i) = \sigma^2\)` to
 `$$g(E(Y_i|x_i)) = \eta_i = \mathbf{x}_i \beta$$`
-, `\(Y|X \sim\)` Exponential-Family.
+, `\(Y|X \sim\)` Exponential-Family, and `\(g\)` is known as a **link** function.
 
-- Whereby the glm allows non-linear effects in `\(\beta\)`, and non-constant residual variance.
+- Whereby the glm allows non-linear effects in `\(\beta\)`, and since the conditional distribution of `\(Y|X\)` can include all sorts of interesting families, it also permits non-constant residual variance.
 
 ---
+
+### The Bernoulli GLM with logit link
 
 - To finish specifying the Logistic model we just need to define a reasonable link function that connects `\(\eta_i\)` to `\(p_i\)`: logit function
 
@@ -91,11 +93,11 @@ class: middle
 - The logit function takes a value between 0 and 1 and maps it to a value between `\(-\infty\)` and `\(\infty\)`
 
 --
-- Inverse logit (logistic) function:
+- Inverse logit (aka expit) function:
 `$$g^{-1}(x) = \frac{\exp(x)}{1+\exp(x)} = \frac{1}{1+\exp(-x)}$$`
 
 --
-- The inverse logit function takes a value between `\(-\infty\)` and `\(\infty\)` and maps it to a value between 0 and 1
+- The expit function takes a value between `\(-\infty\)` and `\(\infty\)` and maps it to a value between 0 and 1
 
 --
 - This formulation is also useful for interpreting the model, since the logit can be interpreted as the log odds of a success -- more on this later
@@ -184,8 +186,7 @@ class: middle
 ```r
 # Fix random numbers by setting the seed 
 # Enables analysis to be reproducible when random numbers are used 
-#set.seed(20211115)
-set.seed(1116)
+set.seed(20211115)
 
 # Put 80% of the data into the training set 
 email_split = initial_split(email, prop = 0.80)
@@ -212,27 +213,27 @@ glimpse(train_data)
 ```
 ## Rows: 3,136
 ## Columns: 21
-## $ spam         &lt;fct&gt; 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-## $ to_multiple  &lt;fct&gt; 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,…
+## $ spam         &lt;fct&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,…
+## $ to_multiple  &lt;fct&gt; 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0,…
 ## $ from         &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
-## $ cc           &lt;int&gt; 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 1, 0…
-## $ sent_email   &lt;fct&gt; 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0,…
-## $ time         &lt;dttm&gt; 2012-01-25 17:46:55, 2012-01-03 00:28:28, 2012-02-04 11:31:11, 2012-03-19 09…
-## $ image        &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-## $ attach       &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-## $ dollar       &lt;dbl&gt; 10, 0, 0, 0, 0, 0, 13, 0, 0, 0, 2, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0,…
-## $ winner       &lt;fct&gt; no, no, no, no, no, no, no, yes, no, no, no, no, no, no, no, no, no, no, no, …
-## $ inherit      &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ cc           &lt;int&gt; 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ sent_email   &lt;fct&gt; 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ time         &lt;dttm&gt; 2012-01-23 19:23:58, 2012-03-28 09:13:47, 2012-02-13 10:05:15, 2012-02-06 14…
+## $ image        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ attach       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,…
+## $ dollar       &lt;dbl&gt; 0, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 46, 0, 1, 4, 0, 0, 0, 6, 0, 0…
+## $ winner       &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, yes, no, no, …
+## $ inherit      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
 ## $ viagra       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-## $ password     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-## $ num_char     &lt;dbl&gt; 23.308, 1.162, 4.732, 42.238, 1.228, 25.599, 16.764, 10.731, 3.778, 27.182, 2…
-## $ line_breaks  &lt;int&gt; 477, 2, 127, 712, 30, 674, 367, 226, 98, 671, 46, 192, 67, 85, 655, 18, 167, …
-## $ format       &lt;fct&gt; 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
-## $ re_subj      &lt;fct&gt; 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0,…
-## $ exclaim_subj &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,…
+## $ password     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0,…
+## $ num_char     &lt;dbl&gt; 24.832, 4.998, 3.568, 26.110, 7.870, 5.127, 2.710, 5.005, 7.911, 11.933, 4.66…
+## $ line_breaks  &lt;int&gt; 624, 114, 81, 652, 253, 120, 74, 118, 190, 165, 115, 256, 349, 640, 101, 349,…
+## $ format       &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1,…
+## $ re_subj      &lt;fct&gt; 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0,…
+## $ exclaim_subj &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0,…
 ## $ urgent_subj  &lt;fct&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-## $ exclaim_mess &lt;dbl&gt; 12, 0, 2, 2, 2, 31, 2, 0, 0, 1, 0, 1, 2, 0, 2, 0, 11, 1, 4, 0, 1, 1, 3, 2, 0,…
-## $ number       &lt;fct&gt; small, none, big, big, small, small, small, small, small, small, small, small…
+## $ exclaim_mess &lt;dbl&gt; 2, 0, 1, 1, 8, 0, 0, 2, 5, 0, 8, 0, 8, 1, 1, 0, 8, 0, 0, 0, 1, 0, 0, 1, 5, 1,…
+## $ number       &lt;fct&gt; small, small, small, small, big, small, small, small, small, small, small, sm…
 ```
 ]
 .pull-right[
@@ -245,26 +246,26 @@ glimpse(test_data)
 ## Rows: 785
 ## Columns: 21
 ## $ spam         &lt;fct&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-## $ to_multiple  &lt;fct&gt; 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,…
+## $ to_multiple  &lt;fct&gt; 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0,…
 ## $ from         &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
-## $ cc           &lt;int&gt; 0, 1, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 0, 0, 0,…
-## $ sent_email   &lt;fct&gt; 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,…
-## $ time         &lt;dttm&gt; 2012-01-01 12:55:06, 2012-01-01 14:38:32, 2012-01-02 00:42:16, 2012-01-02 10…
-## $ image        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-## $ attach       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0,…
-## $ dollar       &lt;dbl&gt; 0, 0, 5, 0, 0, 0, 0, 5, 4, 0, 0, 0, 21, 0, 0, 2, 9, 0, 0, 0, 0, 20, 0, 0, 0, …
+## $ cc           &lt;int&gt; 1, 2, 1, 7, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 35, 0, 1…
+## $ sent_email   &lt;fct&gt; 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1,…
+## $ time         &lt;dttm&gt; 2012-01-01 14:38:32, 2012-01-01 18:32:53, 2012-01-01 22:16:39, 2012-01-02 19…
+## $ image        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ attach       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ dollar       &lt;dbl&gt; 0, 2, 0, 0, 0, 2, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
 ## $ winner       &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, n…
-## $ inherit      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ inherit      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
 ## $ viagra       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-## $ password     &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0,…
-## $ num_char     &lt;dbl&gt; 4.837, 15.075, 18.037, 45.842, 11.438, 1.482, 14.431, 0.978, 7.792, 0.978, 2.…
-## $ line_breaks  &lt;int&gt; 193, 354, 345, 881, 125, 24, 296, 13, 192, 14, 32, 30, 557, 159, 81, 173, 151…
-## $ format       &lt;fct&gt; 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1,…
-## $ re_subj      &lt;fct&gt; 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0,…
-## $ exclaim_subj &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ password     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ num_char     &lt;dbl&gt; 15.075, 19.693, 3.959, 0.334, 1.482, 4.103, 4.512, 4.761, 4.040, 1.401, 1.389…
+## $ line_breaks  &lt;int&gt; 354, 330, 81, 9, 24, 173, 107, 151, 76, 41, 37, 21, 145, 309, 183, 114, 135, …
+## $ format       &lt;fct&gt; 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1,…
+## $ re_subj      &lt;fct&gt; 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1,…
+## $ exclaim_subj &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,…
 ## $ urgent_subj  &lt;fct&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-## $ exclaim_mess &lt;dbl&gt; 1, 10, 20, 5, 2, 0, 0, 0, 6, 0, 0, 1, 3, 0, 4, 0, 1, 0, 139, 2, 0, 18, 1, 8, …
-## $ number       &lt;fct&gt; big, small, small, big, small, none, small, small, small, small, small, none,…
+## $ exclaim_mess &lt;dbl&gt; 10, 4, 1, 0, 0, 0, 0, 1, 4, 0, 8, 2, 1, 3, 0, 1, 4, 7, 2, 9, 0, 2, 0, 0, 0, 1…
+## $ number       &lt;fct&gt; small, big, small, small, none, small, small, big, small, small, small, none,…
 ```
 ]
 ]
@@ -320,22 +321,22 @@ email_fit
 ```
 ## parsnip model object
 ## 
-## Fit time:  33ms 
+## Fit time:  65ms 
 ## 
 ## Call:  stats::glm(formula = spam ~ . - from - sent_email - viagra, family = stats::binomial, 
 ##     data = data)
 ## 
 ## Coefficients:
 ##  (Intercept)  to_multiple1            cc          time         image        attach        dollar  
-##   -9.867e+01    -2.505e+00     1.944e-02     7.396e-08    -2.854e+00     5.070e-01    -6.440e-02  
+##   -1.043e+02    -2.802e+00     2.799e-02     7.810e-08    -3.578e+00     6.103e-01    -7.948e-02  
 ##    winneryes       inherit      password      num_char   line_breaks       format1      re_subj1  
-##    2.170e+00     4.499e-01    -7.065e-01     5.870e-02    -5.420e-03    -9.017e-01    -2.995e+00  
+##    2.111e+00     4.099e-01    -7.562e-01     6.814e-02    -5.259e-03    -9.421e-01    -3.474e+00  
 ## exclaim_subj  urgent_subj1  exclaim_mess   numbersmall     numberbig  
-##    1.002e-01     3.572e+00     1.009e-02    -8.518e-01    -1.329e-01  
+##    2.886e-01     2.734e+00     7.918e-03    -7.879e-01     2.957e-02  
 ## 
 ## Degrees of Freedom: 3135 Total (i.e. Null);  3117 Residual
-## Null Deviance:	    1974 
-## Residual Deviance: 1447 	AIC: 1485
+## Null Deviance:	    1933 
+## Residual Deviance: 1413 	AIC: 1451
 ```
 ]
 
@@ -386,16 +387,16 @@ email_pred
 ## # A tibble: 785 x 4
 ##    .pred_0 .pred_1 spam  time               
 ##      &lt;dbl&gt;   &lt;dbl&gt; &lt;fct&gt; &lt;dttm&gt;             
-##  1   0.993 0.00709 0     2012-01-01 12:55:06
-##  2   0.998 0.00181 0     2012-01-01 14:38:32
-##  3   0.981 0.0191  0     2012-01-02 00:42:16
-##  4   0.999 0.00124 0     2012-01-02 10:12:51
-##  5   0.988 0.0121  0     2012-01-02 11:45:36
-##  6   0.830 0.170   0     2012-01-02 16:55:03
-##  7   0.959 0.0410  0     2012-01-02 20:07:17
-##  8   0.861 0.139   0     2012-01-03 00:41:35
-##  9   0.938 0.0617  0     2012-01-03 11:02:35
-## 10   0.902 0.0983  0     2012-01-03 06:14:51
+##  1   0.999 0.00127 0     2012-01-01 14:38:32
+##  2   0.996 0.00373 0     2012-01-01 18:32:53
+##  3   0.994 0.00596 0     2012-01-01 22:16:39
+##  4   0.992 0.00801 0     2012-01-02 19:07:51
+##  5   0.845 0.155   0     2012-01-02 16:55:03
+##  6   0.962 0.0376  0     2012-01-03 14:51:16
+##  7   0.996 0.00414 0     2012-01-03 17:34:13
+##  8   0.997 0.00308 0     2012-01-03 17:40:07
+##  9   0.927 0.0728  0     2012-01-03 19:06:48
+## 10   0.998 0.00243 0     2012-01-03 19:36:42
 ## # … with 775 more rows
 ```
 
@@ -415,16 +416,16 @@ email_pred %&gt;%
 ## # A tibble: 785 x 4
 ##    .pred_0 .pred_1 spam  time               
 ##      &lt;dbl&gt;   &lt;dbl&gt; &lt;fct&gt; &lt;dttm&gt;             
-##  1  0.0972   0.903 1     2012-02-13 07:15:00
-##  2  0.167    0.833 0     2012-01-27 15:05:06
-*##  3  0.175    0.825 1     2012-03-01 00:40:27
-##  4  0.267    0.733 1     2012-03-17 06:13:27
-##  5  0.317    0.683 1     2012-03-21 08:33:12
-##  6  0.374    0.626 1     2012-02-08 03:00:05
-*##  7  0.386    0.614 0     2012-01-30 09:20:29
-##  8  0.403    0.597 1     2012-01-07 11:11:49
-##  9  0.462    0.538 1     2012-03-06 06:46:20
-## 10  0.463    0.537 0     2012-02-17 17:54:16
+##  1  0.0970   0.903 1     2012-03-27 01:17:01
+##  2  0.165    0.835 1     2012-03-01 00:40:27
+*##  3  0.191    0.809 1     2012-01-21 16:55:55
+##  4  0.206    0.794 0     2012-01-02 22:30:31
+##  5  0.243    0.757 1     2012-03-31 05:20:24
+##  6  0.258    0.742 1     2012-03-17 12:20:57
+*##  7  0.288    0.712 0     2012-02-03 08:25:39
+##  8  0.293    0.707 1     2012-02-24 19:43:44
+##  9  0.308    0.692 0     2012-01-31 10:07:48
+## 10  0.346    0.654 0     2012-02-04 05:39:37
 ## # … with 775 more rows
 ```
 
@@ -477,7 +478,7 @@ email_pred %&gt;%
 ## # A tibble: 1 x 3
 ##   .metric .estimator .estimate
 ##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-## 1 roc_auc binary         0.857
+## 1 roc_auc binary         0.840
 ```
 ]
 .pull-right[
@@ -528,11 +529,11 @@ train_data %&gt;%
 ## # A tibble: 5 x 4
 ##   time                date         dow month
 ##   &lt;dttm&gt;              &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 2012-03-15 14:51:35 2012-03-15     5     3
-## 2 2012-03-03 09:24:02 2012-03-03     7     3
-## 3 2012-01-18 11:55:23 2012-01-18     4     1
-## 4 2012-02-24 23:08:59 2012-02-24     6     2
-## 5 2012-01-11 08:18:51 2012-01-11     4     1
+## 1 2012-01-31 17:06:58 2012-01-31     3     1
+## 2 2012-02-02 14:38:31 2012-02-02     5     2
+## 3 2012-02-14 06:17:18 2012-02-14     3     2
+## 4 2012-03-05 12:55:12 2012-03-05     2     3
+## 5 2012-02-23 13:12:30 2012-02-23     5     2
 ```
 
 ???
@@ -824,7 +825,7 @@ email_wflow = workflow() %&gt;%
   add_recipe(email_rec)
 ```
 
-.code70[
+.code60[
 
 ```
 ## ══ Workflow ════════════════════════════════════════════════════════════════════════════════════════
@@ -865,47 +866,27 @@ email_fit = email_wflow %&gt;%
 
 ---
 
-.code60[
+.code50[
 
 ```r
-tidy(email_fit) %&gt;% print(n = 31)
+tidy(email_fit)
 ```
 
 ```
-## # A tibble: 31 x 5
-##    term               estimate  std.error statistic  p.value
-##    &lt;chr&gt;                 &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-##  1 (Intercept)        -0.892      0.249     -3.58   3.37e- 4
-##  2 image              -1.65       0.934     -1.76   7.77e- 2
-##  3 viagra              2.28     182.         0.0125 9.90e- 1
-##  4 num_char            0.0470     0.0244     1.93   5.36e- 2
-##  5 line_breaks        -0.00510    0.00138   -3.69   2.28e- 4
-##  6 exclaim_subj       -0.204      0.277     -0.736  4.62e- 1
-##  7 exclaim_mess        0.00885    0.00186    4.75   1.99e- 6
-##  8 to_multiple_X1     -2.60       0.354     -7.35   2.06e-13
-##  9 cc_X.1.68.         -0.312      0.490     -0.638  5.24e- 1
-## 10 attach_X.1.21.      2.05       0.368      5.58   2.45e- 8
-## 11 dollar_X.1.64.      0.214      0.217      0.988  3.23e- 1
-## 12 winner_yes          2.18       0.428      5.08   3.68e- 7
-## 13 inherit_X.1.5.     -9.21     765.        -0.0120 9.90e- 1
-## 14 inherit_X.5.10.     2.51       1.44       1.74   8.12e- 2
-## 15 password_X.1.5.    -1.71       0.748     -2.28   2.24e- 2
-## 16 password_X.5.10.  -12.5      475.        -0.0263 9.79e- 1
-## 17 password_X.10.20. -13.7      814.        -0.0168 9.87e- 1
-## 18 password_X.20.22. -13.9     1029.        -0.0135 9.89e- 1
-## 19 format_X1          -0.916      0.159     -5.77   7.79e- 9
-## 20 re_subj_X1         -2.90       0.437     -6.65   2.95e-11
-## 21 urgent_subj_X1      3.52       1.08       3.25   1.15e- 3
-## 22 number_small       -0.895      0.167     -5.35   8.75e- 8
-## 23 number_big         -0.199      0.250     -0.797  4.25e- 1
-## 24 time_dow_Mon        0.0441     0.296      0.149  8.82e- 1
-## 25 time_dow_Tue        0.371      0.267      1.39   1.64e- 1
-## 26 time_dow_Wed       -0.133      0.272     -0.488  6.26e- 1
-## 27 time_dow_Thu        0.0392     0.277      0.141  8.88e- 1
-## 28 time_dow_Fri        0.0488     0.280      0.174  8.62e- 1
-## 29 time_dow_Sat        0.253      0.298      0.849  3.96e- 1
-## 30 time_month_Feb      0.784      0.180      4.35   1.37e- 5
-## 31 time_month_Mar      0.541      0.181      2.99   2.79e- 3
+## # A tibble: 30 x 5
+##    term           estimate std.error statistic  p.value
+##    &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1 (Intercept)    -1.18      0.273      -4.31  1.64e- 5
+##  2 image          -2.00      0.976      -2.05  4.08e- 2
+##  3 num_char        0.0611    0.0240      2.54  1.11e- 2
+##  4 line_breaks    -0.00517   0.00135    -3.82  1.35e- 4
+##  5 exclaim_subj    0.0672    0.258       0.261 7.94e- 1
+##  6 exclaim_mess    0.00649   0.00182     3.56  3.69e- 4
+##  7 to_multiple_X1 -3.00      0.383      -7.84  4.57e-15
+##  8 cc_X.1.68.     -0.327     0.470      -0.695 4.87e- 1
+##  9 attach_X.1.21.  2.40      0.403       5.96  2.57e- 9
+## 10 dollar_X.1.64. -0.0448    0.218      -0.206 8.37e- 1
+## # … with 20 more rows
 ```
 ]
 
@@ -917,13 +898,7 @@ tidy(email_fit) %&gt;% print(n = 31)
 ```r
 email_pred = predict(email_fit, test_data, type = "prob") %&gt;% 
   bind_cols(test_data) 
-```
 
-```
-## Warning: There are new levels in a factor: NA
-```
-
-```r
 email_pred
 ```
 
@@ -931,13 +906,13 @@ email_pred
 ## # A tibble: 785 x 23
 ##    .pred_0  .pred_1 spam  to_multiple from     cc sent_email
 ##      &lt;dbl&gt;    &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;       &lt;fct&gt; &lt;int&gt; &lt;fct&gt;     
-##  1   0.995 0.00470  0     1           1         0 1         
-##  2   0.999 0.00134  0     0           1         1 1         
-##  3   0.967 0.0328   0     0           1         0 0         
-##  4   0.999 0.000776 0     0           1         1 0         
-##  5   0.994 0.00642  0     0           1         4 0         
-##  6   0.860 0.140    0     0           1         0 0         
-##  7   0.970 0.0296   0     0           1         0 0         
+##  1   0.999 0.000809 0     0           1         1 1         
+##  2   0.998 0.00177  0     0           1         2 0         
+##  3   0.996 0.00409  0     0           1         1 0         
+##  4   0.996 0.00429  0     0           1         7 0         
+##  5   0.873 0.127    0     0           1         0 0         
+##  6   0.957 0.0434   0     0           1         0 0         
+##  7   0.997 0.00340  0     1           1         1 0         
 ...
 ```
 
@@ -980,7 +955,7 @@ email_pred %&gt;%
 ## # A tibble: 1 x 3
 ##   .metric .estimator .estimate
 ##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-## 1 roc_auc binary         0.857
+## 1 roc_auc binary         0.847
 ```
 ]
 .pull-right[
@@ -1005,9 +980,8 @@ Suppose we decide to label an email as spam if the model predicts the probabilit
 
 |                        | Email is not spam| Email is spam|
 |:-----------------------|-----------------:|-------------:|
-|Email labelled not spam |               710|            60|
-|Email labelled spam     |                 6|             8|
-|NA                      |                 1|            NA|
+|Email labelled not spam |               700|            66|
+|Email labelled spam     |                 8|            11|
 ]
 .panel[.panel-name[Code]
 
@@ -1037,9 +1011,8 @@ Suppose we decide to label an email as spam if the model predicts the probabilit
 
 |                        | Email is not spam| Email is spam|
 |:-----------------------|-----------------:|-------------:|
-|Email labelled not spam |               665|            34|
-|Email labelled spam     |                51|            34|
-|NA                      |                 1|            NA|
+|Email labelled not spam |               644|            38|
+|Email labelled spam     |                64|            39|
 ]
 .panel[.panel-name[Code]
 
@@ -1069,9 +1042,8 @@ Suppose we decide to label an email as spam if the model predicts the probabilit
 
 |                        | Email is not spam| Email is spam|
 |:-----------------------|-----------------:|-------------:|
-|Email labelled not spam |               714|            65|
-|Email labelled spam     |                 2|             3|
-|NA                      |                 1|            NA|
+|Email labelled not spam |               705|            70|
+|Email labelled spam     |                 3|             7|
 ]
 .panel[.panel-name[Code]
 
@@ -1165,6 +1137,7 @@ folds
 ]
 
 ---
+class: code60
 
 ## Fit resamples
 
@@ -1180,21 +1153,14 @@ email_fit_rs
 ```
 
 ```
-## Warning: This tuning result has notes. Example notes on model fitting include:
-## preprocessor 1/1, model 1/1: glm.fit: fitted probabilities numerically 0 or 1 occurred
-## preprocessor 1/1, model 1/1: glm.fit: fitted probabilities numerically 0 or 1 occurred
-## preprocessor 1/1, model 1/1: glm.fit: fitted probabilities numerically 0 or 1 occurred
-```
-
-```
 ## # Resampling results
 ## # 5-fold cross-validation 
 ## # A tibble: 5 x 4
 ##   splits             id    .metrics         .notes          
 ##   &lt;list&gt;             &lt;chr&gt; &lt;list&gt;           &lt;list&gt;          
-## 1 &lt;split [2508/628]&gt; Fold1 &lt;tibble [2 × 4]&gt; &lt;tibble [1 × 1]&gt;
-## 2 &lt;split [2509/627]&gt; Fold2 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt;
-## 3 &lt;split [2509/627]&gt; Fold3 &lt;tibble [2 × 4]&gt; &lt;tibble [2 × 1]&gt;
+## 1 &lt;split [2508/628]&gt; Fold1 &lt;tibble [2 × 4]&gt; &lt;tibble [2 × 1]&gt;
+## 2 &lt;split [2509/627]&gt; Fold2 &lt;tibble [2 × 4]&gt; &lt;tibble [1 × 1]&gt;
+## 3 &lt;split [2509/627]&gt; Fold3 &lt;tibble [2 × 4]&gt; &lt;tibble [1 × 1]&gt;
 ## 4 &lt;split [2509/627]&gt; Fold4 &lt;tibble [2 × 4]&gt; &lt;tibble [2 × 1]&gt;
 ## 5 &lt;split [2509/627]&gt; Fold5 &lt;tibble [2 × 4]&gt; &lt;tibble [1 × 1]&gt;
 ```
@@ -1216,8 +1182,8 @@ collect_metrics(email_fit_rs)
 ## # A tibble: 2 x 6
 ##   .metric  .estimator  mean     n std_err .config             
 ##   &lt;chr&gt;    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
-## 1 accuracy binary     0.908     5 0.00906 Preprocessor1_Model1
-## 2 roc_auc  binary     0.852     5 0.0118  Preprocessor1_Model1
+## 1 accuracy binary     0.908     5 0.00395 Preprocessor1_Model1
+## 2 roc_auc  binary     0.837     5 0.00384 Preprocessor1_Model1
 ```
 
 ---
@@ -1236,38 +1202,86 @@ collect_metrics(email_fit_rs, summarize = FALSE) %&gt;%
 ## # A tibble: 10 x 5
 ##    id    .metric  .estimator .estimate .config             
 ##    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;               
-##  1 Fold1 accuracy binary         0.928 Preprocessor1_Model1
-##  2 Fold1 roc_auc  binary         0.835 Preprocessor1_Model1
-##  3 Fold2 accuracy binary         0.879 Preprocessor1_Model1
-##  4 Fold2 roc_auc  binary         0.821 Preprocessor1_Model1
-##  5 Fold3 accuracy binary         0.927 Preprocessor1_Model1
-##  6 Fold3 roc_auc  binary         0.871 Preprocessor1_Model1
-##  7 Fold4 accuracy binary         0.906 Preprocessor1_Model1
-##  8 Fold4 roc_auc  binary         0.885 Preprocessor1_Model1
-##  9 Fold5 accuracy binary         0.903 Preprocessor1_Model1
-## 10 Fold5 roc_auc  binary         0.846 Preprocessor1_Model1
+##  1 Fold1 accuracy binary         0.915 Preprocessor1_Model1
+##  2 Fold1 roc_auc  binary         0.834 Preprocessor1_Model1
+##  3 Fold2 accuracy binary         0.904 Preprocessor1_Model1
+##  4 Fold2 roc_auc  binary         0.847 Preprocessor1_Model1
+##  5 Fold3 accuracy binary         0.915 Preprocessor1_Model1
+##  6 Fold3 roc_auc  binary         0.844 Preprocessor1_Model1
+##  7 Fold4 accuracy binary         0.895 Preprocessor1_Model1
+##  8 Fold4 roc_auc  binary         0.828 Preprocessor1_Model1
+##  9 Fold5 accuracy binary         0.910 Preprocessor1_Model1
+## 10 Fold5 roc_auc  binary         0.831 Preprocessor1_Model1
 ```
 ]
 .panel[.panel-name[Pretty]
 
 |Fold  | accuracy| roc_auc|
 |:-----|--------:|-------:|
-|Fold1 |    0.928|   0.835|
-|Fold2 |    0.879|   0.821|
-|Fold3 |    0.927|   0.871|
-|Fold4 |    0.906|   0.885|
-|Fold5 |    0.903|   0.846|
+|Fold1 |    0.915|   0.834|
+|Fold2 |    0.904|   0.847|
+|Fold3 |    0.915|   0.844|
+|Fold4 |    0.895|   0.828|
+|Fold5 |    0.910|   0.831|
 ]
 ]
 
 
 ---
 
+### Training data optimism
+
+In the typical case, we use cross-validation to tune and select between models, then use the train/test split to evaluate the final chosen model
+
 -  In this case, the training data does not severely overestimate the performance in testing or cross-validation.
 -  In general, the gap between training and test is a function of the training *optimism*.
--  `\(\nearrow\)` DOF, `\(\nearrow\)` optimism
+-  `\(\nearrow\)` model flexibility, `\(\nearrow\)` optimism
 -  `\(\searrow\)` training set size, `\(\nearrow\)` optimism.
--  In the typical case, we use cross-validation to tune and select between models, then use the train/test split to evaluate the final choosen model
+
+---
+
+### Example of training optimism
+
+.pull-left[
+
+```r
+set.seed(123)
+train_data_small = train_data %&gt;% sample_n(size = 100)
+overfit = fit(email_wflow, data = train_data_small)
+overpredict = predict(overfit, train_data_small, type = "prob") %&gt;% 
+  bind_cols(train_data_small)
+```
+]
+
+.pull-right[
+&lt;img src="l17-prediction-logistic_files/figure-html/unnamed-chunk-51-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+```
+## # A tibble: 1 x 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 roc_auc binary             1
+```
+]
+
+---
+
+# Final announcements
+
+*  You will have access to the lectures as long as github exists and provides hosting for websites.  
+*  You will have access to your completed homework assignments on github as long as you have access to your github account.
+*  You will have indefinite access to rstudio cloud and your projects there, but your account will revert back to the "free" tier (5 hours/month) on/around 19 Dec 2021. So you might need to export at the project to do much with it after this point.
+*  I am not distributing the homework keys, but you are welcome to ask about homework during office hours or with a classmate. I would rather that you not electronically redistribute the entirety of a graded assignment with a classmate&lt;sup&gt;1&lt;/sup&gt; 
+*  I will accept corrections on labs / homework until +7 days after HW05 is returned.
+
+.footnote[[1] Reminder: sharing graded assignments within a class year isn't technically prohibited, but sharing across class years is prohibited and is a violation of the academic honesty policy per department policy.]
+
+---
+class: middle
+
+## A final request
+
+Since I am not sure how long it will take for you to receive an formal invitation to evaluate this course, please fill out [this short, anonymous survey on the course](https://docs.google.com/forms/d/e/1FAIpQLSeCWQ2FHl8aabut8-Gcj4Ea2Xke8qAM0Yo0ecmHkcv-X-8aqg/viewform?usp=sf_link)
 
 ---
 
