@@ -59,7 +59,7 @@ You can load them, and the `nycbnb` data by running the following in your Consol
 
 ```{r load-packages, message = FALSE}
 library(tidyverse)
-nycbnb = read_csv("https://urmc-bst.github.io/bst430-fall2021-site/hw_lab_instruction/hw-01-airbnb/data/nylistings.csv")
+nycbnb = read_csv("https://bst-urmc.github.io/bst430-fall2024-site/hw_lab_instruction/hw-01-airbnb/data/nylistings.csv")
 ```
 
 ## Data
